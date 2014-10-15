@@ -6,11 +6,11 @@ Vagrant.configure("2") do |config|
     # networking:
     #  9200 - rest api port
     #  9300 - java api port
-    #  80:1080 - nodejs http port
+    #  3000:3000 - nodejs http port
     #
     config.vm.network :forwarded_port, guest:9200, host: 9200, auto_correct: true
     config.vm.network :forwarded_port, guest:9300, host: 9300, auto_correct: true
-    config.vm.network :forwarded_port, guest:80, host: 1080, auto_correct: true
+    config.vm.network :forwarded_port, guest:3000, host: 3000, auto_correct: true
 
     # set proper name and ram
     config.vm.provider "virtualbox" do |v|
