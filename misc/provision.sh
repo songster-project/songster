@@ -42,4 +42,4 @@ apt-get -y update > /dev/null
 echo "Installing node.js..."
 apt-get install -y nodejs
 
-echo "Finished provisioning. Elasticsearch: http://localhost:9200/_plugin/head/; NodeJS: http://localhost:1080"
+echo "Finished provisioning. Elasticsearch: http://localhost:9200/_plugin/head/; NodeJS: http://localhost:3000"
