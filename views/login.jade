@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1 Please login
+  form(method="post")
+    label Username
+    input(type="text", name="username", id="username")
+    label Password
+    input(type="password", name="password", id="password")
+    button(type="submit") Sign In

@@ -4,9 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var passportinit = require('./config/passport');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var login = require('./routes/login');
+var logout = require('./routes/logout');
+var account = require('./routes/account');
+
+var settings = require('./config/settings.js');
 
 var app = express();
 
@@ -19,11 +27,28 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(settings.cookie_secret));
+app.use(session({
+    secret: settings.cookie_secret,
+    store: new MongoStore({
+        db: settings.db,
+        host: settings.db_host,
+        port: settings.db_port,
+        username: settings.db_user,
+        password: settings.db_pass
+    }),
+    saveUninitialized: true,
+    resave: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/app', passportinit.ensureAuthenticated, express.static(path.join(__dirname, 'app')));
+app.use('/login', login);
+app.use('/logout', logout);
+app.use('/account', account);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
