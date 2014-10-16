@@ -15,7 +15,7 @@ TODO a descripton for deployment will be added here once available
  * Lisa Fichtinger
  * [Manuel Geier](http://geier.io)
  * Markus Zisser
- * Martin Schleiss
+ * [Martin Schleiss](http://martinschleiss.com)
  * Patrick Säuerl
  * [Thomas Rieder](http://rieder.io)
 
