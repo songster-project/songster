@@ -4,9 +4,13 @@
   "homepage": "https://github.com/songster-project",
   "bugs": "https://github.com/songster-project/songster/issues",
   "private": true,
+  "licenses": {
+    "type": "MIT",
+    "url": "https://raw.github.com/songster-project/songster/master/LICENSE"
+  },
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall" : "./grunt"
+    "postinstall" : "npm install -g grunt bower && bower install && grunt"
   },
   "dependencies": {
     "express": "~4.9.0",
