@@ -5,8 +5,7 @@
   "bugs": "https://github.com/songster-project/songster/issues",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "postinstall" : "node_modules/.bin/bower install && grunt"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "express": "~4.9.0",
