@@ -31,11 +31,11 @@ We use the ngBoilerplate project (https://github.com/ngbp/ngbp) as a base for ou
 * copied `karma/`, `src/`, `vendor/``.bowerrc`, `.gitmodules`, `bower.json`, `build.config.js`, `changelog.tpl` `Gruntfile.js`, `module.prefix`, `module.suffix`, `tools.md` to the root
 * merged `package.json`, `.gitignore` files
 * adjust `build.config.js` to deploy the app into `/public` instead of `bin`
-* added a post script to install bower dependencies:
+* added a post script to install bower dependencies and run grunt:
 
     "scripts": {
       ...
-      "postinstall" : "node_modules/.bin/bower install"
+      "postinstall" : "postinstall" : "npm install -g grunt bower && bower install && grunt
     },
 
 ## Disclaimer

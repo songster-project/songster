@@ -148,16 +148,6 @@ module.exports = function ( grunt ) {
             expand: true
           }
         ]
-      },
-      additional_files: {
-        files: [
-          {
-            src: [ '<%= additional_files %>' ],
-            dest: '<%= compile_dir %>',
-            cwd: '.',
-            expand: true
-          }
-        ]
       }
     },
 
@@ -564,7 +554,7 @@ module.exports = function ( grunt ) {
   grunt.registerTask( 'build', [
     'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
-    'copy:build_appjs', 'copy:build_vendorjs', 'copy:additional_files',
+    'copy:build_appjs', 'copy:build_vendorjs',
     'index:build' /*, 'karmaconfig', 'karma:continuous' */
   ]);
 

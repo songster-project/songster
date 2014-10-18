@@ -9,6 +9,6 @@ build/
 *.sw*
 *~
 build/
-public/
+app/
 node_modules/
 vendor/

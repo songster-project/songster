@@ -8,7 +8,7 @@ module.exports = {
    * completely built.
    */
   build_dir: 'build',
-  compile_dir: 'public',
+  compile_dir: 'app',
 
   /**
    * This is a collection of file patterns that refer to our app code (the
@@ -72,13 +72,5 @@ module.exports = {
     ],
     assets: [
     ]
-  },
-
-  /**
-   * If you want to add additional files to the compile_dir, you have to spcify
-   * them here.
-   */
-  additional_files: [
-    'views/stylesheets/style.css'
-  ]
+  }
 };
