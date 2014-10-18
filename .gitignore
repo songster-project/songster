@@ -1,5 +1,14 @@
+# nodejs
 .idea/*
 .vagrant/*
 node_modules/*
 build/
 *.log
+
+# ngBoilderplate
+*.sw*
+*~
+build/
+app/
+node_modules/
+vendor/
