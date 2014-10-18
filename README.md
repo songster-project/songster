@@ -35,7 +35,7 @@ We use the ngBoilerplate project (https://github.com/ngbp/ngbp) as a base for ou
 
     "scripts": {
       ...
-      "postinstall" : "postinstall" : "npm install -g grunt bower && bower install && grunt
+      "postinstall" : "postinstall" : "npm install -g grunt bower && bower install && grunt"
     },
 
 ## Disclaimer
