@@ -3,3 +3,8 @@ node_js:
   - '0.10'
 before_install:
   - 'npm install -g grunt-cli bower'
+
+  # enable Firefox for karma
+  # see http://stackoverflow.com/questions/19255976/how-to-make-travis-execute-angular-tests-on-chrome-please-set-env-variable-chr
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
