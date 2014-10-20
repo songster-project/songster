@@ -40,6 +40,6 @@ add-apt-repository -y ppa:chris-lea/node.js
 apt-get -y update > /dev/null
 
 echo "Installing node.js..."
-apt-get install -y nodejs
+apt-get install -y nodejs git
 
 echo "Finished provisioning. Elasticsearch: http://localhost:9200/_plugin/head/; NodeJS: http://localhost:3000"
