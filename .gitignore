@@ -11,4 +11,6 @@ build/
 build/
 app/
 node_modules/
-vendor/
+!vendor/
+vendor/*
+!vendor/placeholders/
