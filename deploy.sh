@@ -6,7 +6,13 @@
 
     echo $branch_name
 
-    if [ "$branch_name" = "master" ]; then
+    bname="$(git symbolic-ref HEAD 2>/dev/null)" ||
+    bname="(unnamed branch)"
+
+    bname=${bname##refs/heads/}
+    echo $bname
+
+    if [ "$bname" = "master" ]; then
 		chmod 600 id_rsa
         eval `ssh-agent -s`
         ssh-add id_rsa
