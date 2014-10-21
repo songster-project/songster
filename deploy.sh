@@ -12,6 +12,8 @@
     bname=${bname##refs/heads/}
     echo $bname
 
+    echo $TRAVIS_BRANCH
+
     if [ "$bname" = "master" ]; then
 		chmod 600 id_rsa
         eval `ssh-agent -s`
