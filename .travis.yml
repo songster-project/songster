@@ -8,5 +8,6 @@ before_install:
 after_success:
 - chmod 600 id_rsa
 - ssh-add id_rsa
+- cat .travis/known_hosts >> ~/.ssh/known_hosts
 - git remote add dokku_main dokku@dev.songster-project.me:main
 - git push dokku_main master
