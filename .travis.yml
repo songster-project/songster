@@ -1,5 +1,12 @@
 language: node_js
 node_js:
-  - '0.10'
+- '0.10'
 before_install:
-  - 'npm install -g grunt-cli bower'
+- openssl aes-256-cbc -K $encrypted_1645300b04d0_key -iv $encrypted_1645300b04d0_iv
+  -in id_rsa.enc -out .travis/id_rsa -d
+- npm install -g grunt-cli bower
+after_success:
+- chmod 600 .travis/id_rsa
+- ssh-add .travis/id_rsa
+- git remote add dokku_main dokku@dev.songster-project.me:main
+- git push dokku_main master

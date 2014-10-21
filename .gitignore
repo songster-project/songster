@@ -4,6 +4,7 @@
 node_modules/*
 build/
 *.log
+.ssh/*
 
 # ngBoilderplate
 *.sw*
