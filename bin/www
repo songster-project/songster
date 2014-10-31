@@ -15,7 +15,7 @@ mongodb.MongoClient.connect(settings.mongo_url, function(err, db) {
     console.log('Connected to MongoDB (native)');
 
     database.db = db;
-    database.conn = mongoose.createConnection('mongodb://localhost:27017/songster');
+    database.conn = mongoose.createConnection(settings.mongo_url);
 
     database.conn.once('open', function (err) {
         if (err) {
