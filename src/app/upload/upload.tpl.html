@@ -1,0 +1,40 @@
+<div class="row">
+  <h1 class="page-header">
+    Upload form
+    <small>by Thomas</small>
+  </h1>
+  <h2>Upload new files</h2>
+
+  <div ng-controller="UploadCtrl">
+    <input type="text" ng-model="myModelObj">
+    <input type="file" ng-file-select="onFileSelect($files)">
+    <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*">
+
+    <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
+    <div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function"
+         ng-show="dropSupported">drop files here
+    </div>
+    <div ng-file-drop-available="dropSupported=true"
+         ng-show="!dropSupported">HTML5 Drop File is not supported!
+    </div>
+    <button ng-click="upload.abort()">Cancel Upload</button>
+  </div>
+  <h2>Existing files</h2>
+  <table class="table table-striped">
+    <tr>
+      <th>Title</th>
+      <th>Artist</th>
+      <th>Album</th>
+      <th>Year</th>
+      <th>File</th>
+    </tr>
+    <tr ng:repeat="song in songs">
+      <td>{{ song.title }}</td>
+      <td>{{ song.artist }}</td>
+      <td>{{ song.album }}</td>
+      <td>{{ song.year }}</td>
+      <td><a href="/song/{{ song.file_id }}/raw">Play</a></td>
+    </tr>
+  </table>
+</div>
+
