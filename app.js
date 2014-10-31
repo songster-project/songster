@@ -13,6 +13,7 @@ var routes = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
 var account = require('./routes/account');
+var song = require('./routes/song');
 
 var settings = require('./config/settings.js');
 
@@ -49,6 +50,7 @@ app.use('/app', passportinit.ensureAuthenticated, express.static(path.join(__dir
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/account', account);
+app.use('/song', song);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
