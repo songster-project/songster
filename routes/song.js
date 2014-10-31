@@ -14,7 +14,7 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
         form.uploadDir = 'upload';
         form.parse(req, function (err, fields, files) {
 
-            var readStream = fs.createReadStream(files.filename.path);
+            var readStream = fs.createReadStream(files.file.path);
             var writeStream = database.gfs.createWriteStream({
                 mode: 'w',
                 filename: files.file.name
@@ -97,6 +97,5 @@ router.get('/', passport.ensureAuthenticated, function (req, res) {
 
     });
 });
-
 
 module.exports = router;
