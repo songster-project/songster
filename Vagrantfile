@@ -11,7 +11,8 @@ Vagrant.configure("2") do |config|
     config.vm.network :forwarded_port, guest:9200, host: 9200, auto_correct: true
     config.vm.network :forwarded_port, guest:9300, host: 9300, auto_correct: true
     config.vm.network :forwarded_port, guest:3000, host: 3000, auto_correct: true
-
+    config.vm.network :forwarded_port, guest:27017, host: 27017, auto_correct: true
+    
     # set proper name and ram
     config.vm.provider "virtualbox" do |v|
         v.name = "Songster Development Vagrantbox"

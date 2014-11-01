@@ -1,9 +1,41 @@
 #!/usr/bin/env node
 var debug = require('debug')('songster');
 var app = require('../app');
+var settings = require('../config/settings');
+var database = require('../config/database');
+var mongodb = require('mongodb');
+var mongoose = require('mongoose');
+var Grid = require('gridfs-stream');
 
 app.set('port', process.env.PORT || 3000);
 
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
+mongodb.MongoClient.connect(settings.mongo_url, function(err, db) {
+    if(err) throw err;
+
+    console.log('Connected to MongoDB (native)');
+
+    database.db = db;
+    database.conn = mongoose.createConnection(settings.mongo_url);
+
+    database.conn.once('open', function (err) {
+        if (err) {
+            throw err;
+        } else {
+            console.log('Connected to MongoDB (mongoose)');
+
+            database.gfs = Grid(database.conn.db, mongoose.mongo);
+            console.log('Connected to GridFS (via mongoose)');
+
+            var server = app.listen(app.get('port'), function() {
+                debug('Express server listening on port ' + server.address().port);
+            });
+        }
+    });
+});
+
+process.on('SIGTERM', function () {
+    console.log("Closing");
+    database.db.close();
+    database.conn.close();
+    app.close();
 });
