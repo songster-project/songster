@@ -65,6 +65,7 @@ module.exports = {
       'vendor/ng-file-upload/angular-file-upload-html5-shi.js',
       'vendor/angular/angular.js',
       'vendor/ng-file-upload/angular-file-upload.js',
+      'vendor/angular-media-player/dist/angular-media-player.min.js',
       'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',

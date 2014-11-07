@@ -9,6 +9,7 @@
     "angular-ui-router": "~0.2"
   },
   "dependencies": {
-      "ng-file-upload": "~1.6"
+      "ng-file-upload": "~1.6",
+      "angular-media-player": "~0.5"
   }
 }
