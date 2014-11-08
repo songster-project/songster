@@ -15,3 +15,8 @@ node_modules/
 !vendor/
 vendor/*
 !vendor/placeholders/
+
+# OS X
+.DS_Store
+.Spotlight-V100
+.Trashes
