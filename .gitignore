@@ -1,7 +1,7 @@
 # nodejs
 .idea/*
 .vagrant/*
-node_modules/*
+node_modules/
 build/
 *.log
 .ssh/*
@@ -9,9 +9,6 @@ build/
 # ngBoilderplate
 *.sw*
 *~
-build/
-app/
-node_modules/
 !vendor/
 vendor/*
 !vendor/placeholders/
