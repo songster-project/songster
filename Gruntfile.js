@@ -360,6 +360,10 @@ module.exports = function ( grunt ) {
      */
     index: {
 
+      options: {
+        includeLiveReload: false
+      },
+
       /**
        * During development, we don't want to have wait for compilation,
        * concatenation, minification, etc. So to avoid these steps, we simply
@@ -543,7 +547,10 @@ module.exports = function ( grunt ) {
    * before watching for changes.
    */
   grunt.renameTask( 'watch', 'delta' );
-  grunt.registerTask( 'watch', [ 'build', 'karma:unit', 'delta' ] );
+  grunt.registerTask( 'watch', 'Watch task' , function() {
+    grunt.config('index.options.includeLiveReload', true);
+    grunt.task.run([ 'build', 'karma:unit', 'delta' ]);
+  });
 
   /**
    * The default task is to build and compile.
@@ -593,6 +600,7 @@ module.exports = function ( grunt ) {
    * compilation.
    */
   grunt.registerMultiTask( 'index', 'Process index.html template', function () {
+    var includeLiveReload = grunt.config('index.options.includeLiveReload');
     var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
     var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
@@ -605,6 +613,7 @@ module.exports = function ( grunt ) {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
+            includeLiveReload: includeLiveReload,
             scripts: jsFiles,
             styles: cssFiles,
             version: grunt.config( 'pkg.version' )
