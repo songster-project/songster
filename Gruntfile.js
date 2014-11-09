@@ -176,6 +176,7 @@ module.exports = function ( grunt ) {
         src: [
           '<%= vendor_files.js %>',
           'module.prefix',
+          '<%= build_dir %>/src/**/module.js',
           '<%= build_dir %>/src/**/*.js',
           '<%= html2js.app.dest %>',
           '<%= html2js.common.dest %>',
@@ -359,6 +360,10 @@ module.exports = function ( grunt ) {
      */
     index: {
 
+      options: {
+        includeLiveReload: false
+      },
+
       /**
        * During development, we don't want to have wait for compilation,
        * concatenation, minification, etc. So to avoid these steps, we simply
@@ -369,9 +374,10 @@ module.exports = function ( grunt ) {
         dir: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= build_dir %>/src/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.app.dest %>',
+          '<%= build_dir %>/src/**/module.js',
+          '<%= build_dir %>/src/**/*.js',
           '<%= vendor_files.css %>',
           '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
         ]
@@ -449,7 +455,7 @@ module.exports = function ( grunt ) {
         files: [
           '<%= app_files.js %>'
         ],
-        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs' ]
+        tasks: [ 'build', 'jshint:src', 'karma:unit:run'  ]
       },
 
       /**
@@ -541,7 +547,10 @@ module.exports = function ( grunt ) {
    * before watching for changes.
    */
   grunt.renameTask( 'watch', 'delta' );
-  grunt.registerTask( 'watch', [ 'build', 'karma:unit', 'delta' ] );
+  grunt.registerTask( 'watch', 'Watch task' , function() {
+    grunt.config('index.options.includeLiveReload', true);
+    grunt.task.run([ 'build', 'karma:unit', 'delta' ]);
+  });
 
   /**
    * The default task is to build and compile.
@@ -555,7 +564,7 @@ module.exports = function ( grunt ) {
     'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
     'copy:build_appjs', 'copy:build_vendorjs',
-    'index:build' /*, 'karmaconfig', 'karma:continuous' */
+    'index:build', 'karmaconfig', 'karma:continuous'
   ]);
 
   /**
@@ -591,6 +600,7 @@ module.exports = function ( grunt ) {
    * compilation.
    */
   grunt.registerMultiTask( 'index', 'Process index.html template', function () {
+    var includeLiveReload = grunt.config('index.options.includeLiveReload');
     var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
     var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
@@ -603,6 +613,7 @@ module.exports = function ( grunt ) {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
+            includeLiveReload: includeLiveReload,
             scripts: jsFiles,
             styles: cssFiles,
             version: grunt.config( 'pkg.version' )

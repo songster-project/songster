@@ -1,11 +1,4 @@
-angular.module( 'ngBoilerplate', [
-  'templates-app',
-  'templates-common',
-  'ngBoilerplate.home',
-  'ngBoilerplate.about',
-  'ngBoilerplate.upload',
-  'ui.router'
-])
+angular.module( 'ngBoilerplate')
 
 .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
   $urlRouterProvider.otherwise( '/home' );

@@ -1,10 +1,4 @@
-angular.module('ngBoilerplate.upload', [
-    'ui.router',
-    'placeholders',
-    'ui.bootstrap',
-    'angularFileUpload',
-    'mediaPlayer'
-])
+angular.module('ngBoilerplate.upload')
 
     .config(function config($stateProvider) {
         $stateProvider.state('upload', {
