@@ -11,7 +11,7 @@ var Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var songTypes = 'file youtube'.split(' ');
 var voteTypes = 'vote suggestion'.split(' ');
-var voteStates = 'new moved played'.split(' ');
+var voteStates = 'new played'.split(' ');
 
 var userSchema = new Schema({
         name: String
@@ -52,28 +52,34 @@ var eventSchema = new Schema({
     owner_id: ObjectId, //Referencing to user
     name: String,
     description: String,
-    link: String,
+    accessKey: String, //for accessing the event
     start: { type: Date, default: Date.now},
     end: { type: Date, default: null},
     votingEnabled: Boolean,
     previewEnabled: Boolean,
     suggestionEnabled: Boolean
-
 }, {collection: 'event'});
 
 var voteSchema = new Schema({
     owner_id: ObjectId, //Referencing to users, might be null
     type: {type: String, enum: voteTypes},
-    state: {type: string, enum: voteStates},
+    state: {type: String, enum: voteStates},
     song_id: ObjectId, //Referencing to the song suggested
     event_id: ObjectId //Referencing to the event that this vote was posted
 }, {collection: 'vote'});
 
-var eventlogSchema = new Schema({
+var eventLogSchema = new Schema({
     event_id: ObjectId, //Referencing to the event that log comes from
     logDate: {type: Date, default: Date.now},
     message: {} //Any Json object you want to log
-}, {collection: 'eventlog'});
+    //Examples that will be logged: start,end, song_id+timestamp
+}, {collection: 'eventLog'});
+
+//For storing the state of the queue
+var queueStateSchema = new Schema({
+    event_id: ObjectId,
+    songs: [ObjectId]
+}, {collection: 'queueState'});
 
 //Schema to Models
 var User = mongoose.model('User',userSchema);
@@ -81,6 +87,7 @@ var Song = mongoose.model('Song',songSchema);
 var Playlist = mongoose.model('Playlist',playlistSchema);
 var Event = mongoose.model('Event',eventSchema);
 var Vote = mongoose.model('Vote',voteSchema);
-var Eventlog = mongoose.model('Eventlog',eventlogSchema);
+var EventLog = mongoose.model('EventLog',eventLogSchema);
+var QueueStateSchema = mongoose.model('QueueState',queueStateSchema);
 
 console.log('Schemas created');
