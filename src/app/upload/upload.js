@@ -2,7 +2,8 @@ angular.module('ngBoilerplate.upload', [
     'ui.router',
     'placeholders',
     'ui.bootstrap',
-    'angularFileUpload'
+    'angularFileUpload',
+    'mediaPlayer'
 ])
 
     .config(function config($stateProvider) {
@@ -42,6 +43,29 @@ angular.module('ngBoilerplate.upload', [
         $http.get('/song/')
             .success(function (data) {
                 $scope.songs = data;
+
+                $scope.mediaPlaylist = [ ];
+                data.forEach(function(element) {
+                    $scope.mediaPlaylist.push({
+                        src: '/song/' + element.file_id + '/raw',
+                        type: 'audio/mp3'
+                    });
+                });
             });
+
+
+
+
+    })
+
+    .run(function ($rootScope) {
+        $rootScope.seekPercentage = function ($event) {
+            var percentage = ($event.offsetX / $event.target.offsetWidth);
+            if (percentage <= 1) {
+                return percentage;
+            } else {
+                return 0;
+            }
+        };
     }
 );
