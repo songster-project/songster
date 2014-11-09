@@ -564,7 +564,7 @@ module.exports = function ( grunt ) {
     'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
     'copy:build_appjs', 'copy:build_vendorjs',
-    'index:build' /*, 'karmaconfig', 'karma:continuous' */
+    'index:build', 'karmaconfig', 'karma:continuous'
   ]);
 
   /**
@@ -608,8 +608,6 @@ module.exports = function ( grunt ) {
     var cssFiles = filterForCSS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
     });
-
-    console.log(jsFiles);
 
     grunt.file.copy('src/index.html', this.data.dir + '/index.html', {
       process: function ( contents, path ) {

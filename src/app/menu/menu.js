@@ -1,4 +1,3 @@
-
 angular
     .module('songster.menu.services')
     .provider('$menu', MenuProvider);
@@ -14,16 +13,16 @@ function Menu(id, title) {
     var _title = title;
     var _entries = [];
 
-    this.getId = function() {
+    this.getId = function () {
         return _id;
     };
-    this.getTitle = function() {
+    this.getTitle = function () {
         return _title;
     };
-    this.addEntry = function(entry) {
+    this.addEntry = function (entry) {
         return _entries.push(entry);
     };
-    this.getEntries = function() {
+    this.getEntries = function () {
         return _entries;
     };
 }
@@ -40,13 +39,13 @@ function MenuEntry(title, icon, route) {
     var _route = route;
     var _icon = icon;
 
-    this.getTitle = function() {
+    this.getTitle = function () {
         return _title;
     };
-    this.getIcon = function() {
+    this.getIcon = function () {
         return _icon;
     };
-    this.getRoute = function() {
+    this.getRoute = function () {
         return _route;
     };
 }
@@ -68,8 +67,10 @@ function MenuBar() {
 
 function MenuProvider() {
     var _menuBar = new MenuBar();
-    var _mainMenu = new Menu('main', 'Main Menu');
-    _menuBar.addMenu(_mainMenu);
+
+    this.addMenu = function addMenu(menuId, title) {
+        _menuBar.addMenu(new Menu(menuId, title));
+    };
 
     this.addMenuEntry = function addMenuEntry(menuId, title, icon, route) {
         var menu = _menuBar.getMenu(menuId);

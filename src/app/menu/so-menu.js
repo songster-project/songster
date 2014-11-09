@@ -1,4 +1,3 @@
-
 angular
     .module('songster.menu')
     .directive('soMenu', ['$menu', SoMenuDirective]);
