@@ -3,6 +3,7 @@
 .vagrant/*
 node_modules/
 build/
+/app/
 *.log
 .ssh/*
 
