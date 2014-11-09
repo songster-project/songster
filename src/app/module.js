@@ -4,6 +4,6 @@ angular.module( 'ngBoilerplate', [
     'ngBoilerplate.home',
     'ngBoilerplate.about',
     'ngBoilerplate.upload',
-    'ngBoilerplate.menu',
+    'songster.menu',
     'ui.router'
 ]);

@@ -1,0 +1,8 @@
+<ul class="nav navbar-nav">
+    <li ui-sref-active="active" ng-repeat="entry in vm.menu.getEntries()">
+        <a href ui-sref="{{entry.getRoute()}}">
+            <i class="fa" ng-class="entry.getIcon()"></i>
+            {{entry.getTitle()}}
+        </a>
+    </li>
+</ul>

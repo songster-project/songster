@@ -374,10 +374,10 @@ module.exports = function ( grunt ) {
         dir: '<%= build_dir %>',
         src: [
           '<%= vendor_files.js %>',
-          '<%= build_dir %>/src/**/module.js',
-          '<%= build_dir %>/src/**/*.js',
           '<%= html2js.common.dest %>',
           '<%= html2js.app.dest %>',
+          '<%= build_dir %>/src/**/module.js',
+          '<%= build_dir %>/src/**/*.js',
           '<%= vendor_files.css %>',
           '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
         ]
@@ -455,7 +455,7 @@ module.exports = function ( grunt ) {
         files: [
           '<%= app_files.js %>'
         ],
-        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs' ]
+        tasks: [ 'build', 'jshint:src', 'karma:unit:run'  ]
       },
 
       /**
@@ -608,6 +608,8 @@ module.exports = function ( grunt ) {
     var cssFiles = filterForCSS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
     });
+
+    console.log(jsFiles);
 
     grunt.file.copy('src/index.html', this.data.dir + '/index.html', {
       process: function ( contents, path ) {
