@@ -3,6 +3,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 
 // temporary hardcoded user storage
+// TODO: reading from database
 var users = [
     { id: 1, username: 'admin', password: 'admin' }
     ,
