@@ -68,11 +68,77 @@ h2 {
  */
 
 .navbar {
-  margin-top: 20px;
   
   small {
     font-size: 60%;
   }
+
+  li {
+    margin-bottom: 10px;
+
+    a {
+      height: 36px;
+      line-height: 36px;
+      vertical-align: middle;
+      text-transform: uppercase;
+
+      span {
+        padding: 6px 10px;
+        height: 36px;
+        vertical-align: top;
+        line-height: 36px;
+      }
+
+      i {
+        transition: all 0.2s ease-in-out;
+        font-size: 36px;
+      }
+
+      &:hover * {
+        color: #428bca;
+      }
+    }
+  }
+}
+
+.navbar-fixed-right,
+.navbar-fixed-left {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: @zindex-navbar-fixed;
+  width: 250px;
+
+  margin-top: 0; // override .navbar defaults
+  margin-bottom: 0; // override .navbar defaults
+
+  // Undo the rounded corners
+  border-radius: 0;
+
+  .navbar-header,
+  .navbar-nav > li {
+    float: none;
+  }
+
+  .navbar-collapse {
+    padding: 0;
+  }
+}
+
+.navbar-fixed-left {
+  left: 0;
+  border-width: 0 1px 0 0;
+}
+.navbar-fixed-right {
+  right: 0;
+  border-width: 0 0 0 1px;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  background-color: transparent;
+  color: #428bca;
 }
 
 
