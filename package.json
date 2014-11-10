@@ -48,6 +48,11 @@
     "karma-jasmine": "^0.1.5",
     "grunt-karma": "^0.8.2",
     "karma-coffee-preprocessor": "^0.2.1",
-    "karma": "^0.12.9"
+    "karma": "^0.12.9",
+    "grunt-simple-mocha": "^0.4.0",
+    "chai": "^1.9.2",
+    "sinon": "^1.11.1",
+    "sinon-chai": "^2.6.0",
+    "mocha": "^2.0.1"
   }
 }
