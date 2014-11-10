@@ -22,5 +22,8 @@ describe('dummy Test', function () {
         var next = sinon.spy();
         pass.ensureAuthenticated(req, res, next);
         expect(next).to.have.been.called;
+    });
+    it('build should break if testcase fails',function(){
+        expect(true).to.equal(false);
     })
 })
