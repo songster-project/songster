@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 Please register
+    form(method=post)
+        label Username
+        input(type="text", name="username", id="username")
+        label Password
+        input(type="password" name="password" id="password")
+        label Repeat Password
+        input(type="password" name="password" id="rep_password")
+        button(type="submit") Register
