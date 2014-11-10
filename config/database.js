@@ -27,11 +27,11 @@ var userSchema = new Schema({
 
 var songSchema = new Schema({
         owner_id: {type: ObjectId, index: true}, //Referencing to user
-        addedDate:  { type: Date, default: Date.now },
+        addedDate: {type: Date, default: Date.now},
         file_id: ObjectId, //Referencing to the file_id in the files collection
-        active: { type: Boolean, default: true},
+        active: {type: Boolean, default: true},
         type: {type: String, enum: songTypes},
-        rating: {type: Number, min:1, max:5, default: null}, //must be integer value
+        rating: {type: Number, min: 1, max: 5, default: null}, //must be integer value
 
         //one of them will be filled
         filename: String,
@@ -43,16 +43,16 @@ var songSchema = new Schema({
         album: String
         //Other metadata may be added
 
-},
+    },
     {collection: 'song'});
 //Index for support of getting all the non-deleted indices of a user
-songSchema.index({owner_id : 1, active: 1});
+songSchema.index({owner_id: 1, active: 1});
 
 var playlistSchema = new Schema({
-        owner_id: { type:ObjectId, index: true}, //Referencing to user
+        owner_id: {type: ObjectId, index: true}, //Referencing to user
         name: String,
         songs: [ObjectId] //Referencing to songs that also have to belong to the same user
-},
+    },
     {collection: 'playlist'});
 
 var eventSchema = new Schema({
@@ -60,8 +60,8 @@ var eventSchema = new Schema({
     name: String,
     description: String,
     accessKey: String, //for accessing the event
-    start: { type: Date, default: Date.now},
-    end: { type: Date, default: null},
+    start: {type: Date, default: Date.now},
+    end: {type: Date, default: null},
     votingEnabled: Boolean,
     previewEnabled: Boolean,
     suggestionEnabled: Boolean
@@ -72,11 +72,11 @@ var voteSchema = new Schema({
     type: {type: String, enum: voteTypes},
     state: {type: String, enum: voteStates},
     song_id: ObjectId, //Referencing to the song suggested
-    event_id: { type: ObjectId, index: true} //Referencing to the event that this vote was posted
+    event_id: {type: ObjectId, index: true} //Referencing to the event that this vote was posted
 }, {collection: 'vote'});
 
 var eventLogSchema = new Schema({
-    event_id: { type: ObjectId, index: true}, //Referencing to the event that log comes from
+    event_id: {type: ObjectId, index: true}, //Referencing to the event that log comes from
     logDate: {type: Date, default: Date.now},
     message: {} //Any Json object you want to log
     //Examples that will be logged: start,end, song_id+timestamp
@@ -90,12 +90,12 @@ var queueStateSchema = new Schema({
 }, {collection: 'queueState'});
 
 //Schema to Models
-var User = mongoose.model('User',userSchema);
-var Song = mongoose.model('Song',songSchema);
-var Playlist = mongoose.model('Playlist',playlistSchema);
-var Event = mongoose.model('Event',eventSchema);
-var Vote = mongoose.model('Vote',voteSchema);
-var EventLog = mongoose.model('EventLog',eventLogSchema);
-var QueueStateSchema = mongoose.model('QueueState',queueStateSchema);
+var User = mongoose.model('User', userSchema);
+var Song = mongoose.model('Song', songSchema);
+var Playlist = mongoose.model('Playlist', playlistSchema);
+var Event = mongoose.model('Event', eventSchema);
+var Vote = mongoose.model('Vote', voteSchema);
+var EventLog = mongoose.model('EventLog', eventLogSchema);
+var QueueStateSchema = mongoose.model('QueueState', queueStateSchema);
 
 console.log('Schemas created');
