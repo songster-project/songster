@@ -19,8 +19,11 @@ var voteStates = 'new played'.split(' ');
 
 
 var userSchema = new Schema({
-        name: String
-        //TODO LF: add here what properties of the User you need, note: object_id is automatically created
+        username: String,
+        password: String,
+        email: String,
+        first_name: String,
+        last_name: String
     },
     {collection: 'user'}
 );
@@ -97,5 +100,14 @@ var Event = mongoose.model('Event', eventSchema);
 var Vote = mongoose.model('Vote', voteSchema);
 var EventLog = mongoose.model('EventLog', eventLogSchema);
 var QueueStateSchema = mongoose.model('QueueState', queueStateSchema);
+
+// export models to make them available outside
+exports.User = User;
+exports.Song = Song;
+exports.Playlist = Playlist;
+exports.Event = Event;
+exports.Vote = Vote;
+exports.EventLog = EventLog;
+exports.QueueStateSchema = QueueStateSchema;
 
 console.log('Schemas created');
