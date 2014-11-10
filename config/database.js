@@ -13,6 +13,11 @@ var songTypes = 'file youtube'.split(' ');
 var voteTypes = 'vote suggestion'.split(' ');
 var voteStates = 'new played'.split(' ');
 
+//Indices:
+//Every schema has default a primary key _id of type ObjectID.
+//Every schema has a default indices on _id
+
+
 var userSchema = new Schema({
         name: String
         //TODO LF: add here what properties of the User you need, note: object_id is automatically created
@@ -21,7 +26,7 @@ var userSchema = new Schema({
 );
 
 var songSchema = new Schema({
-        owner_id: ObjectId, //Referencing to user
+        owner_id: {type: ObjectId, index: true}, //Referencing to user
         addedDate:  { type: Date, default: Date.now },
         file_id: ObjectId, //Referencing to the file_id in the files collection
         active: { type: Boolean, default: true},
@@ -40,9 +45,11 @@ var songSchema = new Schema({
 
 },
     {collection: 'song'});
+//Index for support of getting all the non-deleted indices of a user
+songSchema.index({owner_id : 1, active: 1});
 
 var playlistSchema = new Schema({
-        owner_id: ObjectId, //Referencing to user
+        owner_id: { type:ObjectId, index: true}, //Referencing to user
         name: String,
         songs: [ObjectId] //Referencing to songs that also have to belong to the same user
 },
@@ -65,17 +72,18 @@ var voteSchema = new Schema({
     type: {type: String, enum: voteTypes},
     state: {type: String, enum: voteStates},
     song_id: ObjectId, //Referencing to the song suggested
-    event_id: ObjectId //Referencing to the event that this vote was posted
+    event_id: { type: ObjectId, index: true} //Referencing to the event that this vote was posted
 }, {collection: 'vote'});
 
 var eventLogSchema = new Schema({
-    event_id: ObjectId, //Referencing to the event that log comes from
+    event_id: { type: ObjectId, index: true}, //Referencing to the event that log comes from
     logDate: {type: Date, default: Date.now},
     message: {} //Any Json object you want to log
     //Examples that will be logged: start,end, song_id+timestamp
 }, {collection: 'eventLog'});
 
 //For storing the state of the queue
+//Not sure if we gonna need this
 var queueStateSchema = new Schema({
     event_id: ObjectId,
     songs: [ObjectId]
