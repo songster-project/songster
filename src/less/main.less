@@ -128,10 +128,18 @@ h2 {
 .navbar-fixed-left {
   left: 0;
   border-width: 0 1px 0 0;
+
+  & ~ * {
+    margin-left: 260px;
+  }
 }
 .navbar-fixed-right {
   right: 0;
   border-width: 0 0 0 1px;
+
+  & ~ * {
+    margin-right: 260px;
+  }
 }
 
 .navbar-default .navbar-nav > .active > a,
