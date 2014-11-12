@@ -8,12 +8,14 @@ var passport = require('passport');
 var passportinit = require('./config/passport');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+var expressValidator = require('express-validator');
 
 var routes = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
 var account = require('./routes/account');
 var song = require('./routes/song');
+var playlist = require('./routes/playlist')
 
 var settings = require('./config/settings.js');
 
@@ -28,6 +30,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser(settings.cookie_secret));
 app.use(session({
     secret: settings.cookie_secret,
@@ -51,6 +54,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/account', account);
 app.use('/song', song);
+app.use('/playlist',playlist);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
