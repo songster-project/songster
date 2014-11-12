@@ -5,6 +5,13 @@ var mongoose = require('mongoose');
 exports.conn = null;
 exports.db = null;
 exports.gfs = null;
+exports.User = null;
+exports.Song = null;
+exports.Playlist = null;
+exports.Event = null;
+exports.Vote = null;
+exports.EventLog = null;
+exports.QueueStateSchema = null;
 
 //Schema Definitions
 var Schema = mongoose.Schema;
@@ -27,6 +34,8 @@ var userSchema = new Schema({
     },
     {collection: 'user'}
 );
+
+userSchema.index({username: 1, password: 1});
 
 var songSchema = new Schema({
         owner_id: {type: ObjectId, index: true}, //Referencing to user
@@ -87,27 +96,15 @@ var eventLogSchema = new Schema({
 
 //For storing the state of the queue
 //Not sure if we gonna need this
-var queueStateSchema = new Schema({
-    event_id: ObjectId,
-    songs: [ObjectId]
-}, {collection: 'queueState'});
+//var queueStateSchema = new Schema({
+//    event_id: ObjectId,
+//    songs: [ObjectId]
+//}, {collection: 'queueState'});
 
-//Schema to Models
-var User = mongoose.model('User', userSchema);
-var Song = mongoose.model('Song', songSchema);
-var Playlist = mongoose.model('Playlist', playlistSchema);
-var Event = mongoose.model('Event', eventSchema);
-var Vote = mongoose.model('Vote', voteSchema);
-var EventLog = mongoose.model('EventLog', eventLogSchema);
-var QueueStateSchema = mongoose.model('QueueState', queueStateSchema);
-
-// export models to make them available outside
-exports.User = User;
-exports.Song = Song;
-exports.Playlist = Playlist;
-exports.Event = Event;
-exports.Vote = Vote;
-exports.EventLog = EventLog;
-exports.QueueStateSchema = QueueStateSchema;
-
-console.log('Schemas created');
+//Export Schema to make them available to bin/ww
+exports.UserSchema = userSchema;
+exports.SongSchema = songSchema;
+exports.PlaylistSchema = playlistSchema;
+exports.EventSchema = eventSchema;
+exports.VoteSchema = voteSchema;
+exports.EventlogSchema = eventLogSchema;
