@@ -2,9 +2,7 @@ var express = require('express');
 var router = express.Router();
 var expressValidator = require('express-validator');
 var crypto = require('crypto');
-//var database = require('../config/database.js');
-var User = require('../config/database').User;
-//var User = require('../bin/www').UserEx;
+var db = require('../config/database');
 
 router.get('/', function (req, res) {
     res.render('registration');
@@ -22,8 +20,9 @@ router.post('/', function (req, res, next){
     var errors = req.validationErrors();
 
     if (errors) {
+        
         res.send('validation error');
-        next();
+
     }
     // check if username not already in db
   /*  User.find({username: req.body.username}).count(function(err, count){
@@ -35,7 +34,7 @@ router.post('/', function (req, res, next){
     }); */
     console.log('geht nu');
     // hash password
-    var user = new User();
+    var user = new db.User();
     console.log('geht nimma');
     console.log(user);
     console.log('1 ' + req.body.username);
@@ -55,7 +54,6 @@ router.post('/', function (req, res, next){
         user.salt = salt;
 
         console.log(' in hash ' + user.password);
-       // next();
 
         // save user in db
         user.save(function (err, user) {
