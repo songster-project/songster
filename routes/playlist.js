@@ -33,6 +33,24 @@ router.get('/:id', passport.ensureAuthenticated, function (req,res) {
     });
 });
 
+router.delete('/:id',passport.ensureAuthenticated, function (req,res) {
+    req.checkParams('id','_id of playlist not specified').notEmpty();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+
+    db.Playlist.remove({ _id: req.param('id'), owner_id: req.user._id}, function (err) {
+        if (err) {
+            console.log(err);
+            res.status(400).send('Internal server error');
+            return;
+        }
+        res.status(204).send();
+    });
+});
+
 router.put('/',passport.ensureAuthenticated, function( req,res){
     req.checkBody('_id','_id of playlist not specified').notEmpty();
     req.checkBody('owner_id','id of owner not set').notEmpty();
