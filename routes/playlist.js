@@ -1,26 +1,52 @@
 var express = require('express');
+var passport = require('../config/passport');
 var db = require('../config/database');
 var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 
-router.get('/', function (req, res) {
-   res.send("Hello world");
+router.get('/',passport.ensureAuthenticated, function (req, res) {
+   db.Playlist.find({owner_id : req.user._id},function(err, playlists){
+       if(err)
+       {
+           console.log(err);
+           res.status(400).send('Internal server error');
+           return;
+       }
+       res.send(playlists);
+   });
 });
 
-router.post('/', function (req, res){
+router.get('/:id', passport.ensureAuthenticated, function (req,res) {
+    db.Playlist.find({_id : req.param('id'), owner_id : req.user._id}, function(err,playlist) {
+        if(err)
+        {
+            console.log(err);
+            res.status(400).send('Internal server error');
+            return;
+        }
+        console.log(playlist);
+        if(playlist.length>0)
+            res.send(playlist[0]);
+        else
+            res.send({}); //Not sure yet if this is usefull or intended behaviour
+    });
+});
+
+router.post('/', passport.ensureAuthenticated, function (req, res){
+    //TODO: check if req.user._id is set
+    //Maybe this does not need to be (because it is done by passport, and passport should authenticate
     req.checkBody('name', 'Name is empty').notEmpty();
-    //TODO check for owner id ... this must be set somewhere
     var errors = req.validationErrors();
     if (errors) {
-        res.send('There have been validation errors: ' + util.inspect(errors), 400);
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
 
     var playlist = db.Playlist();
     playlist.name = req.body.name;
     playlist.song = req.body.song;
-    playlist.owner_id = req.body.ownerid;
+    playlist.owner_id = req.user._id;
 
     playlist.save(function (err,playlist)
     {
