@@ -2,11 +2,24 @@ extends layout
 
 block content
     h1 Please register
-    form(method=post)
-        label Username
-        input(type="text", name="username", id="username")
-        label Password
-        input(type="password" name="password" id="password")
-        label Repeat Password
-        input(type="password" name="password" id="rep_password")
-        button(type="submit") Register
+    form(id="form-register" method="post")
+        .form-group
+            label Username
+            input(type="text", name="username", id="username", required=true)
+        .form-group
+            label First Name
+            input(type="text", name="first_name", id="first_name")
+        .form-group
+            label Last Name
+            input(type="text", name="last_name", id="last_name")
+        .form-group
+            label E-Mail
+            input(type="text", name="email", id="email", required=true)
+        .form-group
+            label Password
+            input(type="password" name="password" id="password", required=true)
+        .form-group
+            label Confirm Password
+            input(type="password" name="confirm_password" id="confirm_password", required=true)
+        .form-group
+            button(type="submit" ) Register
