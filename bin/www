@@ -9,13 +9,13 @@ var Grid = require('gridfs-stream');
 
 app.set('port', process.env.PORT || 3000);
 
-mongodb.MongoClient.connect(settings.mongo_url, function(err, db) {
-    if(err) throw err;
+mongodb.MongoClient.connect(settings.mongo_url, function (err, db) {
+    if (err) throw err;
 
     console.log('Connected to MongoDB (native)');
 
     database.db = db;
-    database.conn = mongoose.createConnection(settings.mongo_url, { server: { poolSize: 100 } });
+    database.conn = mongoose.createConnection(settings.mongo_url, {server: {poolSize: 100}});
 
     database.conn.once('open', function (err) {
         if (err) {
@@ -26,9 +26,17 @@ mongodb.MongoClient.connect(settings.mongo_url, function(err, db) {
             database.gfs = Grid(database.conn.db, mongoose.mongo);
             console.log('Connected to GridFS (via mongoose)');
 
-            var server = app.listen(app.get('port'), function() {
+            var server = app.listen(app.get('port'), function () {
                 debug('Express server listening on port ' + server.address().port);
             });
+
+            database.User = database.conn.model('User', database.UserSchema);
+            database.Vote = database.conn.model('Vote', database.VoteSchema);
+            database.Event = database.conn.model('Event', database.EventSchema);
+            database.Playlist = database.conn.model('Playlist', database.PlaylistSchema);
+            database.EventLog = database.conn.model('EventLog', database.EventlogSchema);
+            database.Song = database.conn.model('Song', database.SongSchema);
+            console.log('Schema created');
         }
     });
 });
