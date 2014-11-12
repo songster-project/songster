@@ -3,6 +3,7 @@ var router = express.Router();
 var expressValidator = require('express-validator');
 var crypto = require('crypto');
 var db = require('../config/database');
+var util = require('util');
 
 router.get('/', function (req, res) {
     res.render('registration');
@@ -20,56 +21,36 @@ router.post('/', function (req, res, next){
     var errors = req.validationErrors();
 
     if (errors) {
-        
-        res.send('validation error');
-
+        res.status(400).send('The following validation errors occurred: ' + util.inspect(errors));
     }
-    // check if username not already in db
-  /*  User.find({username: req.body.username}).count(function(err, count){
-        assert.equal(null,err);
-        if (count > 0) {
-            res.send('username already exists');
-            next();
-        }
-    }); */
-    console.log('geht nu');
+
     // hash password
     var user = new db.User();
-    console.log('geht nimma');
-    console.log(user);
-    console.log('1 ' + req.body.username);
     user.username = req.body.username;
     user.first_name = req.body.first_name;
     user.last_name = req.body.last_name;
     user.email = req.body.email;
 
-    console.log('name ' + user.username);
-
     var salt = crypto.randomBytes(128).toString('base64');
-
-    console.log('after salt' + salt);
     crypto.pbkdf2(req.body.password, salt, 10000, 512, function(err, hashedKey){
-
         user.password = hashedKey.toString('base64');
         user.salt = salt;
 
-        console.log(' in hash ' + user.password);
+       // save user in db
+        user.save(function (err, saved_user) {
+            if (err) {
+                if(err.code === 11000) {
+                    res.status(400).send('Username ' + user.username + ' already used. Please use another name.');
+                    return;
+                }
 
-        // save user in db
-        user.save(function (err, user) {
-            if (err) console.error(err);
-            console.log(user);
-            res.send('user ' + user.username + ' successful registered!');
-            //next();
+                res.status(400).send(user.username + ' could not be registered. ');
+                return;
+            }
+            console.log(saved_user);
+            res.status(200).send(saved_user.username + ' registered successfully!');
         });
     });
-
-
-
-
-
-
-    // redirect to successful
 
 });
 

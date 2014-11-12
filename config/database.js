@@ -26,16 +26,18 @@ var voteStates = 'new played'.split(' ');
 
 
 var userSchema = new Schema({
-        username: String,
+        username: {type: String, index :{unique: true}},
         password: String,
         email: String,
         first_name: String,
-        last_name: String
+        last_name: String,
+        salt: String
     },
     {collection: 'user'}
 );
 
 userSchema.index({username: 1, password: 1});
+userSchema.set('autoIndex',true);
 
 var songSchema = new Schema({
         owner_id: {type: ObjectId, index: true}, //Referencing to user
