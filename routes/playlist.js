@@ -5,43 +5,41 @@ var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 
-router.get('/',passport.ensureAuthenticated, function (req, res) {
-   db.Playlist.find({owner_id : req.user._id},function(err, playlists){
-       if(err)
-       {
-           console.log(err);
-           res.status(400).send('Internal server error');
-           return;
-       }
-       res.send(playlists);
-   });
+router.get('/', passport.ensureAuthenticated, function (req, res) {
+    db.Playlist.find({owner_id: req.user._id}, function (err, playlists) {
+        if (err) {
+            console.log(err);
+            res.status(400).send('Internal server error');
+            return;
+        }
+        res.send(playlists);
+    });
 });
 
-router.get('/:id', passport.ensureAuthenticated, function (req,res) {
-    db.Playlist.find({_id : req.param('id'), owner_id : req.user._id}, function(err,playlist) {
-        if(err)
-        {
+router.get('/:id', passport.ensureAuthenticated, function (req, res) {
+    db.Playlist.find({_id: req.param('id'), owner_id: req.user._id}, function (err, playlist) {
+        if (err) {
             console.log(err);
             res.status(400).send('Internal server error');
             return;
         }
         console.log(playlist);
-        if(playlist.length>0)
+        if (playlist.length > 0)
             res.send(playlist[0]);
         else
             res.send({}); //Not sure yet if this is usefull or intended behaviour
     });
 });
 
-router.delete('/:id',passport.ensureAuthenticated, function (req,res) {
-    req.checkParams('id','_id of playlist not specified').notEmpty();
+router.delete('/:id', passport.ensureAuthenticated, function (req, res) {
+    req.checkParams('id', '_id of playlist not specified').notEmpty();
     var errors = req.validationErrors();
     if (errors) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
 
-    db.Playlist.remove({ _id: req.param('id'), owner_id: req.user._id}, function (err) {
+    db.Playlist.remove({_id: req.param('id'), owner_id: req.user._id}, function (err) {
         if (err) {
             console.log(err);
             res.status(400).send('Internal server error');
@@ -51,10 +49,10 @@ router.delete('/:id',passport.ensureAuthenticated, function (req,res) {
     });
 });
 
-router.put('/',passport.ensureAuthenticated, function( req,res){
-    req.checkBody('_id','_id of playlist not specified').notEmpty();
-    req.checkBody('owner_id','id of owner not set').notEmpty();
-    req.checkBody('owner_id','id of owner is not of the logged in one').equals(req.user._id);
+router.put('/', passport.ensureAuthenticated, function (req, res) {
+    req.checkBody('_id', '_id of playlist not specified').notEmpty();
+    req.checkBody('owner_id', 'id of owner not set').notEmpty();
+    req.checkBody('owner_id', 'id of owner is not of the logged in one').equals(req.user._id);
     req.checkBody('name', 'Name is empty').notEmpty();
     var errors = req.validationErrors();
     if (errors) {
@@ -63,24 +61,24 @@ router.put('/',passport.ensureAuthenticated, function( req,res){
     }
     var id = req.body._id;
     delete req.body._id;
-    db.Playlist.findOneAndUpdate({_id : id},req.body,function (err,playlist){
+    db.Playlist.findOneAndUpdate({_id: id}, req.body, function (err, playlist) {
         if (err) {
             console.log(err);
             res.status(400).send('Internal server error');
             return;
         }
-        if(playlist)
+        if (playlist)
             res.status(200).send(playlist);
         //Playlist has not been updated, return error
         res.status(404).send();
 
         return;
     });
-    
+
 
 });
 
-router.post('/', passport.ensureAuthenticated, function (req, res){
+router.post('/', passport.ensureAuthenticated, function (req, res) {
     //TODO: check if req.user._id is set
     //Maybe this does not need to be (because it is done by passport, and passport should authenticate
     req.checkBody('name', 'Name is empty').notEmpty();
@@ -95,9 +93,8 @@ router.post('/', passport.ensureAuthenticated, function (req, res){
     playlist.song = req.body.song;
     playlist.owner_id = req.user._id;
 
-    playlist.save(function (err,playlist)
-    {
-        if(err) {
+    playlist.save(function (err, playlist) {
+        if (err) {
             console.log(err);
             res.status(400).send('Internal server error');
         }

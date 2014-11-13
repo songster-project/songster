@@ -28,7 +28,7 @@
     "id3v1-parser": "~0.3.0",
     "id3v2-parser": "~0.3.0",
     "formidable": "~1.0",
-   "express-validator": "~2.6.0"
+    "express-validator": "~2.6.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
