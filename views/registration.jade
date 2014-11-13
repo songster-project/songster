@@ -1,5 +1,9 @@
 extends layout
 
+block head
+
+    script(type='text/javascript' src='js/zxcvbn-async.js')
+
 block content
     .col-xs-12.col-sm-8.col-md-6.col-sm-offset-2.col-md-offset-3
         .panel.panel-default
@@ -22,6 +26,21 @@ block content
                         .col-xs-12.col-sm-6.col-md-6
                             .form-group
                                 input.form-control(type="password" name="password" id="password", required=true, placeholder='Password')
+                                .progress
+                                    .progress-bar.bar-custom(id='progressbar' role='progressbar' aria-valuenow='40' aria-valuemax='100' aria-valuemin='0' style='width: 0%' )
+                                script.
+                                    $('#password').keyup(function() {
+                                        var text = ['Weak Password', 'Weak', 'Medium', 'Strong', 'Very Strong'];
+                                        var color = ['red', 'red', 'yellow', 'yellow','green'];
+                                        var textcolor = ['red', 'white', 'black', 'white', 'white'];
+                                        var textValue = $(this).val();
+                                        var result = zxcvbn(textValue);
+                                        var bar = $('#progressbar');
+                                        bar.css('width', 25*result.score + '%');
+                                        bar.css('background-color', color[result.score]);
+                                        bar.css('color', textcolor[result.score]);
+                                        bar.text(text[result.score]);
+                                    });
                         .col-xs-12.col-sm-6.col-md-6
                             .form-group
                                 input.form-control(type="password" name="confirm_password" id="confirm_password", required=true, placeholder='Confirm Password')
@@ -30,3 +49,6 @@ block content
                 .alert.alert-danger(role='alert')
                     span.sr-only Error:
                     span #{message}
+
+
+
