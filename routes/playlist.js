@@ -9,7 +9,7 @@ router.get('/', passport.ensureAuthenticated, function (req, res) {
     db.Playlist.find({owner_id: req.user._id}, function (err, playlists) {
         if (err) {
             console.log(err);
-            res.status(400).send('Internal server error');
+            res.status(500).send('Internal server error');
             return;
         }
         res.send(playlists);
@@ -20,7 +20,7 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
     db.Playlist.find({_id: req.param('id'), owner_id: req.user._id}, function (err, playlist) {
         if (err) {
             console.log(err);
-            res.status(400).send('Internal server error');
+            res.status(500).send('Internal server error');
             return;
         }
         console.log(playlist);
@@ -42,7 +42,7 @@ router.delete('/:id', passport.ensureAuthenticated, function (req, res) {
     db.Playlist.remove({_id: req.param('id'), owner_id: req.user._id}, function (err) {
         if (err) {
             console.log(err);
-            res.status(400).send('Internal server error');
+            res.status(500).send('Internal server error');
             return;
         }
         res.status(204).send();
@@ -61,10 +61,13 @@ router.put('/', passport.ensureAuthenticated, function (req, res) {
     }
     var id = req.body._id;
     delete req.body._id;
-    db.Playlist.findOneAndUpdate({_id: id}, req.body, function (err, playlist) {
+    //ID + owner because i can only update my playlists
+    //Without ownerid, i could change the playlist of someone elses to mine
+    //PlaylistID => form another user, Owner_ID => Mine, thus i steal it
+    db.Playlist.findOneAndUpdate({_id: id,owner_id: req.user._id}, req.body, function (err, playlist) {
         if (err) {
             console.log(err);
-            res.status(400).send('Internal server error');
+            res.status(500).send('Internal server error');
             return;
         }
         if (playlist)
@@ -96,7 +99,7 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
     playlist.save(function (err, playlist) {
         if (err) {
             console.log(err);
-            res.status(400).send('Internal server error');
+            res.status(500).send('Internal server error');
         }
         console.log(playlist);
         res.status(201).send(playlist);
