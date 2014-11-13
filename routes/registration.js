@@ -13,10 +13,12 @@ router.get('/', function (req, res) {
 router.post('/', function (req, res, next){
 
     // parameter checks
-    req.checkBody('username', 'Username must not be empty').notEmpty();
-    req.checkBody('password', 'Password must not be empty').notEmpty();
-    req.checkBody('confirm_password', 'Confirm Password must not be empty').notEmpty();
-    req.checkBody('email', 'Valid E-Mail required').isEmail();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('confirm_password', 'Confirm Password is required').notEmpty();
+    req.checkBody('email', 'Valid E-Mail is required').isEmail();
+    req.checkBody('first_name', 'First name is required').notEmpty();
+    req.checkBody('last_name', 'Last name is required').notEmpty();
     req.assert('password', 'Passwords do not match').equals(req.body.confirm_password);
 
     var errors = req.validationErrors();
