@@ -15,7 +15,7 @@ mongodb.MongoClient.connect(settings.mongo_url, function (err, db) {
     console.log('Connected to MongoDB (native)');
 
     database.db = db;
-    database.conn = mongoose.createConnection(settings.mongo_url, {server: {poolSize: 100}});
+    database.conn = mongoose.createConnection(settings.mongo_url, {server: {poolSize: 500}});
 
     database.conn.once('open', function (err) {
         if (err) {
