@@ -82,9 +82,10 @@ router.put('/', passport.ensureAuthenticated, function (req, res) {
 });
 
 router.post('/', passport.ensureAuthenticated, function (req, res) {
-    //TODO: check if req.user._id is set
     //Maybe this does not need to be (because it is done by passport, and passport should authenticate
     req.checkBody('name', 'Name is empty').notEmpty();
+    req.checkBody('owner_id', 'id of owner not set').notEmpty();
+    req.checkBody('owner_id', 'id of owner is not of the logged in one').equals(req.user._id);
     var errors = req.validationErrors();
     if (errors) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
