@@ -1,25 +1,29 @@
 extends layout
 
 block content
-    h1 Please register
-    form(id="form-register" method="post")
-        .form-group
-            label Username
-            input(type="text", name="username", id="username", required=true)
-        .form-group
-            label First Name
-            input(type="text", name="first_name", id="first_name")
-        .form-group
-            label Last Name
-            input(type="text", name="last_name", id="last_name")
-        .form-group
-            label E-Mail
-            input(type="text", name="email", id="email", required=true)
-        .form-group
-            label Password
-            input(type="password" name="password" id="password", required=true)
-        .form-group
-            label Confirm Password
-            input(type="password" name="confirm_password" id="confirm_password", required=true)
-        .form-group
-            button(type="submit" ) Register
+    .col-xs-12.col-sm-8.col-md-6.col-sm-offset-2.col-md-offset-3
+        .panel.panel-default
+            .panel-heading
+                h1.panel-title Please register
+            .panel-body
+                form(id="form-register" method="post")
+                    .form-group
+                        input.form-control(type='text', placeholder='Username', name='username', id='username', required=true)
+                    .row
+                        .col-xs-12.col-sm-6.col-md-6
+                            .form-group
+                                input.form-control(type="text", name="first_name", id="first_name" placeholder='First Name')
+                        .col-xs-12.col-sm-6.col-md-6
+                            .form-group
+                                input.form-control(type="text", name="last_name", id="last_name" placeholder='Last Name')
+                    .form-group
+                        input.form-control(type="text", name="email", id="email", required=true, placeholder='E-Mail Address')
+                    .row
+                        .col-xs-12.col-sm-6.col-md-6
+                            .form-group
+                                input.form-control(type="password" name="password" id="password", required=true, placeholder='Password')
+                        .col-xs-12.col-sm-6.col-md-6
+                            .form-group
+                                input.form-control(type="password" name="confirm_password" id="confirm_password", required=true, placeholder='Confirm Password')
+                    .form-group
+                        button.form-control(type="submit" class='btn btn-custom' id='register') Register
