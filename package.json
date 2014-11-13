@@ -25,10 +25,11 @@
     "promise": "~6.0",
     "mongoose": "~3.8",
     "async": "~0.9.0",
-    "id3v1-parser": "~0.3.0",
-    "id3v2-parser": "~0.3.0",
+    "express-validator": "~2.6.0",
     "formidable": "~1.0",
-    "express-validator": "~2.6.0"
+    "id3js": "~1.1.3",
+    "album-art": "~1.0.2",
+    "request": "~2.48.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

@@ -79,6 +79,7 @@
   </div>
   <table class="table table-striped">
     <tr>
+      <th>Cover</th>
       <th>Title</th>
       <th>Artist</th>
       <th>Album</th>
@@ -86,6 +87,8 @@
       <th>File</th>
     </tr>
     <tr ng:repeat="song in songs">
+      <td ng-if="song.cover"><img src="/song/{{ song.cover }}/cover"></td>
+      <td ng-if="!song.cover">No cover available</td>
       <td>{{ song.title }}</td>
       <td>{{ song.artist }}</td>
       <td>{{ song.album }}</td>
