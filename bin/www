@@ -26,10 +26,6 @@ mongodb.MongoClient.connect(settings.mongo_url, function (err, db) {
             database.gfs = Grid(database.conn.db, mongoose.mongo);
             console.log('Connected to GridFS (via mongoose)');
 
-            var server = app.listen(app.get('port'), function () {
-                debug('Express server listening on port ' + server.address().port);
-            });
-
             database.User = database.conn.model('User', database.UserSchema);
             database.Vote = database.conn.model('Vote', database.VoteSchema);
             database.Event = database.conn.model('Event', database.EventSchema);
@@ -37,6 +33,12 @@ mongodb.MongoClient.connect(settings.mongo_url, function (err, db) {
             database.EventLog = database.conn.model('EventLog', database.EventlogSchema);
             database.Song = database.conn.model('Song', database.SongSchema);
             console.log('Schema created');
+
+            var server = app.listen(app.get('port'), function () {
+                debug('Express server listening on port ' + server.address().port);
+            });
+
+
         }
     });
 });
