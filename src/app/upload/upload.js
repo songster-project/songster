@@ -14,23 +14,44 @@ angular.module('ngBoilerplate.upload')
     })
 
     .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http) {
+        $scope.uploadedFiles = [ ];
+
+        // generic function to remove elements from an ng-repeat array
+        $scope.remove = function(array, index){
+            array.splice(index, 1);
+        };
+
         $scope.onFileSelect = function ($files) {
             // $files: an array of files selected, each file has name, size, and type.
             for (var i = 0; i < $files.length; i++) {
                 var file = $files[i];
 
-                $scope.upload = $upload.upload({
-                    url: '/song/',
-                    method: 'POST',
-                    headers: {'Content-Type': file.type},
-                    data: {myObj: $scope.myModelObj},
-                    file: file
-                }).progress(function (evt) {
-                    console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-                }).success(function (data, status, headers, config) {
-                    // file is uploaded successfully
-                    console.log(data);
+                $scope.uploadedFiles.push({
+                    name: file.name,
+                    finished: false
                 });
+
+                // also check this server side
+                if ("mp3" === file.name.substr(-3)) {
+                    $scope.upload = $upload.upload({
+                        url: '/song/',
+                        method: 'POST',
+                        headers: {'Content-Type': file.type},
+                        data: {myObj: $scope.myModelObj},
+                        file: file
+                    }).success(function (data, status, headers, config) {
+                        // file is uploaded successfully
+                        for (var i = 0; i < $scope.uploadedFiles.length; i++) {
+                            if ($scope.uploadedFiles[i].name === file.name) {
+                                $scope.uploadedFiles.splice(i, 1);
+                            }
+                        }
+                        $scope.uploadedFiles.push({
+                            name: file.name,
+                            finished: true
+                        });
+                    });
+                }
             }
         };
 
@@ -46,10 +67,6 @@ angular.module('ngBoilerplate.upload')
                     });
                 });
             });
-
-
-
-
     })
 
     .run(function ($rootScope) {
