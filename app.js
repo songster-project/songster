@@ -8,12 +8,14 @@ var passport = require('passport');
 var passportinit = require('./config/passport');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+var expressValidator = require('express-validator');
 
 var routes = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
 var account = require('./routes/account');
 var song = require('./routes/song');
+var playlist = require('./routes/playlist')
 
 var settings = require('./config/settings.js');
 
@@ -27,7 +29,8 @@ app.set('view engine', 'jade');
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(expressValidator());
 app.use(cookieParser(settings.cookie_secret));
 app.use(session({
     secret: settings.cookie_secret,
@@ -51,9 +54,10 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/account', account);
 app.use('/song', song);
+app.use('/playlist', playlist);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -64,7 +68,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -75,7 +79,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

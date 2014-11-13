@@ -5,9 +5,9 @@ var LocalStrategy = require('passport-local').Strategy;
 // temporary hardcoded user storage
 // TODO: reading from database
 var users = [
-    { id: 1, username: 'admin', password: 'admin' }
+    {id: 1, username: 'admin', password: 'admin', _id: '54638a8a8b5aca5d121cd09c'}
     ,
-    { id: 2, username: 'user', password: 'user' }
+    {id: 2, username: 'user', password: 'user', _id: '5463a0f51ab1845e1c637b64'}
 ];
 
 
@@ -67,10 +67,10 @@ passport.use(new LocalStrategy(
                     return done(err);
                 }
                 if (!user) {
-                    return done(null, false, { message: 'Unknown user ' + username });
+                    return done(null, false, {message: 'Unknown user ' + username});
                 }
                 if (user.password != password) {
-                    return done(null, false, { message: 'Invalid password' });
+                    return done(null, false, {message: 'Invalid password'});
                 }
                 return done(null, user);
             });
