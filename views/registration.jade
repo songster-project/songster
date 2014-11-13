@@ -27,3 +27,6 @@ block content
                                 input.form-control(type="password" name="confirm_password" id="confirm_password", required=true, placeholder='Confirm Password')
                     .form-group
                         button.form-control(type="submit" class='btn btn-custom' id='register') Register
+                .alert.alert-danger(role='alert')
+                    span.sr-only Error:
+                    span #{message}

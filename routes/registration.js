@@ -21,7 +21,8 @@ router.post('/', function (req, res, next){
     var errors = req.validationErrors();
 
     if (errors) {
-        res.status(400).send('The following validation errors occurred: ' + util.inspect(errors));
+        res.render('registration', {message: util.inspect(errors)});
+        return;
     }
 
     // hash password
@@ -40,14 +41,15 @@ router.post('/', function (req, res, next){
         user.save(function (err, saved_user) {
             if (err) {
                 if(err.code === 11000) {
-                    res.status(400).send('Username ' + user.username + ' already used. Please use another name.');
+                    res.render('registration', {message: 'Username ' + user.username + ' already used. Please use another name.' });
                     return;
                 }
 
-                res.status(400).send(user.username + ' could not be registered. ');
+                res.render('registration', {message: user.username + ' could not be registered. Please try again.'});
                 return;
             }
             console.log(saved_user);
+
             res.status(200).send(saved_user.username + ' registered successfully!');
         });
     });
