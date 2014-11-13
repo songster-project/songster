@@ -4,6 +4,7 @@ var expressValidator = require('express-validator');
 var crypto = require('crypto');
 var db = require('../config/database');
 var util = require('util');
+var passport = require('passport');
 
 router.get('/', function (req, res) {
     res.render('registration');
@@ -26,31 +27,33 @@ router.post('/', function (req, res, next){
     }
 
     // hash password
-    var user = new db.User();
-    user.username = req.body.username;
-    user.first_name = req.body.first_name;
-    user.last_name = req.body.last_name;
-    user.email = req.body.email;
+    var l_user = new db.User();
+    l_user.username = req.body.username;
+    l_user.first_name = req.body.first_name;
+    l_user.last_name = req.body.last_name;
+    l_user.email = req.body.email;
 
     var salt = crypto.randomBytes(128).toString('base64');
     crypto.pbkdf2(req.body.password, salt, 10000, 512, function(err, hashedKey){
-        user.password = hashedKey.toString('base64');
-        user.salt = salt;
+        l_user.password = hashedKey.toString('base64');
+        l_user.salt = salt;
 
        // save user in db
-        user.save(function (err, saved_user) {
+        l_user.save(function (err, user) {
             if (err) {
                 if(err.code === 11000) {
-                    res.render('registration', {message: 'Username ' + user.username + ' already used. Please use another name.' });
+                    res.render('registration', {message: 'Username ' + l_user.username + ' already used. Please use another name.' });
                     return;
                 }
 
-                res.render('registration', {message: user.username + ' could not be registered. Please try again.'});
+                res.render('registration', {message: l_user.username + ' could not be registered. Please try again.'});
                 return;
             }
-            console.log(saved_user);
+            console.log(user);
 
-            res.status(200).send(saved_user.username + ' registered successfully!');
+            passport.authenticate('local')(req,res, function() {
+                return res.redirect('/');
+            });
         });
     });
 
