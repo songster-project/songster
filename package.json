@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "grunt build"
+    "test": "./bin/test"
   },
   "dependencies": {
     "express": "~4.9.0",
@@ -54,6 +54,7 @@
     "chai": "^1.9.2",
     "sinon": "^1.11.1",
     "sinon-chai": "^2.6.0",
+    "supertest": "^0.14.0",
     "mocha": "^2.0.1"
   }
 }
