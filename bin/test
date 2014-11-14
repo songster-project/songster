@@ -3,3 +3,4 @@
 npm start &
 grunt
 ./node_modules/.bin/mocha -R dot $(find integration_tests -name '*.js')
+./node_modules/protractor/bin/protractor protractor.config.js
