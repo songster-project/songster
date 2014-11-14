@@ -1,0 +1,11 @@
+#!/bin/bash
+mongo songster --eval "db.dropDatabase()"
+mongoimport -d songster -c user --file ./testdata/user.json
+mongoimport -d songster -c song --file ./testdata/song.json
+mongoimport -d songster -c playlist --file ./testdata/playlist.json
+mongoimport -d songster -c event --file ./testdata/event.json
+mongoimport -d songster -c vote --file ./testdata/vote.json
+mongoimport -d songster -c eventLog --file ./testdata/eventLog.json
+mongoimport -d songster -c queueState --file ./testdata/queueState.json
+mongoimport -d songster -c fs.files --file ./testdata/fs.files.json
+mongoimport -d songster -c fs.chunks --file ./testdata/fs.chunks.json

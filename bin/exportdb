@@ -1,0 +1,10 @@
+#!/bin/bash
+mongoexport -d songster -c user -o ./exportdata/user.json
+mongoexport -d songster -c song -o ./exportdata/song.json
+mongoexport -d songster -c playlist -o ./exportdata/playlist.json
+mongoexport -d songster -c event -o ./exportdata/event.json
+mongoexport -d songster -c vote -o ./exportdata/vote.json
+mongoexport -d songster -c eventLog -o ./exportdata/eventLog.json
+mongoexport -d songster -c queueState -o ./exportdata/queueState.json
+mongoexport -d songster -c fs.files -o ./exportdata/fs.files.json
+mongoexport -d songster -c fs.chunks -o ./exportdata/fs.chunks.json
