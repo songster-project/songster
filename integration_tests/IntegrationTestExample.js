@@ -42,12 +42,4 @@ describe('Test', function () {
                 done();
             })
     });
-    it('should display songs', function (done) {
-        api.get('/song')
-            .expect('[{"addedDate":"2014-11-13T17:29:02.493Z","title":"Meet The Enemy","artist":"Eluveitie","album":"Helvetios","year":"","comment":"","track":0,"genre":255,"file_id":"5464ea5e516bfe3a06661698","_id":"5464ea5e815d523a069555c0"}]')
-            .end(function (err, res) {
-                expect(err).to.not.exist;
-                done();
-            })
-    });
 });
