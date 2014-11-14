@@ -3,5 +3,3 @@
 npm start &
 grunt
 ./node_modules/.bin/mocha -R dot $(find integration_tests -name '*.js')
-killall npm
-killall node
