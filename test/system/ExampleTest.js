@@ -15,6 +15,6 @@ describe('Test', function () {
     it('protractor test, should change to upload side if you click on upload link at the home side', function () {
         browser.get('http://localhost:3000/app/#/home');
         element(by.xpath('//a[@ui-sref="upload"]')).click();
-        expect(browser.getTitle()).toEqual('files | ngBoilerplate');
+        expect(browser.getTitle()).toEqual('Upload files | ngBoilerplate');
     });
 });
