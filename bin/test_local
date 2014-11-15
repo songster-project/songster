@@ -1,0 +1,12 @@
+#!/bin/bash
+killall npm
+killall node
+grunt
+./bin/importdb
+npm start &
+# give our server some time to startup
+sleep 12
+./node_modules/.bin/mocha -R dot $(find integration_tests -name '*.js')
+./node_modules/protractor/bin/protractor localprotractor.config.js
+killall npm
+killall node
