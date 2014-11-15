@@ -52,9 +52,12 @@ var songSchema = new Schema({
         //Common Metadata
         title: String,
         artist: String,
-        album: String
+        album: String,
+        year: String,
         //Other metadata may be added
 
+        // the GFS id of the cover if available
+        cover: String
     },
     {collection: 'song'});
 //Index for support of getting all the non-deleted indices of a user

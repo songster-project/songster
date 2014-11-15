@@ -1,23 +1,39 @@
-<div class="row">
+<div class="row" ng-controller="UploadCtrl">
   <h1 class="page-header">
     Upload form
     <small>by Thomas</small>
   </h1>
   <h2>Upload new files</h2>
 
-  <div ng-controller="UploadCtrl">
-    <input type="text" ng-model="myModelObj">
-    <input type="file" ng-file-select="onFileSelect($files)">
-    <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*">
+  <div>
+    <input type="text" ng-model="myModelObj" style="display: none">
+    <!--
+      Multi-file picker for upload
+    <input type="file" ng-file-select="onFileSelect($files)" multiple accept="audio/*">
+    -->
 
     <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
-    <div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function"
-         ng-show="dropSupported">drop files here
+    <div id="drop-zone" class="upload-drop-zone" ng-file-drop="onFileSelect($files)"
+         ng-file-drag-over-class="optional-css-class-name-or-function" ng-show="dropSupported">
+      Just drag and drop files here
     </div>
-    <div ng-file-drop-available="dropSupported=true"
+    <div id="no-drop-zone" class="upload-drop-zone" ng-file-drop-available="dropSupported=true"
          ng-show="!dropSupported">HTML5 Drop File is not supported!
     </div>
-    <button ng-click="upload.abort()">Cancel Upload</button>
+  </div>
+  <h2>Processed files</h2>
+  <!-- Upload Finished -->
+  <div class="js-upload-finished">
+    <div class="list-group" ng:repeat="file in uploadedFiles">
+      <a ng-if="file.finished" href="javascript:void(0)" ng-click="remove(uploadedFiles, $index)"
+         class="list-group-item list-group-item-success">
+        <span class="badge alert-success pull-right">Upload complete</span>{{ file.name }}
+      </a>
+      <a ng-if="!file.finished" href="javascript:void(0)" ng-click="remove(uploadedFiles, $index)"
+         class="list-group-item list-group-item-info">
+        <span class="badge alert-info pull-right">Upload in progress</span>{{ file.name }}
+      </a>
+    </div>
   </div>
   <h2>Existing files</h2>
   <audio media-player="mediaPlayer" data-playlist="mediaPlaylist">
@@ -54,7 +70,8 @@
       <span><i class="fa fa-volume-up"></i></span>
     </div>
     <div class="progress" ng-click="mediaPlayer.seek(mediaPlayer.duration * seekPercentage($event))">
-      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{ width: mediaPlayer.currentTime * 100 / mediaPlayer.duration + '%' }"></div>
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+           ng-style="{ width: mediaPlayer.currentTime * 100 / mediaPlayer.duration + '%' }"></div>
       <div class="time" ng-show="mediaPlayer.formatTime">
         <span>{{ mediaPlayer.formatTime }}</span><b>/</b><span>{{ mediaPlayer.formatDuration }}</span>
       </div>
@@ -62,6 +79,7 @@
   </div>
   <table class="table table-striped">
     <tr>
+      <th>Cover</th>
       <th>Title</th>
       <th>Artist</th>
       <th>Album</th>
@@ -69,6 +87,8 @@
       <th>File</th>
     </tr>
     <tr ng:repeat="song in songs">
+      <td ng-if="song.cover"><img src="/song/{{ song.cover }}/cover"></td>
+      <td ng-if="!song.cover">No cover available</td>
       <td>{{ song.title }}</td>
       <td>{{ song.artist }}</td>
       <td>{{ song.album }}</td>
@@ -77,4 +97,3 @@
     </tr>
   </table>
 </div>
-
