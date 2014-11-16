@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "
+_____ starting backend tests _____
+"
+./node_modules/.bin/mocha -R dot $(find tests -name '*.js')
+echo "
+_____ backend testing finished _____
+"

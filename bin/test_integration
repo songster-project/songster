@@ -1,0 +1,25 @@
+#!/bin/bash
+# stop server if one is running
+killall npm
+killall node
+echo "
+_____ running grunt _____
+"
+grunt > /dev/null
+echo "
+_____ starting server _____
+"
+npm start &  > /dev/null
+# give our server some time to startup
+sleep 10
+echo "
+_____ starting integration tests _____
+"
+./node_modules/.bin/mocha -R dot $(find integration_tests -name '*.js')
+
+echo "
+_____ integration testing finished _____
+"
+# stop the server
+killall npm
+killall node

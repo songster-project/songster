@@ -1,12 +1,38 @@
 #!/bin/bash
+# stop server if one is running
 killall npm
 killall node
-grunt
-./bin/importdb
+echo "
+_____ make grunt build _____
+"
+grunt > /dev/null
+echo "
+_____ starting frontend tests _____
+"
+grunt karma:continuous
+echo "
+_____ starting backend tests _____
+"
+./node_modules/.bin/mocha -R dot $(find tests -name '*.js')
+echo "
+_____ starting server _____
+"
 npm start &
+sudo Xvfb :10 -ac & > /dev/null
+export DISPLAY=:10 > /dev/null
 # give our server some time to startup
 sleep 12
+echo "
+_____ starting integration tests _____
+"
 ./node_modules/.bin/mocha -R dot $(find integration_tests -name '*.js')
+echo "
+_____ starting system tests _____
+"
 ./node_modules/protractor/bin/protractor localprotractor.config.js
+echo "
+_____ testing finished _____
+"
+# stop the server
 killall npm
 killall node
