@@ -16,7 +16,7 @@ var logout = require('./routes/logout');
 var account = require('./routes/account');
 var song = require('./routes/song');
 var playlist = require('./routes/playlist')
-
+var event = require('./routes/event');
 var settings = require('./config/settings.js');
 
 var app = express();
@@ -55,6 +55,7 @@ app.use('/logout', logout);
 app.use('/account', account);
 app.use('/song', song);
 app.use('/playlist', playlist);
+app.use('/event', event);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
