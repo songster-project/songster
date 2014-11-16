@@ -18,6 +18,17 @@ router.get('/', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
+router.get('/active', passport.ensureAuthenticated, function (req, res) {
+    db.Event.find({end: null}, function (err, playlists) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.send(playlists);
+    });
+});
+
 router.get('/current', passport.ensureAuthenticated, function (req, res) {
     db.Event.findOne({owner_id: req.user._id, end: null}, function (err, event) {
         if (err) {
@@ -67,26 +78,26 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
         return;
     }
 
-    var event = db.Event();
-    event.name = req.body.name;
-    event.owner_id = req.body.owner_id;
-    event.description = req.body.description;
-    event.accessKey = req.body.accessKey;
-    event.votingEnabled = req.body.votingEnabled;
-    event.previewEnabled = req.body.previewEnabled;
-    event.suggestionEnabled = req.body.suggestionEnabled;
-    db.Event.findOne({owner_id: req.body.owner_id, end: null}, function (err, event) {
+    db.Event.findOne({owner_id: req.body.owner_id, end: null}, function (err, eventDB) {
 
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
         }
-        if (event) {
-            console.log('Event already running: ' + event);
+        if (eventDB) {
+            console.log('Event already running: ' + eventDB);
             res.status(400).send('This user has already an event running');
             return;
         }
+        var event = db.Event();
+        event.name = req.body.name;
+        event.owner_id = req.body.owner_id;
+        event.description = req.body.description;
+        event.accessKey = req.body.accessKey;
+        event.votingEnabled = req.body.votingEnabled;
+        event.previewEnabled = req.body.previewEnabled;
+        event.suggestionEnabled = req.body.suggestionEnabled;
         //Note: i know it MIGHT be the case that between the check and the execution, anotherone is added
         //I currently have not really a solution for this, the probability for this is extr emely low
         //If this is really an important test case ... check afterwards if only one exists
