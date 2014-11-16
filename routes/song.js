@@ -11,6 +11,11 @@ var albumArt = require('album-art');
 var request = require('request');
 var GridStore = require('mongodb').GridStore;
 var ObjectID = require('mongodb').ObjectID;
+var elasticsearch = require('elasticsearch');
+var client = new elasticsearch.Client({
+  host: 'localhost:9200',
+  log: 'trace'
+});
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     try {
@@ -61,6 +66,19 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                                     if (err) {
                                         console.log('error deleting the temp-file');
                                         console.log(err);
+                                    } else {
+                                        client.index({
+                                            index: 'songs',
+                                            type: 'song',
+                                            body: {
+                                                title: metadata.title,
+                                                album: metadata.album,
+                                                artist: metadata.artist,
+                                                year: metadata.year
+                                            }
+                                        }, function (error, response) {
+                                            console.log('Index elasticsearch');
+                                        });
                                     }
                                 });
                             });
