@@ -19,13 +19,14 @@ router.get('/', passport.ensureAuthenticated, function (req, res) {
 });
 
 router.get('/active', passport.ensureAuthenticated, function (req, res) {
-    db.Event.find({end: null}, function (err, playlists) {
+    db.Event.find({end: null}, function (err, events) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
         }
-        res.send(playlists);
+        res.send(events);
+        console.log(events);
     });
 });
 
@@ -68,7 +69,7 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
 
 //For when you want to end the current event
 router.put('/current/end', passport.ensureAuthenticated, function (req, res) {
-    console.log("request");
+    console.log("Shutting down event of: "+req.user._id);
     db.Event.findOneAndUpdate({owner_id: req.user._id, end: null}, {$set: {end: Date.now()}}, function (err, event) {
         if (err) {
             console.log(err);
