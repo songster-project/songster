@@ -66,14 +66,14 @@ passport.use(new LocalStrategy(
                     return done(err);
                 }
                 if (!user) {
-                    return done(null, false, { message: 'Unknown user ' + username });
+                    return done(null, false, { message: 'Invalid username or password'});
                 }
 
                 // hash password
                 crypto.pbkdf2(password, user.salt, 10000, 512, function(err, hashedKey) {
                     var hash_password = hashedKey.toString('base64');
                     if (user.password != hash_password) {
-                        return done(null, false, { message: 'Invalid password' });
+                        return done(null, false, { message: 'Invalid username or password' });
                     }
                     return done(null, user);
                 });

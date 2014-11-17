@@ -3,25 +3,25 @@ var router = express.Router();
 var passport = require('passport');
 
 router.get('/', function (req, res) {
-    if(req.isAuthenticated()) {
-       return res.redirect('/app');
+    if (req.isAuthenticated()) {
+        return res.redirect('/app');
     }
-    res.render('login', { user: req.user, message: req.session.messages });
+
+    res.render('login', { user: req.user});
 });
 
 
 router.post('/', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) {
-            return next(err);
+            return res.render('login', {message: [info.message]});
         }
         if (!user) {
-            req.session.messages = [info.message];
-            return res.redirect('/login');
+            return res.render('login', {message: [info.message]});
         }
         req.logIn(user, function (err) {
             if (err) {
-                return next(err);
+                return res.render('login', {message: [info.message]});
             }
             return res.redirect('/');
         });

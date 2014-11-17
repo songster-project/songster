@@ -7,6 +7,9 @@ block content
             .panel-heading
                 h1.panel-title Please login
             .panel-body
+                .alert.alert-danger(role='alert')
+                    span.sr-only Error:
+                    span(id='error_message') #{message}
                 form(id="form-register" method="post")
                     .input-group
                         span.input-group-addon(class='glyphicon glyphicon-user', aria-hidden='true')
@@ -16,3 +19,9 @@ block content
                         input.form-control(type="password" name="password" id="password", required=true, placeholder='Password')
                     .form-group
                         button.form-control(type="submit" class='btn btn-custom' id='register') Login
+    script.
+        if($('#error_message').text() == "") {
+            $('.alert-danger').hide();
+        } else {
+            $('.alert-danger').show();
+        };
