@@ -16,7 +16,7 @@ var logout = require('./routes/logout');
 var account = require('./routes/account');
 var song = require('./routes/song');
 var playlist = require('./routes/playlist')
-
+var event = require('./routes/event');
 var settings = require('./config/settings.js');
 
 var app = express();
@@ -30,7 +30,18 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(expressValidator());
+app.use(expressValidator(
+    {
+        customValidators: {
+            isMongoID: function (value) {
+                return value.match("^[0-9a-fA-F]{24}$");
+            },
+            isBool: function (value) {
+                return typeof value === 'boolean';
+            }
+        }
+    }
+));
 app.use(cookieParser(settings.cookie_secret));
 app.use(session({
     secret: settings.cookie_secret,
@@ -55,6 +66,7 @@ app.use('/logout', logout);
 app.use('/account', account);
 app.use('/song', song);
 app.use('/playlist', playlist);
+app.use('/event', event);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
