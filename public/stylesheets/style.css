@@ -18,6 +18,10 @@ a {
     background-color: #245269;
 }
 
+.btn[disabled] {
+    color: #000000;
+}
+
 .input-group {
     padding-bottom: 0.5em;
     padding-top: 0.5em;
