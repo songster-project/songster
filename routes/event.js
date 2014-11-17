@@ -45,8 +45,8 @@ router.get('/current', passport.ensureAuthenticated, function (req, res) {
 });
 
 
-router.get('/:id',passport.ensureAuthenticated, function (req, res) {
-    db.Event.findOne({_id:req.param('id')}, function (err, event) {
+router.get('/:id', passport.ensureAuthenticated, function (req, res) {
+    db.Event.findOne({_id: req.param('id')}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
@@ -60,7 +60,7 @@ router.get('/:id',passport.ensureAuthenticated, function (req, res) {
 //For when you want to end the current event
 router.put('/current/end', passport.ensureAuthenticated, function (req, res) {
     console.log("request");
-    db.Event.findOneAndUpdate({owner_id: req.user._id, end: null},{ $set: { end: Date.now() }}, function (err, event) {
+    db.Event.findOneAndUpdate({owner_id: req.user._id, end: null}, {$set: {end: Date.now()}}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
