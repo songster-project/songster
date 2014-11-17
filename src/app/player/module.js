@@ -1,0 +1,6 @@
+angular.module('songster.player.services', []);
+
+angular.module('songster.player', [
+    'mediaPlayer',
+    'songster.player.services'
+]);
