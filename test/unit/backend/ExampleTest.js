@@ -22,5 +22,8 @@ describe('Test', function () {
         var next = sinon.spy();
         pass.ensureAuthenticated(req, res, next);
         expect(next).to.have.been.called;
-    })
+    });
+    it('should fail',function(){
+        expect(false).to.equal(true);
+    });
 })
