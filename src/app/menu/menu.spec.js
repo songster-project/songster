@@ -95,13 +95,14 @@ describe('menu', function () {
                 expect(entry2.getTitle()).toEqual('Contact');
                 var entry3 = entries[2];
                 expect(entry3.getTitle()).toEqual('About');
-                expect(entry3.getPriority()).toEqual(0);
             });
 
             it('should prioritize undefined priorities with 0', function () {
                 var menu = $menu.getMenu('main');
                 var entries = menu.getEntries();
-                var entry = _.find(entries, {'title': 'About'});
+                var entry = _.find(entries, function (entry) {
+                    return entry.getTitle() === "About";
+                });
                 expect(entry.getPriority()).toEqual(0);
             });
         });
