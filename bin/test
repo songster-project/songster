@@ -1,6 +1,12 @@
 #!/bin/bash
-./bin/importdb
+killall -SIGTERM npm
+killall -SIGTERM node
 npm start &
 grunt
-./node_modules/.bin/mocha -R dot $(find integration_tests -name '*.js')
-./node_modules/protractor/bin/protractor protractor.config.js
+./node_modules/mocha/bin/mocha -R dot $(find test/unit/backend -name '*.js')
+./bin/importdb
+./node_modules/mocha/bin/mocha -R dot $(find test/integration -name '*.js')
+./bin/importdb
+./node_modules/protractor/bin/protractor ./test/protractor.config.js
+killall -SIGTERM npm
+killall -SIGTERM node

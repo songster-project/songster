@@ -1,11 +1,11 @@
 #!/bin/bash
 mongo songster --eval "db.dropDatabase()"
-mongoimport -d songster -c user --file ./testdata/user.json
-mongoimport -d songster -c song --file ./testdata/song.json
-mongoimport -d songster -c playlist --file ./testdata/playlist.json
-mongoimport -d songster -c event --file ./testdata/event.json
-mongoimport -d songster -c vote --file ./testdata/vote.json
-mongoimport -d songster -c eventLog --file ./testdata/eventLog.json
-mongoimport -d songster -c queueState --file ./testdata/queueState.json
-mongoimport -d songster -c fs.files --file ./testdata/fs.files.json
-mongoimport -d songster -c fs.chunks --file ./testdata/fs.chunks.json
+mongoimport -d songster -c user --file ./test/data/import/user.json
+mongoimport -d songster -c song --file ./test/data/import/song.json
+mongoimport -d songster -c playlist --file ./test/data/import/playlist.json
+mongoimport -d songster -c event --file ./test/data/import/event.json
+mongoimport -d songster -c vote --file ./test/data/import/vote.json
+mongoimport -d songster -c eventLog --file ./test/data/import/eventLog.json
+mongoimport -d songster -c queueState --file ./test/data/import/queueState.json
+mongoimport -d songster -c fs.files --file ./test/data/import/fs.files.json
+mongoimport -d songster -c fs.chunks --file ./test/data/import/fs.chunks.json
