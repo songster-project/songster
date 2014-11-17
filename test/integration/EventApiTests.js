@@ -5,27 +5,48 @@ var expect = chai.expect;
 var supertest = require('supertest');
 var api = supertest.agent('http://localhost:3000');
 
-describe('Test', function () {
+describe('EventApi', function () {
     this.timeout(10000);
 
-    it('should login with correct credentials', function (done) {
+    //Callback - Magic provided by: https://github.com/visionmedia/superagent/issues/314
+    //Basically solves that we can be logged in
+    beforeEach(function (done) {
         var postdata = {
             "username": "admin",
             "password": "admin"
+        };
+        var cb = function (x) {
+           return ;
         };
         api.post('/login')
             .send(postdata)
             .expect('Moved Temporarily. Redirecting to /')
             .end(function (err, res) {
                 expect(err).to.not.exist;
+
+                process.nextTick(function () {
+                    cb(err);
+                });
                 done();
             })
+
+
     });
+
+    afterEach(function (done) {
+        api.get('/logout').end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
     //Logged In
     //#########################################################################################
 
     it('should return no events in the start of the tests', function (done) {
+        console.log("requesting");
         api.get('/event').end(function (err, res) {
+            console.log(res.text);
             expect(err).to.not.exist;
             expect(res.body).to.be.empty;
             done();
@@ -37,11 +58,13 @@ describe('Test', function () {
                 "name": "myEvent",
                 "accessKey": "theKey",
                 "owner_id": "54638a8a8b5aca5d121cd09c",
-                "suggestionEnabled": "true",
-                "votingEnabled": "true",
-                "previewEnabled": "true"
+                "suggestionEnabled": true,
+                "votingEnabled": true,
+                "previewEnabled": true
             }
             api.post('/event').send(postdata).end(function (err, res) {
+                console.log('Error:' + err);
+                console.log(res.text);
                 expect(err).to.not.exist;
                 expect(res.body).to.contain.key('start');
                 eventid = res.body._id;
@@ -55,9 +78,9 @@ describe('Test', function () {
             "name": "myEvent",
             "accessKey": "theKey",
             "owner_id": "54638a8a8b5aca5d121cd09c",
-            "suggestionEnabled": "true",
-            "votingEnabled": "true",
-            "previewEnabled": "true"
+            "suggestionEnabled": true,
+            "votingEnabled": true,
+            "previewEnabled": true
         }
         api.post('/event').send(postdata).end(function (err, res) {
                 api.post('/event').send(postdata).end(function (err, res) {
@@ -109,4 +132,5 @@ describe('Test', function () {
             done();
         });
     });
+
 });
