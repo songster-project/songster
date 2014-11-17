@@ -45,14 +45,23 @@ router.get('/current', passport.ensureAuthenticated, function (req, res) {
 });
 
 
-router.get('/:id', passport.ensureAuthenticated, function (req, res) {
-    db.Event.findOne({_id: req.param('id')}, function (err, event) {
+router.get('/:id',passport.ensureAuthenticated, function (req, res) {
+    req.checkParams('id', 'ID is not an ID').isMongoID();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    db.Event.findOne({_id:req.param('id')}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
         }
-        res.send(event);
+        if (event)
+            res.status(200).send(event);
+        //event has not been updated, return error
+        res.status(404).send();
     });
 });
 
