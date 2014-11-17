@@ -94,7 +94,7 @@ describe('Test', function () {
         api.get('/event/current').end(function (err, res) {
 
             var id = res.body._id;
-            api.get('/event/'+id).end(function(err,res) {
+            api.get('/event/' + id).end(function (err, res) {
                 expect(err).to.not.exist;
                 expect(res.body.name).to.equal('myEvent');
                 done();
@@ -103,8 +103,7 @@ describe('Test', function () {
     });
 
     it('should set the end date when ending the event', function (done) {
-        api.put('/event/current/end').send({}).end(function (err,res)
-        {
+        api.put('/event/current/end').send({}).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body.end).to.not.equal(null);
             done();
