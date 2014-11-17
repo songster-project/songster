@@ -1,33 +1,24 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
-
-// temporary hardcoded user storage
-/*var users = [
-    { id: 1, username: 'admin', password: 'admin' }
-    ,
-    { id: 2, username: 'user', password: 'user' }
-]; */
-
+var db = require('../config/database.js');
+var crypto = require('crypto');
 
 function findById(id, fn) {
-    var idx = id - 1;
-    if (users[idx]) {
-        fn(null, users[idx]);
-    } else {
-        fn(new Error('User ' + id + ' does not exist'));
-    }
+
+    db.User.findById(id, function (err,doc) {
+        if(err) return fn(new Error('User ' + id + ' does not exist'));
+        return fn(null,doc);
+    })
+
 }
 
 
 function findByUsername(username, fn) {
-    for (var i = 0, len = users.length; i < len; i++) {
-        var user = users[i];
-        if (user.username === username) {
-            return fn(null, user);
-        }
-    }
-    return fn(null, null);
+
+    db.User.findOne({username: username}, function (err,doc){
+        if(err) return fn(null,null);
+        return fn(null, doc);
+    })
 }
 
 
