@@ -1,5 +1,5 @@
 exports.config ={
-    specs:['./test/system/**/*.js'],
+    specs:['./system/**/*.js'],
     framework:'jasmine',
     capabilities:{
         browserName: 'firefox'

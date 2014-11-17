@@ -8,9 +8,9 @@ chai.use(sinonChai);
 var expect = chai.expect;
 
 
-describe('dummy Test', function () {
+describe('Test', function () {
     it('ensureAuthenticated calls next if user is authenticated', function () {
-        var pass = require('./../config/passport');
+        var pass = require('./../../../config/passport');
         var req = {
             isAuthenticated: function () {
                 return true;
