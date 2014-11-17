@@ -3,13 +3,13 @@
 killall -SIGTERM npm
 killall -SIGTERM node
 echo "_____ setting up testdata _____"
-./bin/importdb
+./bin/importdb > /dev/null
 
 echo "_____ running grunt _____"
 grunt > /dev/null
 
 echo "_____ starting server _____"
-npm start &  > /dev/null
+npm start &
 # give our server some time to startup
 sleep 10
 
