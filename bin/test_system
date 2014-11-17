@@ -3,7 +3,7 @@
 killall -SIGTERM npm
 killall -SIGTERM node
 echo "_____ setting up testdata _____"
-./bin/importdb
+./bin/importdb > /dev/null
 
 echo "_____ running grunt _____"
 grunt > /dev/null

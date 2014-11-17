@@ -3,7 +3,7 @@
 killall -SIGTERM npm
 killall -SIGTERM node
 echo "_____ run grunt _____"
-grunt
+grunt > /dev/null
 
 echo "_____ starting backend tests _____"
 ./node_modules/mocha/bin/mocha -R dot $(find test/unit/backend -name '*.js')
@@ -21,14 +21,14 @@ export DISPLAY=:10  > /dev/null
 sleep 10
 
 echo "_____ setting up testdata _____"
-./bin/importdb
+./bin/importdb > /dev/null
 
 echo "_____ starting integration tests _____"
 ./node_modules/mocha/bin/mocha -R dot $(find test/integration -name '*.js')
 echo "_____ integration testing finished _____"
 
 echo "_____ setting up testdata _____"
-./bin/importdb
+./bin/importdb > /dev/null
 
 echo "_____ starting system tests _____"
 ./node_modules/protractor/bin/protractor test/localprotractor.config.js
