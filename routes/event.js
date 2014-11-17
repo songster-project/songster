@@ -94,9 +94,9 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
     //description => may be null
     //start date will be set
     //end date will be set
-    req.checkBody('suggestionEnabled', 'suggestionsenabled needs to be set and needs to be true or false').notEmpty();
-    req.checkBody('votingEnabled', 'votingenabled needs to be set and needs to be true or false').notEmpty();
-    req.checkBody('previewEnabled', 'previewenabled needs to be set and needs to be true or false').notEmpty();
+    req.checkBody('suggestionEnabled', 'suggestionsenabled needs to be set and needs to be true or false').notEmpty().isBool();
+    req.checkBody('votingEnabled', 'votingenabled needs to be set and needs to be true or false').notEmpty().isBool();
+    req.checkBody('previewEnabled', 'previewenabled needs to be set and needs to be true or false').notEmpty().isBool();
     var errors = req.validationErrors();
     if (errors) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
