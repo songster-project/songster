@@ -1,12 +1,13 @@
 #!/bin/bash
-killall -SIGTERM npm
-killall -SIGTERM node
 npm start &
 grunt
+echo "_____ starting frontend tests _____"
+grunt karma:continuous
+echo "_____ starting backend tests _____"
 ./node_modules/mocha/bin/mocha -R dot $(find test/unit/backend -name '*.js')
 ./bin/importdb
+echo "_____ starting integration tests _____"
 ./node_modules/mocha/bin/mocha -R dot $(find test/integration -name '*.js')
 ./bin/importdb
+echo "_____ starting system tests _____"
 ./node_modules/protractor/bin/protractor ./test/protractor.config.js
-killall -SIGTERM npm
-killall -SIGTERM node
