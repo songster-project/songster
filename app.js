@@ -31,14 +31,16 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator(
-    { customValidators: {
-        isMongoID: function(value) {
-            return value.match("^[0-9a-fA-F]{24}$");
-        },
-        isBool: function(value) {
-            return typeof value === 'boolean';
+    {
+        customValidators: {
+            isMongoID: function (value) {
+                return value.match("^[0-9a-fA-F]{24}$");
+            },
+            isBool: function (value) {
+                return typeof value === 'boolean';
+            }
         }
-    }}
+    }
 ));
 app.use(cookieParser(settings.cookie_secret));
 app.use(session({

@@ -16,7 +16,7 @@ describe('EventApi', function () {
             "password": "admin"
         };
         var cb = function (x) {
-           return ;
+            return;
         };
         api.post('/login')
             .send(postdata)
