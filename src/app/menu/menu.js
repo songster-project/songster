@@ -6,13 +6,11 @@ angular
  * A Menu
  * @param title {String} title of the menu
  * @param id {String} unique identifier of the menu
- * @param priority {Number} priority number
  * @constructor
  */
-function Menu(id, title, priority) {
+function Menu(id, title) {
     var _id = id;
     var _title = title;
-    var _priority = _.isNumber(priority) ? priority : 0;
     var _entries = [];
 
     this.getId = function () {
@@ -23,9 +21,6 @@ function Menu(id, title, priority) {
     };
     this.addEntry = function (entry) {
         return _entries.push(entry);
-    };
-    this.getPriority = function () {
-        return _priority;
     };
     this.getEntries = function () {
         // return the entries with the highest priority on top
@@ -40,12 +35,14 @@ function Menu(id, title, priority) {
  * @param title {String} title of the menu entry
  * @param icon {String} an icon for the entry
  * @param route {String} route for the menu entry
+ * @param priority {Number} priority number
  * @constructor
  */
-function MenuEntry(title, icon, route) {
+function MenuEntry(title, icon, route, priority) {
     var _title = title;
     var _route = route;
     var _icon = icon;
+    var _priority = _.isNumber(priority) ? priority : 0;
 
     this.getTitle = function () {
         return _title;
@@ -55,6 +52,9 @@ function MenuEntry(title, icon, route) {
     };
     this.getRoute = function () {
         return _route;
+    };
+    this.getPriority = function () {
+        return _priority;
     };
 }
 
