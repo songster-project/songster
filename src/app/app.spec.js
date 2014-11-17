@@ -13,5 +13,8 @@ describe( 'AppCtrl', function() {
     it( 'should pass a dummy test', inject( function() {
       expect( AppCtrl ).toBeTruthy();
     }));
+    it( 'test should fail', inject( function() {
+      expect( false ).toBeTruthy();
+    }));
   });
 });
