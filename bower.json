@@ -9,7 +9,8 @@
     "angular-ui-router": "~0.2"
   },
   "dependencies": {
-      "ng-file-upload": "~1.6",
-      "angular-media-player": "~0.5"
+    "ng-file-upload": "~1.6",
+    "angular-media-player": "~0.5",
+    "angular-lodash": "~0.1.2"
   }
 }
