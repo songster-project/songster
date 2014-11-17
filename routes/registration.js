@@ -7,6 +7,9 @@ var util = require('util');
 var passport = require('passport');
 
 router.get('/', function (req, res) {
+    if(req.isAuthenticated()) {
+        return res.redirect('/app');
+    }
     res.render('registration');
 });
 

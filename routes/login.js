@@ -3,6 +3,9 @@ var router = express.Router();
 var passport = require('passport');
 
 router.get('/', function (req, res) {
+    if(req.isAuthenticated()) {
+       return res.redirect('/app');
+    }
     res.render('login', { user: req.user, message: req.session.messages });
 });
 
