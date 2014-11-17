@@ -101,7 +101,7 @@ describe('menu', function () {
             it('should prioritize undefined priorities with 0', function () {
                 var menu = $menu.getMenu('main');
                 var entries = menu.getEntries();
-                var entry = _.find(entries, { 'title': 'About' });
+                var entry = _.find(entries, {'title': 'About'});
                 expect(entry.getPriority()).toEqual(0);
             });
         });
