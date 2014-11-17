@@ -30,7 +30,7 @@ function Menu(id, title, priority) {
     this.getEntries = function () {
         // return the entries with the highest priority on top
         return _.sortBy(_entries, function (entry) {
-            return entry.priority * -1;
+            return entry.getPriority() * -1;
         });
     };
 }
