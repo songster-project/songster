@@ -34,6 +34,9 @@ app.use(expressValidator(
     { customValidators: {
         isMongoID: function(value) {
             return value.match("^[0-9a-fA-F]{24}$");
+        },
+        isBool: function(value) {
+            return typeof value === 'boolean';
         }
     }}
 ));
