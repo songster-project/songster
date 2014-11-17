@@ -1,4 +1,5 @@
 angular.module( 'ngBoilerplate.home', [
     'ui.router',
-    'plusOne'
+    'plusOne',
+    'songster.menu'
 ]);
