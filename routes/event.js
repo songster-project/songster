@@ -44,6 +44,19 @@ router.get('/current', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
+
+router.get('/:id',passport.ensureAuthenticated, function (req, res) {
+    db.Event.findOne({_id:req.param('id')}, function (err, event) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        res.send(event);
+    });
+});
+
+
 //For when you want to end the current event
 router.put('/current/end', passport.ensureAuthenticated, function (req, res) {
     console.log("request");
