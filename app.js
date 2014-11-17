@@ -30,7 +30,13 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(expressValidator());
+app.use(expressValidator(
+    { customValidators: {
+        isMongoID: function(value) {
+            return value.match("^[0-9a-fA-F]{24}$");
+        }
+    }}
+));
 app.use(cookieParser(settings.cookie_secret));
 app.use(session({
     secret: settings.cookie_secret,
