@@ -23,7 +23,4 @@ describe('Test', function () {
         pass.ensureAuthenticated(req, res, next);
         expect(next).to.have.been.called;
     });
-    it('should fail',function(){
-        expect(false).to.equal(true);
-    });
 })
