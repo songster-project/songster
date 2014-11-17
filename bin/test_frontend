@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "_____ make grunt build _____"
+grunt build > /dev/null
+
+echo "_____ starting frontend tests _____"
+grunt karma:continuous
+echo "_____ frontend testing finished _____"

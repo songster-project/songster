@@ -1,10 +1,10 @@
 #!/bin/bash
-mongoexport -d songster -c user -o ./exportdata/user.json
-mongoexport -d songster -c song -o ./exportdata/song.json
-mongoexport -d songster -c playlist -o ./exportdata/playlist.json
-mongoexport -d songster -c event -o ./exportdata/event.json
-mongoexport -d songster -c vote -o ./exportdata/vote.json
-mongoexport -d songster -c eventLog -o ./exportdata/eventLog.json
-mongoexport -d songster -c queueState -o ./exportdata/queueState.json
-mongoexport -d songster -c fs.files -o ./exportdata/fs.files.json
-mongoexport -d songster -c fs.chunks -o ./exportdata/fs.chunks.json
+mongoexport -d songster -c user -o ./test/data/export/user.json
+mongoexport -d songster -c song -o ./test/data/export/song.json
+mongoexport -d songster -c playlist -o ./test/data/export/playlist.json
+mongoexport -d songster -c event -o ./test/data/export/event.json
+mongoexport -d songster -c vote -o ./test/data/export/vote.json
+mongoexport -d songster -c eventLog -o ./test/data/export/eventLog.json
+mongoexport -d songster -c queueState -o ./test/data/export/queueState.json
+mongoexport -d songster -c fs.files -o ./test/data/export/fs.files.json
+mongoexport -d songster -c fs.chunks -o ./test/data/export/fs.chunks.json

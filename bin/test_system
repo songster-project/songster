@@ -1,0 +1,24 @@
+#!/bin/bash
+# stop server if one is running
+killall -SIGTERM npm
+killall -SIGTERM node
+echo "_____ setting up testdata _____"
+./bin/importdb > /dev/null
+
+echo "_____ running grunt _____"
+grunt > /dev/null
+
+echo "_____ starting server _____"
+npm start &  > /dev/null
+sudo Xvfb :10 -ac &  > /dev/null
+export DISPLAY=:10  > /dev/null
+# give our server some time to startup
+sleep 10
+
+echo "_____ starting system tests _____"
+./node_modules/protractor/bin/protractor test/localprotractor.config.js
+echo "_____ system testing finished _____"
+
+# stop the server
+killall -SIGTERM npm
+killall -SIGTERM node

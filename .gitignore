@@ -22,4 +22,4 @@ vendor/*
 .Trashes
 
 # Tests
-/exportdata/
+/test/data/export/
