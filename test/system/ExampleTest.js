@@ -17,4 +17,7 @@ describe('Test', function () {
         element(by.xpath('//a[@ui-sref="upload"]')).click();
         expect(browser.getTitle()).toEqual('Upload files | ngBoilerplate');
     });
+    it('should fail',function(){
+        expect(true).toBeFalsy();
+    })
 });

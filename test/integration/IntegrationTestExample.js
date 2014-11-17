@@ -42,7 +42,4 @@ describe('Test', function () {
                 done();
             })
     });
-    it('should fail',function(){
-        expect(false).to.equal(true);
-    });
 });
