@@ -18,7 +18,6 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-html2js');
-  grunt.loadNpmTasks('grunt-simple-mocha');
 
   /**
    * Load in our build configuration file.
@@ -356,21 +355,6 @@ module.exports = function ( grunt ) {
     },
 
     /**
-     * The Mocha configurations.
-     */
-    simplemocha: {
-      options: {
-        globals: ['expect'],
-        timeout: 3000,
-        ignoreLeaks: false,
-        ui: 'bdd',
-        reporter: 'tap'
-      },
-
-      all: { src: ['tests/**/*.js'] }
-    },
-
-    /**
      * The `index` task compiles the `index.html` file as a Grunt template. CSS
      * and JS files co-exist here but they get split apart later.
      */
@@ -580,7 +564,7 @@ module.exports = function ( grunt ) {
     'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
     'copy:build_appjs', 'copy:build_vendorjs',
-    'index:build', 'karmaconfig', 'karma:continuous', 'simplemocha'
+    'index:build', 'karmaconfig', 'karma:continuous'
   ]);
 
   /**
