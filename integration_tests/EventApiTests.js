@@ -105,10 +105,9 @@ describe('Test', function () {
     it('should set the end date when ending the event', function (done) {
         api.put('/event/current/end').send({}).end(function (err,res)
         {
-            console.log("ending");
             expect(err).to.not.exist;
             expect(res.body.end).to.not.equal(null);
-            done;
+            done();
         });
     });
 });
