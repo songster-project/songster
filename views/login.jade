@@ -12,10 +12,12 @@ block content
                     span(id='error_message') #{message}
                 form(id="form-register" method="post")
                     .input-group
-                        span.input-group-addon(class='glyphicon glyphicon-user', aria-hidden='true')
+                        span.input-group-addon
+                            i(class='glyphicon glyphicon-user', aria-hidden='true')
                         input.form-control(type='text', placeholder='Username', name='username', id='username', required=true)
                     .input-group
-                        span.input-group-addon(class='glyphicon glyphicon-lock', aria-hidden='true')
+                        span.input-group-addon
+                            i(class='glyphicon glyphicon-lock', aria-hidden='true')
                         input.form-control(type="password" name="password" id="password", required=true, placeholder='Password')
                     .form-group
                         button.form-control(type="submit" class='btn btn-custom' id='register') Login
