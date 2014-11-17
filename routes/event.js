@@ -26,7 +26,6 @@ router.get('/active', passport.ensureAuthenticated, function (req, res) {
             return;
         }
         res.send(events);
-        console.log(events);
     });
 });
 
@@ -59,8 +58,10 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
             res.status(500).send('Internal server error');
             return;
         }
-        if (event)
+        if (event) {
             res.status(200).send(event);
+            return;
+        }
         //event has not been updated, return error
         res.status(404).send();
     });
@@ -69,15 +70,16 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
 
 //For when you want to end the current event
 router.put('/current/end', passport.ensureAuthenticated, function (req, res) {
-    console.log("Shutting down event of: "+req.user._id);
     db.Event.findOneAndUpdate({owner_id: req.user._id, end: null}, {$set: {end: Date.now()}}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
         }
-        if (event)
+        if (event) {
             res.status(200).send(event);
+            return;
+        }
         //event has not been updated, return error
         res.status(404).send();
     });
@@ -130,7 +132,6 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
                 res.status(500).send('Internal server error');
                 return;
             }
-            console.log(event);
             res.status(201).send(event);
         });
 
