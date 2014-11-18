@@ -9,15 +9,15 @@ angular.module('ngBoilerplate.upload')
                     templateUrl: 'upload/upload.tpl.html'
                 }
             },
-            data: { pageTitle: 'Upload files' }
+            data: {pageTitle: 'Upload files'}
         });
     })
 
     .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http) {
-        $scope.uploadedFiles = [ ];
+        $scope.uploadedFiles = [];
 
         // generic function to remove elements from an ng-repeat array
-        $scope.remove = function(array, index){
+        $scope.remove = function (array, index) {
             array.splice(index, 1);
         };
 
@@ -59,8 +59,8 @@ angular.module('ngBoilerplate.upload')
             .success(function (data) {
                 $scope.songs = data;
 
-                $scope.mediaPlaylist = [ ];
-                data.forEach(function(element) {
+                $scope.mediaPlaylist = [];
+                data.forEach(function (element) {
                     $scope.mediaPlaylist.push({
                         src: '/song/' + element.file_id + '/raw',
                         type: 'audio/mp3'

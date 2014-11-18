@@ -77,5 +77,34 @@ describe('menu', function () {
                 expect(entry2.getRoute()).toEqual('about');
             });
         });
+
+        describe('with prioritized entries', function () {
+
+            beforeEach(function () {
+                $menuProvider.addMenuEntry('main', 'Home', 'fa-home', 'home', 45);
+                $menuProvider.addMenuEntry('main', 'About', 'fa-about', 'about', undefined);
+                $menuProvider.addMenuEntry('main', 'Contact', 'fa-contact', 'contact', 10);
+            });
+
+            it('should be ordered by priority desc', function () {
+                var menu = $menu.getMenu('main');
+                var entries = menu.getEntries();
+                var entry1 = entries[0];
+                expect(entry1.getTitle()).toEqual('Home');
+                var entry2 = entries[1];
+                expect(entry2.getTitle()).toEqual('Contact');
+                var entry3 = entries[2];
+                expect(entry3.getTitle()).toEqual('About');
+            });
+
+            it('should prioritize undefined priorities with 0', function () {
+                var menu = $menu.getMenu('main');
+                var entries = menu.getEntries();
+                var entry = _.find(entries, function (entry) {
+                    return entry.getTitle() === "About";
+                });
+                expect(entry.getPriority()).toEqual(0);
+            });
+        });
     });
 });

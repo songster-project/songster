@@ -23,7 +23,10 @@ function Menu(id, title) {
         return _entries.push(entry);
     };
     this.getEntries = function () {
-        return _entries;
+        // return the entries with the highest priority on top
+        return _.sortBy(_entries, function (entry) {
+            return entry.getPriority() * -1;
+        });
     };
 }
 
@@ -32,12 +35,14 @@ function Menu(id, title) {
  * @param title {String} title of the menu entry
  * @param icon {String} an icon for the entry
  * @param route {String} route for the menu entry
+ * @param priority {Number} priority number
  * @constructor
  */
-function MenuEntry(title, icon, route) {
+function MenuEntry(title, icon, route, priority) {
     var _title = title;
     var _route = route;
     var _icon = icon;
+    var _priority = _.isNumber(priority) ? priority : 0;
 
     this.getTitle = function () {
         return _title;
@@ -47,6 +52,9 @@ function MenuEntry(title, icon, route) {
     };
     this.getRoute = function () {
         return _route;
+    };
+    this.getPriority = function () {
+        return _priority;
     };
 }
 
@@ -72,10 +80,10 @@ function MenuProvider() {
         _menuBar.addMenu(new Menu(menuId, title));
     };
 
-    this.addMenuEntry = function addMenuEntry(menuId, title, icon, route) {
+    this.addMenuEntry = function addMenuEntry(menuId, title, icon, route, priority) {
         var menu = _menuBar.getMenu(menuId);
         if (!!menu) {
-            menu.addEntry(new MenuEntry(title, icon, route));
+            menu.addEntry(new MenuEntry(title, icon, route, priority));
         }
     };
 
