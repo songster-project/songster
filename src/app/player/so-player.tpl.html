@@ -1,0 +1,51 @@
+<div>
+    <div class="player-control">
+        <div class="btn" ng-click="mediaPlayer.play()">
+            <span>Simple Play</span>
+            <i class="fa fa-play"></i>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.playPause()">
+            <i class="fa" ng-class="{ 'fa-pause': mediaPlayer.playing, 'fa-play': !mediaPlayer.playing }"></i>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.next()">
+            <span>Next</span>
+            <i class="fa fa-step-forward"></i>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.prev()">
+            <i class="fa fa-step-backward"></i>
+            <span>Prev</span>
+        </div>
+        <div class="btn btn-noclick">
+            <span>currentTrack: <span class="badge">{{ mediaPlayer.currentTrack }}</span></span>
+        </div>
+        <div class="btn btn-noclick">
+            <span><i class="fa fa-clock-o"></i>: <span class="badge">{{ mediaPlayer.formatTime }}</span></span>
+        </div>
+        <div class="btn btn-noclick">
+            <span>volume: <span class="badge">{{ mediaPlayer.volume * 100 | number:0 }}%</span></span>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.setVolume(mediaPlayer.volume - 0.1)">
+            <span><i class="fa fa-volume-down"></i></span>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.setVolume(mediaPlayer.volume + 0.1)">
+            <span><i class="fa fa-volume-up"></i></span>
+        </div>
+        <div class="progress" ng-click="mediaPlayer.seek(mediaPlayer.duration * seekPercentage($event))">
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                 ng-style="{ width: mediaPlayer.currentTime * 100 / mediaPlayer.duration + '%' }"></div>
+            <div class="time" ng-show="mediaPlayer.formatTime">
+                <span>{{ mediaPlayer.formatTime }}</span><b>/</b><span>{{ mediaPlayer.formatDuration }}</span>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+        </tr>
+        <tr ng:repeat="song in songs">
+            <td>{{ song.title }}</td>
+            <td>{{ song.artist }}</td>
+        </tr>
+    </table>
+</div>
