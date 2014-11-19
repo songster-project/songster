@@ -9,15 +9,33 @@ describe('Registration', function () {
     this.timeout(10000);
 
     beforeEach(function (done) {
+
+        var cb = function (x) {
+            return;
+        };
+
         api.get('/logout').end(function (err, res) {
             expect(err).to.not.exist;
+
+            process.nextTick(function () {
+                cb(err);
+            });
             done();
         });
     });
 
     afterEach(function (done) {
+
+        var cb = function (x) {
+            return;
+        };
+
         api.get('/logout').end(function (err, res) {
             expect(err).to.not.exist;
+
+            process.nextTick(function () {
+                cb(err);
+            });
             done();
         });
     });
@@ -42,8 +60,6 @@ describe('Registration', function () {
            done();
 
         });
-
-
 
     });
 

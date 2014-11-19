@@ -7,13 +7,13 @@ var util = require('util');
 var passport = require('passport');
 
 router.get('/', function (req, res) {
-    if(req.isAuthenticated()) {
+    if (req.isAuthenticated()) {
         return res.redirect('/app');
     }
     res.render('registration');
 });
 
-router.post('/', function (req, res, next){
+router.post('/', function (req, res, next) {
 
     // parameter checks
     req.checkBody('username', 'Username is required').notEmpty();
@@ -40,30 +40,41 @@ router.post('/', function (req, res, next){
     l_user.email = req.body.email;
 
     var salt = crypto.randomBytes(128).toString('base64');
-    crypto.pbkdf2(req.body.password, salt, 10000, 512, function(err, hashedKey){
+    crypto.pbkdf2(req.body.password, salt, 10000, 512, function (err, hashedKey) {
         l_user.password = hashedKey.toString('base64');
         l_user.salt = salt;
 
-       // save user in db
-        l_user.save(function (err, user) {
-            if (err) {
-                if(err.code === 11000) {
-                    res.status(400);
-                    res.render('registration', {message: 'Username ' + l_user.username + ' already used. Please use another name.' });
+
+
+        // !! IS REQUIRED FOR MOCHA TESTING - BUG OF MOCHA
+        // callback of ensure indexes is called after indexes on user collection
+        // are created - this is needed for async testing - otherwise unique indices are
+        // not ensured and tests will fail that actually pass when are tested manually
+        db.User.ensureIndexes(function (err) {
+            if (err) throw err;
+
+            // save user in db
+            l_user.save(function (err, user) {
+                if (err) {
+                    // username already exists
+                    if (err.code === 11000) {
+                        res.status(400);
+                        res.render('registration', {message: 'Username ' + l_user.username + ' already used. Please use another name.' });
+                        return;
+                    }
+
+                    res.status(500);
+                    res.render('registration', {message: l_user.username + ' could not be registered. Please try again.'});
                     return;
                 }
 
-                res.status(500);
-                res.render('registration', {message: l_user.username + ' could not be registered. Please try again.'});
-                return;
-            }
-           // console.log(user);
-
-            passport.authenticate('local')(req,res, function() {
-                return res.redirect('/');
+                passport.authenticate('local')(req, res, function () {
+                    return res.redirect('/');
+                });
             });
         });
     });
+
 
 });
 
