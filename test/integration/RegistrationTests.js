@@ -75,7 +75,6 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
             expect(err).to.not.exist;
             done();
         });
@@ -94,7 +93,6 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
             expect(err).to.not.exist;
             done();
         });
@@ -113,8 +111,7 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
+           expect(err).to.not.exist;
             done();
         });
 
@@ -132,7 +129,6 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
             expect(err).to.not.exist;
             done();
         });
@@ -151,8 +147,7 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
+           expect(err).to.not.exist;
             done();
         });
 
@@ -171,8 +166,7 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
+           expect(err).to.not.exist;
             done();
         });
 
@@ -191,7 +185,6 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
             expect(err).to.not.exist;
             done();
         });
@@ -211,7 +204,6 @@ describe('Registration', function () {
         };
 
         api.post('/registration').send(postdata).expect(400).end(function (err, res) {
-            console.log(res.text);
             expect(err).to.not.exist;
             done();
         });
