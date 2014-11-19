@@ -47,32 +47,10 @@
     </script>
 </head>
 <body>
-<div class="navbar navbar-default navbar-fixed-left">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" ng-init="menuCollapsed = true"
-                ng-click="menuCollapsed = ! menuCollapsed">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <div class="navbar-brand">
-            Songster
-            <small>
-                <a href="http://github.com/ngbp/ngbp/blob/v<%= version %>-release/CHANGELOG.md">
-                    v<%= version %>
-                </a>
-            </small>
-        </div>
-    </div>
-    <div class="collapse navbar-collapse" collapse="menuCollapsed">
-        <so-menu menu-id="'main'"></so-menu>
-    </div>
-</div>
 
-<div class="navbar navbar-default navbar-fixed-right">
-    <so-player></so-player>
-</div>
+<so-main-menu></so-main-menu>
+
+<so-player></so-player>
 
 <div class="container-fluid" ui-view="main"></div>
 

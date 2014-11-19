@@ -90,6 +90,9 @@ h2 {
       }
 
       i {
+        display: inline-block;
+        width: 40px;
+        text-align: center;
         transition: all 0.2s ease-in-out;
         font-size: 36px;
       }
@@ -103,42 +106,66 @@ h2 {
 
 .navbar-fixed-right,
 .navbar-fixed-left {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  z-index: @zindex-navbar-fixed;
-  width: 250px;
+  // this will only be on the left/right side
+  // if we have a big screen, otherwise it will be on top
+  @media (min-width: @screen-sm-min) {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: @zindex-navbar-fixed;
+    width: @mainMenuWidth;
 
-  margin-top: 0; // override .navbar defaults
-  margin-bottom: 0; // override .navbar defaults
+    margin-top: 0; // override .navbar defaults
+    margin-bottom: 0; // override .navbar defaults
+    // Undo the rounded corners
+    border-radius: 0;
 
-  // Undo the rounded corners
-  border-radius: 0;
+    .navbar-header,
+    .navbar-nav > li {
+      float: none;
+    }
 
-  .navbar-header,
-  .navbar-nav > li {
-    float: none;
-  }
-
-  .navbar-collapse {
-    padding: 0;
+    .navbar-collapse {
+      padding: 0;
+    }
   }
 }
 
+// left panel
 .navbar-fixed-left {
   left: 0;
   border-width: 0 1px 0 0;
 
-  & ~ * {
-    margin-left: 260px;
+  @media (min-width: @screen-sm-min) {
+    & ~ * {
+      margin-left: @mainMenuWidth + 10px;
+    }
+
+    // if large enough, minimizing works, otherwise not
+    @media (min-width: @screen-sm-min) {
+      &.minimized ~ * {
+        margin-left: @mainMenuMinimizedWidth + 10px;
+      }
+    }
   }
 }
+
+// right panel
 .navbar-fixed-right {
   right: 0;
   border-width: 0 0 0 1px;
 
-  & ~ * {
-    margin-right: 260px;
+  @media (min-width: @screen-lg-min) {
+    & ~ * {
+      margin-right: @mainMenuWidth + 10px;
+    }
+
+    // if large enough, minimizing works, otherwise not
+    @media (min-width: @screen-sm-min) {
+      &.minimized ~ * {
+        margin-right: @mainMenuMinimizedWidth + 10px;
+      }
+    }
   }
 }
 
@@ -149,6 +176,35 @@ h2 {
   color: #428bca;
 }
 
+.main-menu {
+  .toggleButton {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 20px;
+    margin: 5px;
+  }
+
+  // if too small, hide the toggle button
+  @media (max-width: @screen-xs-max) {
+    .toggleButton {
+      display: none;
+    }
+  }
+
+  // if large enough, minimizing works, otherwise not
+  @media (min-width: @screen-sm-min) {
+    &.minimized {
+      width: @mainMenuMinimizedWidth;
+      .navbar-header {
+        visibility: hidden;
+      }
+      .menu-entry span {
+        display: none;
+      }
+    }
+  }
+}
 
 /**
  * Footer

@@ -8,6 +8,7 @@ function SoPlayerDirective() {
         scope: {
             menuId: "="
         },
+        replace: true,
         controller: ['$scope', '$http', function SoPlayerController($scope, $http) {
             var vm = this;
             vm.songs = [];
