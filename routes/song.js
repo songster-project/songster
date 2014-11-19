@@ -69,7 +69,7 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
                         albumArt(metadata.artist, metadata.album, 'large', function (err, url) {
                             console.log('metadata url: ' + url);
 
-                            if (url != null && !err) {
+                            if (!err && url != null && url.length > 0) {
                                 var imageWriteStream = database.gfs.createWriteStream({
                                     mode: 'w'
                                 });
