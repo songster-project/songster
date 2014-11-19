@@ -17,7 +17,7 @@ var account = require('./routes/account');
 var song = require('./routes/song');
 var playlist = require('./routes/playlist');
 var registration = require('./routes/registration');
-
+var event = require('./routes/event');
 var settings = require('./config/settings.js');
 
 var app = express();
@@ -68,6 +68,7 @@ app.use('/account', account);
 app.use('/song', song);
 app.use('/playlist', playlist);
 app.use('/registration', registration);
+app.use('/event', event);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

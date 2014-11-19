@@ -27,6 +27,7 @@ router.post('/', function (req, res, next){
     var errors = req.validationErrors();
 
     if (errors) {
+        res.status(400);
         res.render('registration', {message: util.inspect(errors)});
         return;
     }
@@ -47,14 +48,16 @@ router.post('/', function (req, res, next){
         l_user.save(function (err, user) {
             if (err) {
                 if(err.code === 11000) {
+                    res.status(400);
                     res.render('registration', {message: 'Username ' + l_user.username + ' already used. Please use another name.' });
                     return;
                 }
 
+                res.status(500);
                 res.render('registration', {message: l_user.username + ' could not be registered. Please try again.'});
                 return;
             }
-            console.log(user);
+           // console.log(user);
 
             passport.authenticate('local')(req,res, function() {
                 return res.redirect('/');

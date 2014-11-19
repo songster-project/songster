@@ -14,13 +14,16 @@ router.get('/', function (req, res) {
 router.post('/', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) {
+            res.status(400);
             return res.render('login', {message: [info.message]});
         }
         if (!user) {
+            res.status(400);
             return res.render('login', {message: [info.message]});
         }
         req.logIn(user, function (err) {
             if (err) {
+                res.status(500);
                 return res.render('login', {message: [info.message]});
             }
             return res.redirect('/');
