@@ -1,34 +1,24 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
-
-// temporary hardcoded user storage
-// TODO: reading from database
-var users = [
-    {id: 1, username: 'admin', password: 'admin', _id: '54638a8a8b5aca5d121cd09c'}
-    ,
-    {id: 2, username: 'user', password: 'user', _id: '5463a0f51ab1845e1c637b64'}
-];
-
+var db = require('../config/database.js');
+var crypto = require('crypto');
 
 function findById(id, fn) {
-    var idx = id - 1;
-    if (users[idx]) {
-        fn(null, users[idx]);
-    } else {
-        fn(new Error('User ' + id + ' does not exist'));
-    }
+
+    db.User.findById(id, function (err,doc) {
+        if(err) return fn(new Error('User ' + id + ' does not exist'));
+        return fn(null,doc);
+    })
+
 }
 
 
 function findByUsername(username, fn) {
-    for (var i = 0, len = users.length; i < len; i++) {
-        var user = users[i];
-        if (user.username === username) {
-            return fn(null, user);
-        }
-    }
-    return fn(null, null);
+
+    db.User.findOne({username: username}, function (err,doc){
+        if(err) return fn(null,null);
+        return fn(null, doc);
+    })
 }
 
 
@@ -67,12 +57,17 @@ passport.use(new LocalStrategy(
                     return done(err);
                 }
                 if (!user) {
-                    return done(null, false, {message: 'Unknown user ' + username});
+                    return done(null, false, { message: 'Invalid username or password'});
                 }
-                if (user.password != password) {
-                    return done(null, false, {message: 'Invalid password'});
-                }
-                return done(null, user);
+
+                // hash password
+                crypto.pbkdf2(password, user.salt, 10000, 512, function(err, hashedKey) {
+                    var hash_password = hashedKey.toString('base64');
+                    if (user.password != hash_password) {
+                        return done(null, false, { message: 'Invalid username or password' });
+                    }
+                    return done(null, user);
+                });
             });
         });
     }

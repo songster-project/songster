@@ -1,8 +1,33 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin:5em;
 }
 
+
 a {
-  color: #00B7FF;
+    color: #00B7FF;
+}
+
+.btn-custom {
+    color: #ffffff;
+    background-color: #3278b3;
+    border-color: #2a6496;
+}
+
+.btn-custom:hover {
+    color: #ffffff;
+    background-color: #245269;
+}
+
+.btn[disabled] {
+    color: #000000;
+}
+
+.input-group {
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+
+
+.progress {
+    margin-top: 0.5em;
 }

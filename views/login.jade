@@ -1,10 +1,29 @@
 extends layout
 
+extends layout
 block content
-  h1 Please login
-  form(method="post")
-    label Username
-    input(type="text", name="username", id="username")
-    label Password
-    input(type="password", name="password", id="password")
-    button(type="submit") Sign In
+    .col-xs-12.col-sm-8.col-md-6.col-sm-offset-2.col-md-offset-3
+        .panel.panel-default
+            .panel-heading
+                h1.panel-title Please login
+            .panel-body
+                .alert.alert-danger(role='alert')
+                    span.sr-only Error:
+                    span(id='error_message') #{message}
+                form(id="form-register" method="post")
+                    .input-group
+                        span.input-group-addon
+                            i(class='glyphicon glyphicon-user', aria-hidden='true')
+                        input.form-control(type='text', placeholder='Username', name='username', id='username', required=true)
+                    .input-group
+                        span.input-group-addon
+                            i(class='glyphicon glyphicon-lock', aria-hidden='true')
+                        input.form-control(type="password" name="password" id="password", required=true, placeholder='Password')
+                    .form-group
+                        button.form-control(type="submit" class='btn btn-custom' id='register') Login
+    script.
+        if($('#error_message').text() == "") {
+            $('.alert-danger').hide();
+        } else {
+            $('.alert-danger').show();
+        };

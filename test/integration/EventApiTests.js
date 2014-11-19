@@ -12,15 +12,15 @@ describe('EventApi', function () {
     //Basically solves that we can be logged in
     beforeEach(function (done) {
         var postdata = {
-            "username": "admin",
-            "password": "admin"
+            "username": "user1",
+            "password": "user1"
         };
         var cb = function (x) {
             return;
         };
         api.post('/login')
             .send(postdata)
-            .expect('Moved Temporarily. Redirecting to /')
+            .expect(302)
             .end(function (err, res) {
                 expect(err).to.not.exist;
 
@@ -57,7 +57,7 @@ describe('EventApi', function () {
             var postdata = {
                 "name": "myEvent",
                 "accessKey": "theKey",
-                "owner_id": "54638a8a8b5aca5d121cd09c",
+                "owner_id": "546b16fa2e3a10ea162d9355",
                 "suggestionEnabled": true,
                 "votingEnabled": true,
                 "previewEnabled": true
@@ -77,7 +77,7 @@ describe('EventApi', function () {
         var postdata = {
             "name": "myEvent",
             "accessKey": "theKey",
-            "owner_id": "54638a8a8b5aca5d121cd09c",
+            "owner_id": "546b16fa2e3a10ea162d9355",
             "suggestionEnabled": true,
             "votingEnabled": true,
             "previewEnabled": true

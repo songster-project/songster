@@ -4,8 +4,8 @@ describe('Test', function () {
         browser.driver.wait(function () {
             return browser.driver.findElement(By.xpath("//button")).isDisplayed();
         }, 10000);
-        browser.driver.findElement(By.id("username")).sendKeys('admin');
-        browser.driver.findElement(By.id("password")).sendKeys('admin');
+        browser.driver.findElement(By.id("username")).sendKeys('user1');
+        browser.driver.findElement(By.id("password")).sendKeys('user1');
         browser.driver.findElement(By.xpath("//button")).click();
         browser.driver.getTitle().then(function (title) {
             expect(title).toEqual('Home | ngBoilerplate');
