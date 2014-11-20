@@ -43,8 +43,8 @@ describe('PlaylistApi', function () {
     it('should return the created playlist of an post request ', function (done) {
         var postdata = {
             "name": "thePlaylist",
-            "songs" : ['546a5aba06be233f0d93ecde'],
-            "owner_id" : "546b16fa2e3a10ea162d9355"
+            "songs": ['546a5aba06be233f0d93ecde'],
+            "owner_id": "546b16fa2e3a10ea162d9355"
         }
         api.post('/playlist').send(postdata).end(function (err, res) {
             expect(err).to.not.exist;
@@ -71,23 +71,31 @@ describe('PlaylistApi', function () {
     });
 
 
-    it('should respond with status 200 and the updated playlist after the update', function(done) {
+    it('should respond with status 200 and the updated playlist after the update', function (done) {
 
         var putdata =
         {
             "owner_id": "546b16fa2e3a10ea162d9355",
             "name": 'the new Name!!',
             "_id": "546d3e88021c21731917fed7",
-            "songs": [ "546d3e88021c21731917ffff"]
+            "songs": ["546d3e88021c21731917ffff"]
         };
-        api.put('/event/current/end').send(putdata).end(function (err, res) {
+        api.put('/playlist').send(putdata).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.status).to.equal(200);
             expect(res.body.name).to.equal('the new Name!!');
-            expect(res.body.songs).to.equal([ "546d3e88021c21731917ffff"]);
+            expect(res.body.songs[0]).to.equal("546d3e88021c21731917ffff");
             done();
         });
 
+    });
+
+    it('should  return the  playlist where i am the owner of it ', function (done) {
+        api.get('/playlist').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(2);
+            done();
+        });
     });
 
 });
