@@ -66,13 +66,12 @@ router.put('/', passport.ensureAuthenticated, function (req, res) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
-    console.log('request: '+req.body);
     var id = req.body._id;
     delete req.body._id;
     //ID + owner because i can only update my playlists
     //Without ownerid, i could change the playlist of someone elses to mine
     //PlaylistID => form another user, Owner_ID => Mine, thus i steal it
-    db.Playlist.findOneAndUpdate({_id: id,owner_id: req.user._id}, req.body, function (err, playlist) {
+    db.Playlist.findOneAndUpdate({_id: id, owner_id: req.user._id}, req.body, function (err, playlist) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
