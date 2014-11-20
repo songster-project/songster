@@ -9,3 +9,10 @@ mongoimport -d songster -c eventLog --file ./test/data/import/eventLog.json
 mongoimport -d songster -c queueState --file ./test/data/import/queueState.json
 mongoimport -d songster -c fs.files --file ./test/data/import/fs.files.json
 mongoimport -d songster -c fs.chunks --file ./test/data/import/fs.chunks.json
+#Updates the playlist and corrects the object_ids
+mongo songster --eval "db.playlist.find({}).forEach( function (x) {
+                          db.playlist.remove({ _id: x._id});
+                          x.owner_id =  ObjectId(x.owner_id); // convert field to string
+                          x._id = ObjectId(x._id);
+                          db.playlist.save(x);
+                        });"
