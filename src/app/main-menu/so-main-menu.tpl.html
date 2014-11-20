@@ -1,0 +1,21 @@
+<div class="navbar navbar-default navbar-fixed-left main-menu" ng-init="toggleState=false"
+     ng-class="{'minimized': toggleState}">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" ng-init="menuCollapsed = true"
+                ng-click="menuCollapsed = ! menuCollapsed">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <div class="navbar-brand">
+            Songster
+        </div>
+    </div>
+    <div class="collapse navbar-collapse" collapse="menuCollapsed">
+        <so-menu menu-id="'main'"></so-menu>
+    </div>
+
+    <a href class="toggleButton" ng-click="toggleState = !toggleState"><i class="fa"
+                                                                          ng-class="toggleState ? 'fa-angle-double-right' : 'fa-angle-double-left'"></i></a>
+</div>

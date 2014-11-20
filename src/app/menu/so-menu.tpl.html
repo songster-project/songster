@@ -1,5 +1,5 @@
 <ul class="nav navbar-nav">
-    <li ui-sref-active="active" ng-repeat="entry in vm.menu.getEntries()">
+    <li ui-sref-active="active" class="menu-entry" ng-repeat="entry in vm.menu.getEntries()">
         <a href ui-sref="{{entry.getRoute()}}">
             <i class="fa" ng-class="entry.getIcon()"></i>
             <span>{{entry.getTitle()}}</span>
