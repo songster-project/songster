@@ -2,15 +2,45 @@
 
     <p>
         Create your event!
+        Event active: {{eventActive}}
     </p>
 
 
-    <div ng-if="eventActive">
-        Event is active currently :D
-        Event: {{event}}
+    <div ng-show="eventActive">
+
+        <h1>{{event.name}}</h1>
+        <p>Your event is currently running</p>
+        <table class="table">
+            <tr>
+                <td>Name</td>
+                <td>{{event.name}}</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>{{event.description}}</td>
+            </tr>
+            <tr>
+                <td>Public link:</td>
+                <td>{{event.link}}</td>
+            </tr>
+            <tr>
+                <td>Voting</td>
+                <td>{{event.votingEnabled ? 'enabled' : 'disabled'}}</td>
+            </tr>
+            <tr>
+                <td>Suggestions:</td>
+                <td>{{event.suggestionEnabled ? 'enabled' : 'disabled'}}</td>
+            </tr>
+            <tr>
+                <td>Preview</td>
+                <td>{{event.previewEnabled ? 'enabled' : 'disabled'}}</td>
+            </tr>
+            </table>
+            <button ng-click="endEvent()">End Event</button>
     </div>
 
-    <div ng-if="!eventActive">
+    <div ng-show="!eventActive">
+        <!-- Todo: nice formatting, error checking -->
         <form name="eventinfo">
             Event name: <input type="text" name="eventname" ng-model="event.name" /> <br/>
             Description: <input type="textarea" name="description" ng-model="event.description" /> <br />
@@ -20,5 +50,7 @@
             <button ng-click="startEvent()">Start Event!</button>
         </form>
     </div>
+
+    Errors: {{eventErrors}}
 
 </div>
