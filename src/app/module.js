@@ -7,5 +7,6 @@ angular.module('ngBoilerplate', [
     'songster.menu',
     'songster.main-menu',
     'songster.player',
+    'songster.event',
     'ui.router'
 ]);
