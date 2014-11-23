@@ -9,6 +9,7 @@
     <div ng-show="eventActive">
 
         <h1>{{event.name}}</h1>
+
         <p>Your event is currently running</p>
         <table class="table">
             <tr>
@@ -35,19 +36,59 @@
                 <td>Preview</td>
                 <td>{{event.previewEnabled ? 'enabled' : 'disabled'}}</td>
             </tr>
-            </table>
-            <button ng-click="endEvent()">End Event</button>
+        </table>
+        <button ng-click="endEvent()">End Event</button>
     </div>
 
     <div ng-show="!eventActive">
-        <!-- Todo: nice formatting, error checking -->
-        <form name="eventinfo">
-            Event name: <input type="text" name="eventname" ng-model="event.name" /> <br/>
-            Description: <input type="textarea" name="description" ng-model="event.description" /> <br />
-            Voting: <input type="checkbox" ng-model="event.votingEnabled"/><br />
-            Suggestions: <input type="checkbox" ng-model="event.previewEnabled"/><br />
-            Preview: <input type="checkbox" ng-model="event.suggestionEnabled"/><br />
-            <button ng-click="startEvent()">Start Event!</button>
+        <h1>Start your event!</h1>
+<!-- Layout http://getbootstrap.com/css/#forms-horizontal -->
+        <form name="eventinfo" class="form-horizontal">
+            <div class="form-group">
+                <label for="inputEventName" class="col-sm-2 control-label">Event name</label>
+                <div class="col-sm-10">
+                    <input id="inputEventName" type="text" name="eventname" ng-model="event.name"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputDescription" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                    <input id="inputDescription" type="textarea" name="description" ng-model="event.description"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="event.votingEnabled"/> Voting
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="event.previewEnabled"/> Suggestions
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="event.suggestionEnabled"/> Preview
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button ng-click="startEvent()" class="btn btn-default">Start Event!</button>
+                </div>
+            </div>
         </form>
     </div>
 
