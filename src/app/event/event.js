@@ -15,7 +15,25 @@ angular.module('songster.event')
     })
 
 
-    .controller('EventCtrl', function HomeController($scope) {
+    .controller('EventCtrl', function EventCtrl($scope,  $http) {
+
+        //First we check if we have an event ...
+        $http.get('/event/current')
+            .success(function (data) {
+                $scope.event = data;
+                if(data.isEmptyObject()) {
+                    $scope.eventActive = false;
+                }
+                else {
+                    $scope.eventActive = true;
+                }
+            });
+
+        $scope.startEvent = function() {
+
+            $scope.eventActive = true;
+        };
+
     })
 
 ;

@@ -4,4 +4,21 @@
         Create your event!
     </p>
 
+
+    <div ng-if="eventActive">
+        Event is active currently :D
+        Event: {{event}}
+    </div>
+
+    <div ng-if="!eventActive">
+        <form name="eventinfo">
+            Event name: <input type="text" name="eventname" ng-model="event.name" /> <br/>
+            Description: <input type="textarea" name="description" ng-model="event.description" /> <br />
+            Voting: <input type="checkbox" ng-model="event.votingEnabled"/><br />
+            Suggestions: <input type="checkbox" ng-model="event.previewEnabled"/><br />
+            Preview: <input type="checkbox" ng-model="event.suggestionEnabled"/><br />
+            <button ng-click="startEvent()">Start Event!</button>
+        </form>
+    </div>
+
 </div>
