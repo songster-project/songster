@@ -11,7 +11,7 @@ grunt > /dev/null
 echo "_____ starting server _____"
 npm start &
 # give our server some time to startup
-sleep 10
+sleep 20
 
 echo "_____ starting integration tests _____"
 ./node_modules/mocha/bin/mocha -R dot $(find test/integration -name '*.js')
