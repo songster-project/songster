@@ -23,16 +23,11 @@ var settings = require('./config/settings.js');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(expressValidator(
+var middleware=[];
+middleware[0] = logger('dev');
+middleware[1] = bodyParser.json();
+middleware[2] = bodyParser.urlencoded({extended: false});
+middleware[3] = expressValidator(
     {
         customValidators: {
             isMongoID: function (value) {
@@ -43,9 +38,9 @@ app.use(expressValidator(
             }
         }
     }
-));
-app.use(cookieParser(settings.cookie_secret));
-app.use(session({
+);
+middleware[4] = cookieParser(settings.cookie_secret);
+middleware[5] = session({
     secret: settings.cookie_secret,
     store: new MongoStore({
         db: settings.db,
@@ -56,10 +51,28 @@ app.use(session({
     }),
     saveUninitialized: true,
     resave: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
+});
+middleware[6] = passport.initialize();
+middleware[7] = passport.session();
+middleware[8] = express.static(path.join(__dirname, 'public'));
+
+module.exports.middleware = middleware;
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(middleware[0]);
+app.use(middleware[1]);
+app.use(middleware[2]);
+app.use(middleware[3]);
+app.use(middleware[4]);
+app.use(middleware[5]);
+app.use(middleware[6]);
+app.use(middleware[7]);
+app.use(middleware[8]);
 
 app.use('/', routes);
 app.use('/voting/:id',passportinit.redirectVoting);
