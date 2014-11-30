@@ -8,5 +8,6 @@ angular.module('ngBoilerplate', [
     'songster.main-menu',
     'songster.player',
     'songster.event',
+    'songster.voting',
     'ui.router'
 ]);
