@@ -5,9 +5,9 @@ var crypto = require('crypto');
 
 function findById(id, fn) {
 
-    db.User.findById(id, function (err,doc) {
-        if(err) return fn(new Error('User ' + id + ' does not exist'));
-        return fn(null,doc);
+    db.User.findById(id, function (err, doc) {
+        if (err) return fn(new Error('User ' + id + ' does not exist'));
+        return fn(null, doc);
     })
 
 }
@@ -15,8 +15,8 @@ function findById(id, fn) {
 
 function findByUsername(username, fn) {
 
-    db.User.findOne({username: username}, function (err,doc){
-        if(err) return fn(null,null);
+    db.User.findOne({username: username}, function (err, doc) {
+        if (err) return fn(null, null);
         return fn(null, doc);
     })
 }
@@ -57,14 +57,14 @@ passport.use(new LocalStrategy(
                     return done(err);
                 }
                 if (!user) {
-                    return done(null, false, { message: 'Invalid username or password'});
+                    return done(null, false, {message: 'Invalid username or password'});
                 }
 
                 // hash password
-                crypto.pbkdf2(password, user.salt, 10000, 512, function(err, hashedKey) {
+                crypto.pbkdf2(password, user.salt, 10000, 512, function (err, hashedKey) {
                     var hash_password = hashedKey.toString('base64');
                     if (user.password != hash_password) {
-                        return done(null, false, { message: 'Invalid username or password' });
+                        return done(null, false, {message: 'Invalid username or password'});
                     }
                     return done(null, user);
                 });
@@ -85,3 +85,24 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
     }
     res.redirect('/login');
 }
+
+exports.redirectVoting = function ensureAuthenticated(req, res, next) {
+    id = req.params.id;
+    //When i´m authenticated => i´ll get redirected to the voting page
+    if (req.isAuthenticated()) {
+        console.log('authenticated, redirecting: '+'/app/#/voting/'+id);
+        res.redirect('/app/#/voting/'+id);
+    }
+    //Otherwise, i´ll get logged in and will be redirected to the /anon/ page
+    else {
+        //todo .. needs to be standard anonymous user
+        user = { "username" : "user1", "password" : "user1"};
+        req.body = user;
+        passport.authenticate('local')(req, res, function () {
+            console.log('authenticated ')
+            console.log('/app/#/voting/'+id+'/anon');
+            return res.redirect('/app/#/voting/'+id+'/anon');
+        });
+    }
+}
+

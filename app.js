@@ -61,6 +61,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/voting/:id',passportinit.redirectVoting);
 app.use('/app', passportinit.ensureAuthenticated, express.static(path.join(__dirname, 'app')));
 app.use('/login', login);
 app.use('/logout', logout);
