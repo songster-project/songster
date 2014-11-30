@@ -3,8 +3,8 @@ var clients = [];
 var anzClients = 0;
 
 function notificationsocket(app) {
-    app.ws('notification_example',passport.ensureAuthenticated, function (ws, req) {
-        if(!req.isAuthenticated()){
+    app.ws('notification_example', function (ws, req) {
+        if (!req.isAuthenticated()) {
             ws.close();
             return;
         }
@@ -12,7 +12,7 @@ function notificationsocket(app) {
         anzClients++;
         ws.on('message', function (data) {
             var msg = JSON.parse(data);
-            for (var i=0;i<anzClients;i++) {
+            for (var i = 0; i < anzClients; i++) {
                 clients[i].send(msg.message, function (err) {
                     if (err) {
                         clients.splice(i, 1);
