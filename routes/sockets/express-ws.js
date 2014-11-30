@@ -9,10 +9,9 @@ var server;
  * https://github.com/HenningM/express-ws
  */
 module.exports = function (appllication) {
-    app=appllication;
+    app = appllication;
     server = http.createServer(app);
-    app.listen = function()
-    {
+    app.listen = function () {
         return server.listen.apply(server, arguments)
     }
     app.ws = addSocketRoute;
@@ -33,14 +32,14 @@ function addSocketRoute(route, middleware, callback) {
         server: server,
         path: path.join(app.mountpath, route)
     });
-    wss.on('connection', function(ws) {
+    wss.on('connection', function (ws) {
 
         var response = {writeHead: {}};
         ws.upgradeReq.method = 'WS';
 
-        app.handle(ws.upgradeReq, response, function(err) {
+        app.handle(ws.upgradeReq, response, function (err) {
             var idx = 0;
-            (function next (err) {
+            (function next(err) {
                 if (err) return;
                 var cur = middle[idx++];
                 if (!middle[idx]) {

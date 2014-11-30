@@ -24,7 +24,7 @@ var settings = require('./config/settings.js');
 
 var app = express();
 
-var middleware=[];
+var middleware = [];
 middleware[0] = logger('dev');
 middleware[1] = bodyParser.json();
 middleware[2] = bodyParser.urlencoded({extended: false});
