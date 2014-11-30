@@ -9,7 +9,7 @@ block content
             $('#msg').val('');
         };
         function sendNotification() {
-            ws.send('{"message":"'+$("#msg").val()+'"}');
+            ws.send('{"message":"' + $("#msg").val() + '"}');
         }
     input(name="Message" type="text" size="30" id="msg")
     input(name="Send" type="submit" onclick="sendNotification();" id="sendButton")
