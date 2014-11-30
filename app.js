@@ -18,6 +18,7 @@ var song = require('./routes/song');
 var playlist = require('./routes/playlist');
 var registration = require('./routes/registration');
 var event = require('./routes/event');
+var notification_example = require('./routes/notification_example')
 var settings = require('./config/settings.js');
 
 var app = express();
@@ -57,6 +58,8 @@ middleware[8] = express.static(path.join(__dirname, 'public'));
 
 module.exports.middleware = middleware;
 
+require('./routes/sockets/express-ws')(app);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -82,6 +85,7 @@ app.use('/song', song);
 app.use('/playlist', playlist);
 app.use('/registration', registration);
 app.use('/event', event);
+app.use('/notification_example', notification_example);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

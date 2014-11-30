@@ -1,0 +1,15 @@
+extends layout
+block content
+    h1 Message Board
+    div(id="container")
+    script.
+        var ws = new WebSocket("ws://localhost:3000/notification_example");
+        ws.onmessage = function (event) {
+            $('#container').append("<p>" + event.data + "</p>");
+            $('#msg').val('');
+        };
+        function sendNotification() {
+            ws.send('{"message":"'+$("#msg").val()+'"}');
+        }
+    input(name="Message" type="text" size="30" id="msg")
+    input(name="Send" type="submit" onclick="sendNotification();" id="sendButton")
