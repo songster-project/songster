@@ -90,9 +90,8 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
 
 exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     //Only non anonymous user has access
-    console.log("in not anonymouss");
     if (req.user.username != anonymoususer.username) {
-        next();
+        return next();
     }
     //maybe logout here??
     res.status(403).send('Forbidden for anonymous user');
@@ -112,14 +111,10 @@ exports.redirectVoting = function ensureAuthenticated(req, res, next) {
     else {
         req.body = user;
         console.log("before authenticate");
-        passport.authenticate('local', function (err, user, info) {
-            if (err) {
-                return next(err);
-            }
-            passport.authenticate('local')(req, res, function () {
-
-                return res.redirect('/app/#/voting/' + id + '/anon');
-            });
+        passport.authenticate('local')(req, res, function () {
+            console.log('authenticated ')
+            console.log('/app/#/voting/'+id+'/anon');
+            return res.redirect('/app/#/voting/'+id+'/anon');
         });
     }
 };
