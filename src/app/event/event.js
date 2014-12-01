@@ -15,8 +15,8 @@ angular.module('songster.event')
     })
 
 
-    .controller('EventCtrl', function EventCtrl($scope, $http) {
-
+    .controller('EventCtrl', function EventCtrl($scope,$location, $http) {
+        $scope.location=$location;
         // $scope.eventActive = false;
         //First we check if we have an event ...
         $http.get('/event/current')
@@ -33,9 +33,6 @@ angular.module('songster.event')
             });
 
         $scope.startEvent = function () {
-            //ToDo: acceessKey ... look if we really need it
-            //also ... owner_id is currently hardcoded to user1
-            $scope.event.accessKey = '1234';
             $http.get('/account/id').success(function (data) {
                 $scope.event.owner_id = data.id;
                 $http.post('/event', $scope.event).
