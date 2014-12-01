@@ -88,6 +88,16 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
     res.redirect('/login');
 }
 
+exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
+    //Only non anonymous user has access
+    console.log("in not anonymouss");
+    if (req.user.username != anonymoususer.username) {
+        next();
+    }
+    //maybe logout here??
+    res.status(403).send('Forbidden for anonymous user');
+}
+
 exports.redirectVoting = function ensureAuthenticated(req, res, next) {
     id = req.params.id;
 
