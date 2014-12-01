@@ -12,7 +12,7 @@ var request = require('request');
 var GridStore = require('mongodb').GridStore;
 var ObjectID = require('mongodb').ObjectID;
 
-router.post('/', passport.ensureAuthenticated, function (req, res) {
+router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     try {
         var form = new formidable.IncomingForm();
         form.uploadDir = 'upload';
@@ -28,7 +28,7 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
                 console.log('Started writing to GFS');
                 writeStream.on('close', function () {
 
-                    id3({ file: files.file.path, type: id3.OPEN_LOCAL }, function (err, tags) {
+                    id3({file: files.file.path, type: id3.OPEN_LOCAL}, function (err, tags) {
                         if (err) {
                             console.log(err);
                             res.status(400).send('Bad request');
@@ -101,7 +101,7 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
     }
 });
 
-router.get('/:id', passport.ensureAuthenticated, function (req, res) {
+router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     var songCollection = database.db.collection('song');
     songCollection.findOne({"_id": mongo.ObjectID(req.param('id'))}, function (err, doc) {
         if (err) {
@@ -114,7 +114,7 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.get('/:id/raw', passport.ensureAuthenticated, function (req, res) {
+router.get('/:id/raw', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     var options = {
         _id: req.param("id")
     };
@@ -171,28 +171,28 @@ router.get('/:id/raw', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.get('/:id/cover', passport.ensureAuthenticated, function (req, res) {
+router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     var options = {
         _id: req.param('id')
     };
 
     if (database.gfs.exist(options, function (err, found) {
-        if (err) {
-            res.status(500).send('Internal server error');
-            console.log(err);
-            return;
-        } else if (found) {
-            var readStream = database.gfs.createReadStream(options);
-            res.setHeader('Content-Type', 'image/jpeg');
-            readStream.pipe(res);
-        } else {
-            res.status(404).send('cover not found');
-            return;
-        }
-    }));
+            if (err) {
+                res.status(500).send('Internal server error');
+                console.log(err);
+                return;
+            } else if (found) {
+                var readStream = database.gfs.createReadStream(options);
+                res.setHeader('Content-Type', 'image/jpeg');
+                readStream.pipe(res);
+            } else {
+                res.status(404).send('cover not found');
+                return;
+            }
+        }));
 });
 
-router.get('/', passport.ensureAuthenticated, function (req, res) {
+router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     var songCollection = database.db.collection('song');
     songCollection.find().toArray(function (err, docs) {
         if (err) {

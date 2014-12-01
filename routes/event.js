@@ -7,7 +7,7 @@ var util = require('util');
 var Event = db.Event;
 
 
-router.get('/', passport.ensureAuthenticated, function (req, res) {
+router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({owner_id: req.user._id}, function (err, playlists) {
         if (err) {
             console.log(err);
@@ -18,7 +18,7 @@ router.get('/', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.get('/active', passport.ensureAuthenticated, function (req, res) {
+router.get('/active', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({end: null}, function (err, events) {
         if (err) {
             console.log(err);
@@ -29,7 +29,7 @@ router.get('/active', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.get('/current', passport.ensureAuthenticated, function (req, res) {
+router.get('/current', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.findOne({owner_id: req.user._id, end: null}, function (err, event) {
         if (err) {
             console.log(err);
@@ -45,7 +45,7 @@ router.get('/current', passport.ensureAuthenticated, function (req, res) {
 });
 
 
-router.get('/:id', passport.ensureAuthenticated, function (req, res) {
+router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     req.checkParams('id', 'ID is not an ID').isMongoID();
     var errors = req.validationErrors();
     if (errors) {
@@ -69,7 +69,7 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
 
 
 //For when you want to end the current event
-router.put('/current/end', passport.ensureAuthenticated, function (req, res) {
+router.put('/current/end', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.findOneAndUpdate({owner_id: req.user._id, end: null}, {$set: {end: Date.now()}}, function (err, event) {
         if (err) {
             console.log(err);
@@ -85,7 +85,7 @@ router.put('/current/end', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.post('/', passport.ensureAuthenticated, function (req, res) {
+router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     //Maybe this does not need to be (because it is done by passport, and passport should authenticate
     req.checkBody('name', 'Name is empty').notEmpty();
     req.checkBody('owner_id', 'id of owner not set').notEmpty();
