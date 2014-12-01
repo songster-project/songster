@@ -24,11 +24,7 @@ var settings = require('./config/settings.js');
 
 var app = express();
 
-var middleware = [];
-middleware[0] = logger('dev');
-middleware[1] = bodyParser.json();
-middleware[2] = bodyParser.urlencoded({extended: false});
-middleware[3] = expressValidator(
+var middlewarewebsocket = [expressValidator(
     {
         customValidators: {
             isMongoID: function (value) {
@@ -39,9 +35,9 @@ middleware[3] = expressValidator(
             }
         }
     }
-);
-middleware[4] = cookieParser(settings.cookie_secret);
-middleware[5] = session({
+)];
+middlewarewebsocket.push(cookieParser(settings.cookie_secret));
+middlewarewebsocket.push(session({
     secret: settings.cookie_secret,
     store: new MongoStore({
         db: settings.db,
@@ -52,12 +48,11 @@ middleware[5] = session({
     }),
     saveUninitialized: true,
     resave: true
-});
-middleware[6] = passport.initialize();
-middleware[7] = passport.session();
-middleware[8] = express.static(path.join(__dirname, 'public'));
+}));
+middlewarewebsocket.push(passport.initialize());
+middlewarewebsocket.push(passport.session());
 
-module.exports.middleware = middleware;
+module.exports.middleware = middlewarewebsocket;
 
 require('./routes/sockets/express-ws')(app);
 
@@ -67,15 +62,13 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(middleware[0]);
-app.use(middleware[1]);
-app.use(middleware[2]);
-app.use(middleware[3]);
-app.use(middleware[4]);
-app.use(middleware[5]);
-app.use(middleware[6]);
-app.use(middleware[7]);
-app.use(middleware[8]);
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+for (var i = 0; i < middlewarewebsocket.length; i++) {
+    app.use(middlewarewebsocket[i]);
+}
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/voting/:id',passportinit.redirectVoting);
@@ -122,3 +115,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+require('./routes/sockets/notification_example_socket');
