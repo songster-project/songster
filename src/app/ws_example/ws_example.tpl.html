@@ -1,0 +1,18 @@
+<div class="row" ng-controller="Ws_ExampleCtrl">
+    <h1 class="page-header">
+        Websocket Example
+    </h1>
+
+    <label for="inputMessage" class="col-sm-2 control-label">Message</label>
+    <input id="inputMessage" type="text" name="message" ng-model="message" required/>
+    <button ng-click="sendmessage()" for="inputMessage">Send</button>
+
+    <p>
+        Messages:
+    </p>
+    <ol>
+        <li ng:repeat="msg in messages">
+            {{ msg.value }}
+        </li>
+    </ol>
+</div>
