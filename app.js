@@ -51,7 +51,7 @@ middlewarewebsocket.push(session({
 middlewarewebsocket.push(passport.initialize());
 middlewarewebsocket.push(passport.session());
 
-module.exports.middleware = middlewarewebsocket;
+module.exports.middlewarewebsocket = middlewarewebsocket;
 
 require('./routes/sockets/express-ws')(app);
 

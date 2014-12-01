@@ -1,7 +1,7 @@
 var path = require('path');
 var http = require('http');
 var WebSocketServer = require('ws').Server;
-var middle = require('../../app').middleware;
+var middlewarewebsocket = require('../../app').middlewarewebsocket;
 var app;
 var server;
 /*
@@ -19,7 +19,8 @@ module.exports = function (appllication) {
 
 function addSocketRoute(route, middleware, callback) {
     var args = [].splice.call(arguments, 0);
-
+    var middle = [];
+    middle.push.apply(middle,middlewarewebsocket);
     if (args.length < 2)
         throw new SyntaxError('Invalid number of arguments');
 
@@ -32,6 +33,7 @@ function addSocketRoute(route, middleware, callback) {
         server: server,
         path: path.join(app.mountpath, route)
     });
+
     wss.on('connection', function (ws) {
 
         var response = {writeHead: {}};
@@ -43,11 +45,13 @@ function addSocketRoute(route, middleware, callback) {
                 if (err) return;
                 var cur = middle[idx++];
                 if (!middle[idx]) {
-                    cur(ws, ws.upgradeReq);
+                    cur(ws, ws.upgradeReq,wss);
                 } else {
                     cur(ws.upgradeReq, response, next);
                 }
             }());
         });
     });
+
+    return wss;
 };
