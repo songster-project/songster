@@ -48,9 +48,8 @@
 </head>
 <body>
 
-<so-main-menu></so-main-menu>
-
-<so-player></so-player>
+<so-main-menu ng-if="!anonymousUser"></so-main-menu>
+<so-player ng-if="!anonymousUser"></so-player>
 
 <div class="container-fluid" ui-view="main"></div>
 
