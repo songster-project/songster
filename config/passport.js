@@ -2,6 +2,8 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var db = require('../config/database.js');
 var crypto = require('crypto');
+var anonymoususer = {"username": "anon", "password": "123anon"};
+
 
 function findById(id, fn) {
 
@@ -90,21 +92,25 @@ exports.redirectVoting = function ensureAuthenticated(req, res, next) {
     id = req.params.id;
 
     //Credentials of our anonymous user
-    user = { "username" : "user1", "password" : "user1"};
+    user = anonymoususer;
 
     //If we are authenticated and NOT the anonymous user
     if (req.isAuthenticated() && req.user.username != user.username) {
-        console.log('authenticated, redirecting: '+'/app/#/voting/'+id);
-        res.redirect('/app/#/voting/'+id);
+        res.redirect('/app/#/voting/' + id);
     }
     //I need to be logged in and redirected to the anon page
     else {
         req.body = user;
-        passport.authenticate('local')(req, res, function () {
-            console.log('authenticated ')
-            console.log('/app/#/voting/'+id+'/anon');
-            return res.redirect('/app/#/voting/'+id+'/anon');
+        console.log("before authenticate");
+        passport.authenticate('local', function (err, user, info) {
+            if (err) {
+                return next(err);
+            }
+            passport.authenticate('local')(req, res, function () {
+
+                return res.redirect('/app/#/voting/' + id + '/anon');
+            });
         });
     }
-}
+};
 
