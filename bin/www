@@ -10,7 +10,7 @@ var elasticSearchService = require('../backend/services/elasticSearchService');
 var middleware = require('../app').middleware;
 require('../routes/sockets/notification_example_socket').sock(app, middleware);
 
-app.listen(process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3000);
 
 mongodb.MongoClient.connect(settings.mongo_url, function (err, db) {
     if (err) throw err;
