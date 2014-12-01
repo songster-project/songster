@@ -3,7 +3,7 @@ block content
     h1 Message Board
     div(id="container")
     script.
-        var ws = new WebSocket("ws://localhost:3000/notification_example");
+        var ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/notification_example");
         ws.onmessage = function (event) {
             $('#container').append("<p>" + event.data + "</p>");
             $('#msg').val('');
