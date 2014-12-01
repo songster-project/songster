@@ -90,7 +90,6 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
     req.checkBody('name', 'Name is empty').notEmpty();
     req.checkBody('owner_id', 'id of owner not set').notEmpty();
     req.checkBody('owner_id', 'id of owner is not of the logged in one').equals(req.user._id);
-    req.checkBody('accessKey', 'accessKey needs to be set').notEmpty();
     //description => may be null
     //start date will be set
     //end date will be set
