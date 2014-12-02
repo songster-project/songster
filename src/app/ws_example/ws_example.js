@@ -15,13 +15,12 @@ angular.module('songster.ws_example')
 
     .controller('Ws_ExampleCtrl', function EventCtrl($scope, $http) {
         $scope.messages = [];
-        var ws = new WebSocket("ws://"+location.hostname + ":" + location.port + "/notification_example");
-        $scope.sendmessage = function () {
-            ws.send('{"message":"' + $scope.message + '"}');
-        };
-        ws.onmessage = function (event) {
-            $scope.messages.push({value: event.data});
+        register_to_event('lala', function (msg) {
+            $scope.messages.push(msg);
             $scope.$apply();
+        });
+        $scope.sendmessage = function () {
+            send_event('lala', '{"message":"' + $scope.message + '"}');
+            $scope.message = '';
         };
-
     });
