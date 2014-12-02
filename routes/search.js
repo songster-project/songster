@@ -1,38 +1,30 @@
 var express = require('express');
-var elasticsearch = require('elasticsearch');
 var router = express.Router();
 var passport = require('../config/passport');
-
-var client = new elasticsearch.Client({
-    host: 'localhost:9200',
-    log: 'trace'
-});
-
-var getSourceElementsFromResponse = function (response) {
-    return response;
-};
+var elasticSearchService = require('../backend/services/elasticSearchService');
 
 router.get('/song', passport.ensureAuthenticated, function (req, res) {
-    client.search({
+    elasticSearchService.getClient().search({
         index: 'songster',
         type: 'song',
         pretty: true
     }, function (error, response) {
         if (!error) {
-            res.send(getSourceElementsFromResponse(response));
+            res.send(response);
         }
     });
 
 });
 
 router.get('/song/:query', passport.ensureAuthenticated, function (req, res) {
-    client.search({
+    var escapedQuery = elasticSearchService.escape(req.params.query);
+    elasticSearchService.getClient().search({
         index: 'songster',
         type: 'song',
-        q: '_all:' + req.params.query
+        q: '_all:' + escapedQuery
     }, function (error, response) {
         if (!error) {
-            res.send(getSourceElementsFromResponse(response));
+            res.send(response);
         }
     });
 
