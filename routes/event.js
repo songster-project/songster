@@ -37,7 +37,7 @@ router.get('/current', passport.ensureAuthenticated, passport.ensureNotAnonymous
             return;
         }
         if (event) {
-            res.send(event)
+            res.send(event);
             return;
         }
         res.send({});

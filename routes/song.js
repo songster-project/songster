@@ -11,11 +11,7 @@ var albumArt = require('album-art');
 var request = require('request');
 var GridStore = require('mongodb').GridStore;
 var ObjectID = require('mongodb').ObjectID;
-var elasticsearch = require('elasticsearch');
-var client = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'trace'
-});
+var elasticSearchService = require('../backend/services/elasticSearchService');
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     try {
@@ -60,25 +56,15 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                         var saveMetadata = function () {
                             var collection = database.db.collection('song');
                             metadata['file_id'] = writeStream.id;
-                            collection.insert(metadata, function () {
+                            collection.insert(metadata, function (err, records) {
+                                var record = records[0];
                                 console.log('saved metadata to mongo');
                                 fs.unlink(files.file.path, function (err) {
                                     if (err) {
                                         console.log('error deleting the temp-file');
                                         console.log(err);
                                     } else {
-                                        client.index({
-                                            index: 'songs',
-                                            type: 'song',
-                                            body: {
-                                                title: metadata.title,
-                                                album: metadata.album,
-                                                artist: metadata.artist,
-                                                year: metadata.year
-                                            }
-                                        }, function (error, response) {
-                                            console.log('Index elasticsearch');
-                                        });
+                                        elasticSearchService.indexSong(record);
                                     }
                                 });
                             });
@@ -194,20 +180,20 @@ router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymo
         _id: req.param('id')
     };
 
-    if (database.gfs.exist(options, function (err, found) {
-            if (err) {
-                res.status(500).send('Internal server error');
-                console.log(err);
-                return;
-            } else if (found) {
-                var readStream = database.gfs.createReadStream(options);
-                res.setHeader('Content-Type', 'image/jpeg');
-                readStream.pipe(res);
-            } else {
-                res.status(404).send('cover not found');
-                return;
-            }
-        }));
+    database.gfs.exist(options, function (err, found) {
+        if (err) {
+            res.status(500).send('Internal server error');
+            console.log(err);
+            return;
+        } else if (found) {
+            var readStream = database.gfs.createReadStream(options);
+            res.setHeader('Content-Type', 'image/jpeg');
+            readStream.pipe(res);
+        } else {
+            res.status(404).send('cover not found');
+            return;
+        }
+    });
 });
 
 router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
