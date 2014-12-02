@@ -56,7 +56,6 @@ exports.indexSong = function indexSong(song) {
 exports.escape = function escape(str) {
     // http://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Escaping Special Characters
     // + - && || ! ( ) { } [ ] ^ " ~ * ? : \
-    // /([-&|!(){}[]^"~*?:\+])/
     return (str + '').replace(/([-\\&\|!\(\){}\[\]\^"~\*\?:\+])/g, "\\$1");
 };
 
