@@ -5,7 +5,6 @@ var settings = require('../config/settings');
 var database = require('../config/database');
 var mongodb = require('mongodb');
 var mongoose = require('mongoose');
-var elasticsearch = require('elasticsearch');
 var Grid = require('gridfs-stream');
 
 app.set('port', process.env.PORT || 3000);
