@@ -1,24 +1,24 @@
-<div
-<div class="row">
-    <form>
-        <div class="col-lg-6">
-            <div class="input-group">
-                <input type="text" class="form-control" ng-model="searchRequest.query">
+<div>
+    <div class="row">
+        <form>
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="searchRequest.query">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="submit" ng-click="search(searchRequest)">Search</button>
                     </span>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
-
-<div class="row">
-    <div class="col-lg-6">
-        <p>Total: {{total}}</p>
+        </form>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12" ng-include="'library/templates/songResults.tpl.html'"></div>
-</div>
+    <div class="row">
+        <div class="col-lg-6">
+            <p>Total: {{total}}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12" ng-include="'library/templates/songResults.tpl.html'"></div>
+    </div>
 </div>
