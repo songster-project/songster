@@ -21,8 +21,6 @@ var event = require('./routes/event');
 var search = require('./routes/search');
 var settings = require('./config/settings.js');
 
-var elasticSearchService = require('./backend/services/elasticSearchService');
-
 var app = express();
 
 // view engine setup
@@ -105,13 +103,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-// TODO remove me later on
-// we do this to reindex all songs which are already in the db, so we can see them in the library
-elasticSearchService.dropAllIndices().then(function () {
-    elasticSearchService.reindexSongs();
-});
-
 
 module.exports = app;

@@ -23,22 +23,17 @@ function index(type, obj) {
 }
 
 function reindex(type) {
-    // TODO mega dirty timeout hack :( 'database' is null
-    // does someone has a better idea? maybe a promise or an event call?
-    setTimeout(function () {
-        var collection = database.db.collection(type);
-        collection.find().toArray(function (err, docs) {
-            if (err) {
-                res.status(500).send('Internal server error');
-                console.log(err);
-                return;
-            }
-            docs.forEach(function (doc) {
-                index(type, doc);
-            });
+    var collection = database.db.collection(type);
+    collection.find().toArray(function (err, docs) {
+        if (err) {
+            res.status(500).send('Internal server error');
+            console.log(err);
+            return;
+        }
+        docs.forEach(function (doc) {
+            index(type, doc);
         });
-    }, 2000);
-
+    });
 }
 
 exports.dropAllIndices = function dropAllIndices() {
