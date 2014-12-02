@@ -19,12 +19,24 @@ var playlist = require('./routes/playlist');
 var registration = require('./routes/registration');
 var event = require('./routes/event');
 var search = require('./routes/search');
-var notification_example = require('./routes/notification_example')
 var settings = require('./config/settings.js');
 
 var app = express();
+//add express-ws
+require('./lib/express-ws')(app);
+//initialize notification_server
+require('./lib/notification_server')(app);
 
-var middlewarewebsocket = [expressValidator(
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(expressValidator(
     {
         customValidators: {
             isMongoID: function (value) {
@@ -35,9 +47,9 @@ var middlewarewebsocket = [expressValidator(
             }
         }
     }
-)];
-middlewarewebsocket.push(cookieParser(settings.cookie_secret));
-middlewarewebsocket.push(session({
+));
+app.use(cookieParser(settings.cookie_secret));
+app.use(session({
     secret: settings.cookie_secret,
     store: new MongoStore({
         db: settings.db,
@@ -49,25 +61,8 @@ middlewarewebsocket.push(session({
     saveUninitialized: true,
     resave: true
 }));
-middlewarewebsocket.push(passport.initialize());
-middlewarewebsocket.push(passport.session());
-
-module.exports.middlewarewebsocket = middlewarewebsocket;
-
-require('./routes/sockets/express-ws')(app);
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-for (var i = 0; i < middlewarewebsocket.length; i++) {
-    app.use(middlewarewebsocket[i]);
-}
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
@@ -81,7 +76,6 @@ app.use('/playlist', playlist);
 app.use('/registration', registration);
 app.use('/event', event);
 app.use('/search', search);
-app.use('/notification_example', notification_example);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -115,5 +109,4 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
 require('./routes/sockets/notification_example_socket');

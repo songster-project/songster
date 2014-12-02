@@ -1,26 +1,12 @@
-var passport = require('../../config/passport');
-var app = require('../../app');
-var clients = [];
-var anzClients = 0;
+var nserver = require('./../../lib/notification_server');
+var clients = new Array();
 
-app.ws('notification_example', function (ws, req) {
-    console.log('connection')
-    if (!req.isAuthenticated()) {
-        ws.close();
-        return;
-    }
-    clients[anzClients] = ws;
-    anzClients++;
-    ws.on('message', function (data) {
-        var msg = JSON.parse(data);
-        for (var i = 0; i < anzClients; i++) {
-            clients[i].send(msg.message, function (err) {
-                if (err) {
-                    clients.splice(i, 1);
-                    i--;
-                    anzClients--;
-                }
-            });
-        }
-    });
+nserver.register_Event('lala', function (ws,req, payload) {
+    console.log('callback');
+    nserver.send_Notifications('lala',payload,clients);
+});
+
+nserver.register_User('lala', function (ws,req, payload) {
+    console.log('new user');
+    clients.push(ws);
 });
