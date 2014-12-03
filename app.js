@@ -24,7 +24,11 @@ var app = express();
 //add express-ws
 require('./lib/express-ws')(app);
 //initialize notification_server
-require('./lib/notification_server')(app);
+require('./lib/notification_server')(app,cookieParser,session,passport,settings,MongoStore);
+
+//initialize example socket
+//TODO remove if not needed anymore
+require('./routes/sockets/notification_example_socket');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
