@@ -12,18 +12,21 @@ var connected = false;
 function register_to_event(event, callback) {
     if (!eventmap[event]) {
         eventmap[event] = {
-            callbacks: []
+            callback: callback,
+            registered: false
         };
-        eventmap[event].callbacks.push(callback);
     } else {
-        eventmap[event].callbacks.push(callback);
+        eventmap[event].callback = callback;
     }
 
     //register to event messages from server
     if (connected) {
-        ws.send('{' +
-        '"event_type":"' + event + '",' +
-        '"register" : true}');
+        if (!eventmap[event].registered) {
+            eventmap[event].registered = true;
+            ws.send('{' +
+            '"event_type":"' + event + '",' +
+            '"register" : true}');
+        }
     }
 }
 
@@ -41,23 +44,31 @@ function send_event(event, payload) {
     '"payload":' + payload + '}');
 }
 
+/**
+ * registers for the events at the server after connection is established
+ * @param event
+ */
 ws.onopen = function (event) {
     connected = true;
     for (var i in eventmap) {
         if (eventmap.hasOwnProperty(i)) {
-            console.log("register")
-            ws.send('{' +
-            '"event_type":"' + i + '",' +
-            '"register" : true}');
+            if (!eventmap[i].registered) {
+                eventmap[i].registered = true;
+                ws.send('{' +
+                '"event_type":"' + i + '",' +
+                '"register" : true}');
+            }
         }
     }
 };
 
+/**
+ * calls the callback if a message from the server arrives
+ * @param event
+ */
 ws.onmessage = function (event) {
     var msg = JSON.parse(event.data);
     if (eventmap[msg.event_type]) {
-        for (var i = 0; i < eventmap[msg.event_type].callbacks.length; i++) {
-            eventmap[msg.event_type].callbacks[i](msg.payload);
-        }
+        eventmap[msg.event_type].callback(msg.payload);
     }
 };
