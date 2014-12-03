@@ -101,8 +101,6 @@ exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
 exports.redirectVoting = function redirectVoting(req, res, next) {
     id = req.params.id;
 
-    //Credentials of our anonymous user
-    user = anonymoususer;
 
     //If we are authenticated and NOT the anonymous user
     if (req.isAuthenticated() && req.user.username != user.username) {
@@ -110,11 +108,9 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
     }
     //I need to be logged in and redirected to the anon page
     else {
-        req.body = user;
-        console.log("before authenticate");
+        req.body = anonymoususer;
         passport.authenticate('local')(req, res, function () {
-            console.log('authenticated ')
-            console.log('/app/#/voting/'+id+'/anon');
+            console.log('authenticated anon and redirect to /app/#/voting/'+id+'/anon');
             return res.redirect('/app/#/voting/'+id+'/anon');
         });
     }
