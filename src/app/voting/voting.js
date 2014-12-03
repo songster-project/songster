@@ -29,7 +29,8 @@ angular.module('songster.voting')
     .controller('VotingCtrl', function VotingCtrl($scope,$rootScope, $http,$state, $stateParams) {
         $scope.eventid = $stateParams.eventid;
 
-        //ToDo: Manuel => macht hier weiter
+        //ToDo: Manuel => as discussed in the last week of september, you said you are going to continue at this point
+        //by going to manage that the availability of the menu ...
         $rootScope.anonymousUser = !!$state.current.data.anonymous;
     })
 
