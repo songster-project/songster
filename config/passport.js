@@ -93,7 +93,8 @@ exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     if (req.user.username != anonymoususer.username) {
         return next();
     }
-    //maybe logout here??
+    //TODO: currently it is restricted, maybe because of useability we want to redirect to a certain page here
+    //or go to the login-page. For now (3-12-2014) it's enough to restrict the access.
     res.status(403).send('Forbidden for anonymous user');
 }
 
