@@ -5,7 +5,7 @@ var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 
-router.get('/', passport.ensureAuthenticated, function (req, res) {
+router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Playlist.find({owner_id: req.user._id}, function (err, playlists) {
         if (err) {
             console.log(err);
@@ -16,7 +16,7 @@ router.get('/', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.get('/:id', passport.ensureAuthenticated, function (req, res) {
+router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     req.checkParams('id', 'ID is not an ID').isMongoID();
     var errors = req.validationErrors();
     if (errors) {
@@ -37,7 +37,7 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.delete('/:id', passport.ensureAuthenticated, function (req, res) {
+router.delete('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     req.checkParams('id', 'ID is not an ID').isMongoID();
     req.checkParams('id', '_id of playlist not specified').notEmpty();
     var errors = req.validationErrors();
@@ -56,7 +56,7 @@ router.delete('/:id', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.put('/', passport.ensureAuthenticated, function (req, res) {
+router.put('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     req.checkBody('_id', '_id of playlist not specified').notEmpty();
     req.checkBody('owner_id', 'id of owner not set').notEmpty();
     req.checkBody('owner_id', 'id of owner is not of the logged in one').equals(req.user._id);
@@ -90,7 +90,7 @@ router.put('/', passport.ensureAuthenticated, function (req, res) {
 
 });
 
-router.post('/', passport.ensureAuthenticated, function (req, res) {
+router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     //Maybe this does not need to be (because it is done by passport, and passport should authenticate
     req.checkBody('name', 'Name is empty').notEmpty();
     req.checkBody('owner_id', 'id of owner not set').notEmpty();

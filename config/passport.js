@@ -2,12 +2,14 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var db = require('../config/database.js');
 var crypto = require('crypto');
+var anonymoususer = {"username": "anon", "password": "123anon"};
+
 
 function findById(id, fn) {
 
-    db.User.findById(id, function (err,doc) {
-        if(err) return fn(new Error('User ' + id + ' does not exist'));
-        return fn(null,doc);
+    db.User.findById(id, function (err, doc) {
+        if (err) return fn(new Error('User ' + id + ' does not exist'));
+        return fn(null, doc);
     })
 
 }
@@ -15,8 +17,8 @@ function findById(id, fn) {
 
 function findByUsername(username, fn) {
 
-    db.User.findOne({username: username}, function (err,doc){
-        if(err) return fn(null,null);
+    db.User.findOne({username: username}, function (err, doc) {
+        if (err) return fn(null, null);
         return fn(null, doc);
     })
 }
@@ -57,14 +59,14 @@ passport.use(new LocalStrategy(
                     return done(err);
                 }
                 if (!user) {
-                    return done(null, false, { message: 'Invalid username or password'});
+                    return done(null, false, {message: 'Invalid username or password'});
                 }
 
                 // hash password
-                crypto.pbkdf2(password, user.salt, 10000, 512, function(err, hashedKey) {
+                crypto.pbkdf2(password, user.salt, 10000, 512, function (err, hashedKey) {
                     var hash_password = hashedKey.toString('base64');
                     if (user.password != hash_password) {
-                        return done(null, false, { message: 'Invalid username or password' });
+                        return done(null, false, {message: 'Invalid username or password'});
                     }
                     return done(null, user);
                 });
@@ -85,3 +87,32 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
     }
     res.redirect('/login');
 }
+
+exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
+    //Only non anonymous user has access
+    if (req.user.username != anonymoususer.username) {
+        return next();
+    }
+    //TODO: currently it is restricted, maybe because of useability we want to redirect to a certain page here
+    //or go to the login-page. For now (3-12-2014) it's enough to restrict the access.
+    res.status(403).send('Forbidden for anonymous user');
+}
+
+exports.redirectVoting = function redirectVoting(req, res, next) {
+    id = req.params.id;
+
+
+    //If we are authenticated and NOT the anonymous user
+    if (req.isAuthenticated() && req.user.username != user.username) {
+        res.redirect('/app/#/voting/' + id);
+    }
+    //I need to be logged in and redirected to the anon page
+    else {
+        req.body = anonymoususer;
+        passport.authenticate('local')(req, res, function () {
+            console.log('authenticated anon and redirect to /app/#/voting/'+id+'/anon');
+            return res.redirect('/app/#/voting/'+id+'/anon');
+        });
+    }
+};
+

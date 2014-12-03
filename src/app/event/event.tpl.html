@@ -12,7 +12,7 @@
             </tr>
             <tr>
                 <td>Public link:</td>
-                <td>{{event.link}}</td>
+                <td>http://{{location.host()}}:{{location.port()}}/voting/{{event._id}}</td>
             </tr>
             <tr>
                 <td>Voting</td>
@@ -65,7 +65,7 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="event.previewEnabled"/> Suggestions
+                            <input type="checkbox" ng-model="event.suggestionEnabled"/> Suggestions
                         </label>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="event.suggestionEnabled"/> Preview
+                            <input type="checkbox" ng-model="event.previewEnabled"/> Preview
                         </label>
                     </div>
                 </div>

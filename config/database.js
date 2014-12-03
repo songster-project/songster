@@ -76,7 +76,6 @@ var eventSchema = new Schema({
     owner_id: ObjectId, //Referencing to user
     name: String,
     description: String,
-    accessKey: String, //for accessing the event
     start: {type: Date, default: Date.now},
     end: {type: Date, default: null},
     votingEnabled: Boolean,
