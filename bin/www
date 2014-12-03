@@ -10,9 +10,6 @@ var elasticSearchService = require('../backend/services/elasticSearchService');
 var middleware = require('../app').middleware;
 require('../routes/sockets/notification_example_socket').sock(app, middleware);
 
-//initialize example socket
-//TODO remove if not needed anymore
-require('../routes/sockets/notification_example_socket');
 
 app.set('port', process.env.PORT || 3000);
 
