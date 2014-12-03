@@ -97,7 +97,7 @@ exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     res.status(403).send('Forbidden for anonymous user');
 }
 
-exports.redirectVoting = function ensureAuthenticated(req, res, next) {
+exports.redirectVoting = function redirectVoting(req, res, next) {
     id = req.params.id;
 
     //Credentials of our anonymous user
