@@ -2,8 +2,8 @@ var database = require('../../config/database');
 var settings = require('../../config/settings.js');
 var elasticSearch = require('elasticsearch');
 var elasticSearchClient = new elasticSearch.Client({
-    host: settings.elasticSearch_host + ':' + settings.elasticSearch_port,
-    log: 'trace'
+    host: settings.elasticSearch_url,
+    log: 'info'
 });
 
 function errorCallback(error, response) {

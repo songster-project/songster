@@ -7,8 +7,7 @@ exports.db_port = process.env.MONGODB_PORT || '27017';
 exports.db_user = process.env.MONGODB_USERNAME;
 exports.db_pass = process.env.MONGODB_PASSWORD;
 
-exports.elasticSearch_host = process.env.ELASTIC_SEARCH_HOST || 'localhost';
-exports.elasticSearch_port = process.env.ELASTIC_SEARCH_PORT || '9200';
+exports.elasticSearch_url = process.env.ELASTICSEARCH_URL || 'localhost:9200';
 
 if (process.env.MONGODB_USERNAME != null && process.env.MONGODB_PASSWORD != null) {
     exports.mongo_url = 'mongodb://' + settings.db_user + ':' + settings.db_pass + '@' + settings.db_host + '/' + settings.db;

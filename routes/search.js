@@ -6,8 +6,7 @@ var elasticSearchService = require('../backend/services/elasticSearchService');
 router.get('/song', passport.ensureAuthenticated, function (req, res) {
     elasticSearchService.getClient().search({
         index: 'songster',
-        type: 'song',
-        pretty: true
+        type: 'song'
     }, function (error, response) {
         if (!error) {
             res.send(response);
