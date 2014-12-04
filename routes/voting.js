@@ -71,34 +71,33 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
         }
 
         // find all voted songs from event and send them back
-        var votes = db.Vote.aggregate( [
-            {
-                $match: {
-                    event_id: event._id,
-                    state: 'new',
-                    type: 'vote'
+        var o = {};
+        o.map = function() {
+            emit( this.song_id, 1);
+        };
+        o.reduce = function(key, values) {
+            return values.length;
+        };
+        o.out = {
+            replace: 'songsWithVotes'
+        };
+        o.query = {
+            event_id: event._id,
+            state: 'new',
+            type: 'vote'
+        };
 
-                }},{
-                $project: {
-                    song_id: 1,
-                    _id: 0
-                }
-            },
-            {
-                $group: {
-                    _id: {songs_id : "$song_id" },
-                    count: { $sum: 1}
-                }
-            }]).exec(function (err, votes){
-            if(err) {
-                console.log(err);
-                res.status(500).send('Internal server error');
-                return;
+        db.Vote.mapReduce(o, function (err, model) {
+                model
+                    .find()
+                    .populate({path: '_id', model: 'Song', select: '_id title artist album year'})
+                    .exec( function(err, votes){
+                        console.log(votes)
+                        res.status(200).send(votes);
+                    });
+
             }
-
-            console.log(votes);
-            res.status(200).send(votes);
-        });
+        );
     });
 });
 
