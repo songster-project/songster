@@ -24,8 +24,7 @@ router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req,
             return;
         }
 
-        // find all songs from the user with eventid
-        // TODO find random songs
+        // find 10 random songs for voting
         db.Song.findRandom().select('title artist album year').limit(10).exec(function (err, songs){
             if (err) {
                 console.log(err);
@@ -40,17 +39,6 @@ router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req,
 
             res.send({});
         });
-
-
-
-
-        /*  db.Song.find({owner_id: event.owner_id}, ' title artist album year')
-         .select('title artist album year')
-         .limit(30)
-         .exec(function (err, songs){
-
-         }); */
-
     });
 });
 
