@@ -2,6 +2,7 @@ var express = require('express');
 var passport = require('../config/passport');
 var db = require('../config/database');
 var expressValidator = require('express-validator');
+var random = require('mongoose-random');
 var router = express.Router();
 var util = require('util');
 var Event = db.Event;
@@ -24,24 +25,31 @@ router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req,
         }
 
         // find all songs from the user with eventid
-        // TODO join votes and send votes per song with song
-        db.Song.find({owner_id: event.owner_id}, ' title artist album year')
-            .select('title artist album year')
-            .limit(30)
-            .exec(function (err, songs){
-                if (err) {
-                    console.log(err);
-                    res.status(500).send('Internal server error');
-                    return;
-                }
+        // TODO find random songs
+        db.Song.findRandom().select('title artist album year').limit(10).exec(function (err, songs){
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal server error');
+                return;
+            }
 
-                if(songs) {
-                    res.send(songs);
-                    return;
-                }
+            if(songs) {
+                res.send(songs);
+                return;
+            }
 
-                res.send({});
-            });
+            res.send({});
+        });
+
+
+
+
+        /*  db.Song.find({owner_id: event.owner_id}, ' title artist album year')
+         .select('title artist album year')
+         .limit(30)
+         .exec(function (err, songs){
+
+         }); */
 
     });
 });
@@ -99,6 +107,8 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
     console.log('in voting post');
 
     // for anonym user it must equal the session for only one vote per song
+    // console.log(req.user);
+    // console.log(req.session);
     req.assert('owner_id', 'Owner_id is not the same as users password').equals(req.user._id);
     req.assert('type', 'Type does not match vote types').isInArray(('vote suggestion').split(' '));
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
@@ -148,20 +158,11 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                     res.status(500).send('Internal server error');
                     return;
                 }
-
                 res.status(201).send(vote);
 
             });
-
         });
-
-
     });
-
-
-
-
-
 
 });
 

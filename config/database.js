@@ -1,5 +1,6 @@
 var settings = require('./settings');
 var mongoose = require('mongoose');
+var random = require('mongoose-random');
 
 // are defined bin/www
 exports.conn = null;
@@ -63,6 +64,8 @@ var songSchema = new Schema({
         cover: ObjectId
     },
     {collection: 'song'});
+// adding random field to songs
+songSchema.plugin(random);
 //Index for support of getting all the non-deleted indices of a user
 songSchema.index({owner_id: 1, active: 1});
 
