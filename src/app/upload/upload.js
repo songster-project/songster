@@ -73,10 +73,21 @@ angular.module('ngBoilerplate.upload')
         // TODO this should be moved to the library controller
         $scope.updateSongMetadata = function(song) {
             if (song && song._id) {
-                console.log(song);
                 return $http.put('/song/' + song._id, song);
             } else {
                 return false;
+            }
+        };
+
+        // TODO this should be moved to the library controller
+        $scope.updateCover = function(song) {
+            if (song && song._id) {
+                $http.put('/song/' + song._id + '/updateCover', song)
+                    .success(function(data, status, headers, config) {
+                        song.cover = data.cover;
+                    });
+            } else {
+                console.log('updateCover() got passed an invalid song');
             }
         };
     })

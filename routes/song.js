@@ -11,6 +11,7 @@ var albumArt = require('album-art');
 var request = require('request');
 var GridStore = require('mongodb').GridStore;
 var ObjectID = require('mongodb').ObjectID;
+var mongoose = require('mongoose');
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     try {
@@ -99,6 +100,41 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
         console.log(e);
         res.status(500).send('Internal server error');
         return;
+    }
+});
+
+router.put('/:id/updateCover', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+    if (req && req.body && req.body._id) {
+        database.Song.findOne({"_id": mongo.ObjectID(req.body._id), "owner_id": req.user._id}, function (err, song) {
+            albumArt(song.artist, song.album, 'large', function (err, url) {
+                console.log('metadata url: ' + url);
+                if (!err && url != null && url.length > 0) {
+                    var imageWriteStream = database.gfs.createWriteStream({
+                        mode: 'w'
+                    });
+
+                    request.head(url, function () {
+                        request(url).pipe(imageWriteStream).on('close', function () {
+                            console.log('wrote album art to mongodb');
+                            song.cover = mongoose.Types.ObjectId(imageWriteStream.id);
+
+                            song.save(function (err) {
+                                if (err) {
+                                    console.log('error saving new cover-id to mongo');
+                                    res.status(400).send('Bad Request');
+                                } else {
+                                    res.status(200).send(song);
+                                }
+                            });
+                        });
+                    });
+                } else {
+                    res.status(404).send('cover not found');
+                }
+            });
+        });
+    } else {
+        res.status(400).send('Bad Request');
     }
 });
 
