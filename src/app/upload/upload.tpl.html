@@ -21,7 +21,7 @@
          ng-show="!dropSupported">HTML5 Drop File is not supported!
     </div>
     </div>
-  <h2>Processed files</h2>
+  <h2>All files</h2>
   <!-- Upload Finished -->
   <div class="js-upload-finished">
     <div class="list-group" ng:repeat="file in uploadedFiles">
@@ -35,48 +35,6 @@
       </a>
     </div>
     </div>
-  <h2>Existing files</h2>
-  <audio media-player="mediaPlayer" data-playlist="mediaPlaylist">
-  </audio>
-  <div class="player-control">
-    <div class="btn" ng-click="mediaPlayer.play()">
-      <span>Simple Play</span>
-      <i class="fa fa-play"></i>
-    </div>
-    <div class="btn" ng-click="mediaPlayer.playPause()">
-      <i class="fa" ng-class="{ 'fa-pause': mediaPlayer.playing, 'fa-play': !mediaPlayer.playing }"></i>
-    </div>
-    <div class="btn" ng-click="mediaPlayer.next()">
-      <span>Next</span>
-      <i class="fa fa-step-forward"></i>
-    </div>
-    <div class="btn" ng-click="mediaPlayer.prev()">
-      <i class="fa fa-step-backward"></i>
-      <span>Prev</span>
-    </div>
-    <div class="btn btn-noclick">
-      <span>currentTrack: <span class="badge">{{ mediaPlayer.currentTrack }}</span></span>
-    </div>
-    <div class="btn btn-noclick">
-      <span><i class="fa fa-clock-o"></i>: <span class="badge">{{ mediaPlayer.formatTime }}</span></span>
-    </div>
-    <div class="btn btn-noclick">
-      <span>volume: <span class="badge">{{ mediaPlayer.volume * 100 | number:0 }}%</span></span>
-    </div>
-    <div class="btn" ng-click="mediaPlayer.setVolume(mediaPlayer.volume - 0.1)">
-      <span><i class="fa fa-volume-down"></i></span>
-    </div>
-    <div class="btn" ng-click="mediaPlayer.setVolume(mediaPlayer.volume + 0.1)">
-      <span><i class="fa fa-volume-up"></i></span>
-    </div>
-    <div class="progress" ng-click="mediaPlayer.seek(mediaPlayer.duration * seekPercentage($event))">
-      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-           ng-style="{ width: mediaPlayer.currentTime * 100 / mediaPlayer.duration + '%' }"></div>
-      <div class="time" ng-show="mediaPlayer.formatTime">
-        <span>{{ mediaPlayer.formatTime }}</span><b>/</b><span>{{ mediaPlayer.formatDuration }}</span>
-      </div>
-    </div>
-    </div>
   <table class="table table-striped">
     <tr>
       <th>Cover</th>
@@ -85,15 +43,23 @@
       <th>Album</th>
       <th>Year</th>
       <th>File</th>
+      <th>Add</th>
     </tr>
     <tr ng:repeat="song in songs">
-      <td ng-if="song.cover"><img src="/song/{{ song.cover }}/cover"></td>
-      <td ng-if="!song.cover">No cover available</td>
-      <td>{{ song.title }}</td>
-      <td>{{ song.artist }}</td>
-      <td>{{ song.album }}</td>
-      <td>{{ song.year }}</td>
+      <td>
+        <img class="img-rounded medium-albumart"
+             ng-src="{{ song.cover ? ('/song/' + song.cover + '/cover') : 'assets/no_cover.jpg'}}">
+
+        <div>
+          <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload cover</a>
+        </div>
+      </td>
+      <td><a href="#" editable-text="song.title" onaftersave="updateSongMetadata(song)">{{ song.title || "empty" }}</a></td>
+      <td><a href="#" editable-text="song.artist" onaftersave="updateSongMetadata(song)">{{ song.artist || "empty" }}</a></td>
+      <td><a href="#" editable-text="song.album" onaftersave="updateSongMetadata(song)">{{ song.album || "empty" }}</a></td>
+      <td><a href="#" editable-number="song.year" onaftersave="updateSongMetadata(song)">{{ song.year || "empty" }}</a></td>
       <td><a href="/song/{{ song.file_id }}/raw">Play raw</a></td>
+      <td><a ng-click="player.addFirst(song)">+</a></td>
     </tr>
   </table>
 </div>

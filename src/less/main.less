@@ -154,16 +154,20 @@ h2 {
 .navbar-fixed-right {
   right: 0;
   border-width: 0 0 0 1px;
+  width: @mainMenuWidth + 80px;
+  overflow-y: scroll;
+  padding-left: 5px;
+  padding-right: 5px;
 
   @media (min-width: @screen-lg-min) {
     & ~ * {
-      margin-right: @mainMenuWidth + 10px;
+      margin-right: @mainMenuWidth + 90px;
     }
 
     // if large enough, minimizing works, otherwise not
     @media (min-width: @screen-sm-min) {
       &.minimized ~ * {
-        margin-right: @mainMenuMinimizedWidth + 10px;
+        margin-right: @mainMenuMinimizedWidth + 90px;
       }
     }
   }
@@ -263,6 +267,60 @@ h2 {
   border-color: #222;
 }
 
+.small-albumart {
+  width: 64px;
+  height: 64px;
+  opacity: 0.4;
+}
+
+.medium-albumart {
+  width: 174px;
+  height: 174px;
+}
+
+.small-albumart-active {
+  width: 64px;
+  height: 64px;
+  opacity: 1.0;
+}
+
+.small-albumart-hover {
+  width: 64px;
+  height: 64px;
+  background-image: url(play-hover.png);
+  background-size: 64px 64px;
+}
+
+.queue-action-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  margin-right: 5px;
+}
+
+.queue-action-list li {
+  margin-bottom: 0px;
+  cursor: pointer;
+}
+
+.player-control {
+  text-align: center;
+}
+
+.progress {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.player-buttons {
+  margin-bottom: 80px;
+}
+
+.draggable-icon {
+  margin-right: 5px;
+  color: #AFAFAF;
+  cursor: pointer;
+}
 
 /**
  * Now that all app-wide styles have been applied, we can load the styles for
@@ -273,3 +331,14 @@ h2 {
 
 @import '../app/home/home.less';
 
+
+/**
+  * this is the angular-xeditable stylesheet; couldnt figure out how to import it properly
+  **/
+/*!
+angular-xeditable - 0.1.8
+Edit-in-place for angular.js
+Build date: 2014-01-10
+*/
+
+.editable-wrap{display:inline-block;white-space:nowrap;margin:0}.editable-wrap .editable-controls,.editable-wrap .editable-error{margin-bottom:0}.editable-wrap .editable-controls>input,.editable-wrap .editable-controls>select,.editable-wrap .editable-controls>textarea{margin-bottom:0}.editable-wrap .editable-input{display:inline-block}.editable-buttons{display:inline-block;vertical-align:top}.editable-buttons button{margin-left:5px}.editable-input.editable-has-buttons{width:auto}.editable-bstime .editable-input input[type=text]{width:46px}.editable-bstime .well-small{margin-bottom:0;padding:10px}.editable-range output{display:inline-block;min-width:30px;vertical-align:top;text-align:center}.editable-color input[type=color]{width:50px}.editable-checkbox label span,.editable-checklist label span,.editable-radiolist label span{margin-left:7px;margin-right:10px}.editable-hide{display:none!important}.editable-click,a.editable-click{text-decoration:none;color:#428bca;border-bottom:dashed 1px #428bca}.editable-click:hover,a.editable-click:hover{text-decoration:none;color:#2a6496;border-bottom-color:#2a6496}.editable-empty,.editable-empty:hover,.editable-empty:focus,a.editable-empty,a.editable-empty:hover,a.editable-empty:focus{font-style:italic;color:#D14;text-decoration:none}

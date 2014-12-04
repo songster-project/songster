@@ -59,7 +59,7 @@ var songSchema = new Schema({
         //Other metadata may be added
 
         // the GFS id of the cover if available
-        cover: String
+        cover: ObjectId
     },
     {collection: 'song'});
 //Index for support of getting all the non-deleted indices of a user
