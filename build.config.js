@@ -7,7 +7,7 @@ module.exports = {
    * development and the `compile_dir` folder is where our app resides once it's
    * completely built.
    */
-  build_dir: 'build',
+  build_dir: 'app',
   compile_dir: 'app',
 
   /**
@@ -71,7 +71,8 @@ module.exports = {
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/lodash/dist/lodash.min.js',
-      'vendor/angular-lodash/angular-lodash.js'
+      'vendor/angular-lodash/angular-lodash.js',
+      'vendor/angular-sortable-view/src/angular-sortable-view.min.js'
     ],
     css: [
     ],

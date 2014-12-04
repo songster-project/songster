@@ -13,8 +13,9 @@ angular.module('ngBoilerplate.upload')
         });
     })
 
-    .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http) {
+    .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http, $player) {
         $scope.uploadedFiles = [];
+        $scope.player = $player;
 
         // generic function to remove elements from an ng-repeat array
         $scope.remove = function (array, index) {

@@ -2,5 +2,6 @@ angular.module('songster.player.services', []);
 
 angular.module('songster.player', [
     'mediaPlayer',
-    'songster.player.services'
+    'songster.player.services',
+    'angular-sortable-view'
 ]);
