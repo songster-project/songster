@@ -12,5 +12,6 @@ angular.module('ngBoilerplate', [
     'songster.library',
     'songster.voting',
     'songster.ws_example',
+    'songster.notificationClient',
     'ui.router'
 ]);

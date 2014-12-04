@@ -3,5 +3,6 @@ angular
         'ui.router',
         'placeholders',
         'ui.bootstrap',
-        'songster.menu'
+        'songster.menu',
+        'songster.notificationClient'
     ]);

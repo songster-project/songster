@@ -13,14 +13,14 @@ angular.module('songster.ws_example')
         });
     })
 
-    .controller('Ws_ExampleCtrl', function EventCtrl($scope, $http) {
+    .controller('Ws_ExampleCtrl', function EventCtrl($scope, nClient) {
         $scope.messages = [];
-        register_to_event('lala', function (msg) {
+        nClient.register_to_event('lala', function (msg) {
             $scope.messages.push(msg);
             $scope.$apply();
         });
         $scope.sendmessage = function () {
-            send_event('lala', '{"message":"' + $scope.message + '"}');
+            nClient.send_event('lala', '{"message":"' + $scope.message + '"}');
             $scope.message = '';
         };
     });
