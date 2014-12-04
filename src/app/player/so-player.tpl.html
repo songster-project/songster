@@ -33,10 +33,10 @@
     </div>
   </div>
   <ul class="list-unstyled" sv-root sv-part="queue">
-    <li ng-repeat="item in queue track by item._id" sv-element>
+    <li ng-repeat="item in queue track by item._id" sv-element="opts">
       <div class="media">
         <div class="pull-left">
-          <span class="draggable-icon">
+          <span sv-handle class="draggable-icon">
               <i class="fa fa-ellipsis-v"></i>
               <i class="fa fa-ellipsis-v"></i>
           </span>
