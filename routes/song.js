@@ -40,7 +40,8 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                             title: tags.title || '',
                             album: tags.album || '',
                             artist: tags.artist || '',
-                            year: tags.year || ''
+                            year: tags.year || '',
+                            owner_id: req.user._id
                         };
 
                         // the parser sometimes outputs utf-8 junk :-/
@@ -103,7 +104,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
 
 router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     var songCollection = database.db.collection('song');
-    songCollection.findOne({"_id": mongo.ObjectID(req.param('id'))}, function (err, doc) {
+    songCollection.findOne({"_id": mongo.ObjectID(req.param('id')), "owner_id": req.user._id}, function (err, doc) {
         if (err) {
             res.status(400).send('Bad Request');
             console.log(err);
@@ -114,60 +115,86 @@ router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
     });
 });
 
+function objectsExistsAndBelongsTo(userID, query, callback, failed) {
+    var songCollection = database.db.collection('song');
+
+    if (userID && query) {
+        songCollection.findOne(query, function (err, doc) {
+            if (err) {
+                failed();
+            } else {
+                if (doc != null && JSON.parse(JSON.stringify(doc)).owner_id == userID) {
+                    callback();
+                } else {
+                    failed();
+                }
+            }
+        });
+    } else {
+        failed();
+    }
+}
+
 router.get('/:id/raw', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     var options = {
         _id: req.param("id")
     };
 
-    database.gfs.exist(options, function (err, found) {
-        if (err || !found) {
-            res.status(404).send('song not found');
-            return;
-        }
+    objectsExistsAndBelongsTo(req.user._id, { "file_id": mongo.ObjectID(req.param("id")) }, function () {
+        database.gfs.exist(options, function (err, found) {
+            if (err || !found) {
+                res.status(404).send('song not found');
+                return;
+            }
 
-        if (found) {
-            new GridStore(database.db, new ObjectID(options._id), null, 'r').open(function (err, GridFile) {
-                if (req.headers['range']) {
-                    console.log('got a range request - because fck you');
+            if (found) {
+                new GridStore(database.db, new ObjectID(options._id), null, 'r').open(function (err, GridFile) {
+                    if (req.headers['range']) {
+                        console.log('got a range request - because fck you');
 
-                    var parts = req.headers['range'].replace(/bytes=/, "").split("-");
-                    var partialstart = parts[0];
-                    var partialend = parts[1];
+                        var parts = req.headers['range'].replace(/bytes=/, "").split("-");
+                        var partialstart = parts[0];
+                        var partialend = parts[1];
 
-                    var start = parseInt(partialstart, 10);
-                    var end = partialend ? parseInt(partialend, 10) : GridFile.length - 1;
-                    var chunk = (end - start) + 1;
+                        var start = parseInt(partialstart, 10);
+                        var end = partialend ? parseInt(partialend, 10) : GridFile.length - 1;
+                        var chunk = (end - start) + 1;
 
-                    console.log('Range ', start, '-', end);
+                        console.log('Range ', start, '-', end);
 
-                    res.writeHead(206, {
-                        'Content-Range': 'bytes ' + start + '-' + end + '/' + GridFile.length,
-                        'Accept-Ranges': 'bytes',
-                        'Content-Length': chunk,
-                        'Content-Type': 'audio/mp3'
-                    });
+                        res.writeHead(206, {
+                            'Content-Range': 'bytes ' + start + '-' + end + '/' + GridFile.length,
+                            'Accept-Ranges': 'bytes',
+                            'Content-Length': chunk,
+                            'Content-Type': 'audio/mp3'
+                        });
 
-                    var options = {
-                        _id: req.param("id"),
-                        range: {
-                            startPos: start,
-                            endPos: end
-                        }
-                    };
+                        var options = {
+                            _id: req.param("id"),
+                            range: {
+                                startPos: start,
+                                endPos: end
+                            }
+                        };
 
-                    var readStream = database.gfs.createReadStream(options);
-                    readStream.pipe(res);
+                        var readStream = database.gfs.createReadStream(options);
+                        readStream.pipe(res);
 
-                } else {
-                    console.log('got a normal request - streaming the whole file');
-                    var readStream = database.gfs.createReadStream({
-                        _id: req.param("id")
-                    });
-                    res.setHeader('Content-Type', 'audio/mp3');
-                    readStream.pipe(res);
-                }
-            });
-        }
+                    } else {
+                        console.log('got a normal request - streaming the whole file');
+                        var readStream = database.gfs.createReadStream({
+                            _id: req.param("id")
+                        });
+                        res.setHeader('Content-Type', 'audio/mp3');
+                        readStream.pipe(res);
+                    }
+                });
+            }
+        });
+    },
+    function() {
+        res.status(401).send('not authorized');
+        return;
     });
 });
 
@@ -176,7 +203,8 @@ router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymo
         _id: req.param('id')
     };
 
-    if (database.gfs.exist(options, function (err, found) {
+    objectsExistsAndBelongsTo(req.user._id, { cover: mongo.ObjectID(req.param("id")) }, function () {
+        if (database.gfs.exist(options, function (err, found) {
             if (err) {
                 res.status(500).send('Internal server error');
                 console.log(err);
@@ -190,11 +218,16 @@ router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymo
                 return;
             }
         }));
+    },
+    function() {
+        res.status(401).send('not authorized');
+        return;
+    });
 });
 
 router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     var songCollection = database.db.collection('song');
-    songCollection.find().toArray(function (err, docs) {
+    songCollection.find({ owner_id: req.user._id }).toArray(function (err, docs) {
         if (err) {
             res.status(500).send('Internal server error');
             console.log(err);
