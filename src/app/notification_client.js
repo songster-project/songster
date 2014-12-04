@@ -1,7 +1,8 @@
-angular.module("songster.notificationClient",[]).
+angular.module("songster.notificationClient", []).
     factory("nClient", function () {
         //connect websocket connection to server
         var ws;
+        //used to map event to callback
         var eventmap = {};
         var connected = false;
         var connectatempts = 1;
@@ -14,7 +15,7 @@ angular.module("songster.notificationClient",[]).
          * @param event name of the event you want to register to
          * @param callback function to call if event occurs
          */
-        function register_to_event(event, callback) {
+        service.register_to_event = function register_to_event(event, callback) {
             if (!eventmap[event]) {
                 eventmap[event] = {
                     callback: callback,
@@ -33,33 +34,25 @@ angular.module("songster.notificationClient",[]).
                     '"register" : true}');
                 }
             }
-        }
-
-        service.register_to_event = register_to_event;
+        };
 
         /**
          * sends message for the event to the server
          *
          * @param event name of the event that occured
-         * @param payload data you want to send to the server as string
+         * @param payload data you want to send to the server as JSON
          */
-        function send_event(event, payload) {
-
-            //send event message to server
+        service.send_event = function send_event(event, payload) {
             ws.send('{' +
             '"event_type":"' + event + '",' +
             '"payload":' + payload + '}');
-        }
-
-        service.send_event = send_event;
+        };
 
         function setupsocketconnection() {
             ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/event");
 
             /**
              * registers for the events at the server after connection is established
-             *
-             * @param event
              */
             ws.onopen = function () {
                 connectatempts = 1;
@@ -90,8 +83,6 @@ angular.module("songster.notificationClient",[]).
 
             /**
              * reconnects to the server if websocket connection is closed
-             *
-             * @param event
              */
             ws.onclose = function () {
                 connected = false;
