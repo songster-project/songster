@@ -8,7 +8,7 @@ var Event = db.Event;
 var Song = db.Song;
 
 
-router.get('/songs/:eventid', passport.ensureAuthenticated, function (req, res) {
+router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -25,24 +25,72 @@ router.get('/songs/:eventid', passport.ensureAuthenticated, function (req, res) 
 
         // find all songs from the user with eventid
         // TODO join votes and send votes per song with song
-       db.Song.find({owner_id: event.owner_id}, ' title artist album year')
-           .select('title artist album year')
-           .limit(30)
-           .exec(function (err, songs){
-               if (err) {
-                   console.log(err);
-                   res.status(500).send('Internal server error');
-                   return;
-               }
+        db.Song.find({owner_id: event.owner_id}, ' title artist album year')
+            .select('title artist album year')
+            .limit(30)
+            .exec(function (err, songs){
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+                    return;
+                }
 
-              if(songs) {
-                  res.send(songs);
-                  return;
-              }
+                if(songs) {
+                    res.send(songs);
+                    return;
+                }
 
-               res.send({});
-           });
+                res.send({});
+            });
 
+    });
+});
+
+
+router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, res){
+
+    // get current event with eventid
+    db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
+        if (err ) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if(event == null) {
+            res.send({});
+            return;
+        }
+
+        // find all voted songs from event and send them back
+        var votes = db.Vote.aggregate( [
+            {
+                $match: {
+                    event_id: event._id,
+                    state: 'new',
+                    type: 'vote'
+
+                }},{
+                $project: {
+                    song_id: 1,
+                    _id: 0
+                }
+            },
+            {
+                $group: {
+                    _id: {songs_id : "$song_id" },
+                    count: { $sum: 1}
+                }
+            }]).exec(function (err, votes){
+            if(err) {
+                console.log(err);
+                res.status(500).send('Internal server error');
+                return;
+            }
+
+            console.log(votes);
+            res.status(200).send(votes);
+        });
     });
 });
 
@@ -59,17 +107,17 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
     // check that event id is active
     db.Event.findOne({_id: req.param('event_id'), end:null }, function (err, event){
-       if(err) {
-           console.log(err);
-           res.status(500).send('Internal server error');
-           return;
-       }
+        if(err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
 
-       if (event == null) {
-           console.log('event is not active');
-           res.status(400).send('Bad Request');
-           return;
-       }
+        if (event == null) {
+            console.log('event is not active');
+            res.status(400).send('Bad Request');
+            return;
+        }
 
 
         // check that song is in db
@@ -95,11 +143,11 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
             vote.event_id = req.body.event_id;
 
             vote.save( function(err, vote){
-               if(err)  {
-                   console.log(err);
-                   res.status(500).send('Internal server error');
-                   return;
-               }
+                if(err)  {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+                    return;
+                }
 
                 res.status(201).send(vote);
 
