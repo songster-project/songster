@@ -72,7 +72,7 @@ module.exports = {
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/lodash/dist/lodash.min.js',
       'vendor/angular-lodash/angular-lodash.js',
-      'vendor/angular-sortable-view/src/angular-sortable-view.min.js'
+      'src/common/angular-sortable-view/angular-sortable-view.js'
     ],
     css: [
     ],
