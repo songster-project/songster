@@ -39,6 +39,10 @@ app.use(expressValidator(
             },
             isBool: function (value) {
                 return typeof value === 'boolean';
+            },
+
+            isInArray: function(value, array) {
+             return array.indexOf(value) >= 0;
             }
         }
     }
