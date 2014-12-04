@@ -9,7 +9,6 @@ angular.module('ngBoilerplate', [
     'songster.player',
     'songster.event',
     'songster.voting',
-    'songster.ws_example',
     'songster.notificationClient',
     'ui.router'
 ]);
