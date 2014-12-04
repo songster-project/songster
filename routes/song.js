@@ -115,12 +115,47 @@ router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
     });
 });
 
+router.put('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+    if (req && req.body && req.body._id) {
+        database.Song.findOne({"_id": mongo.ObjectID(req.body._id), "owner_id": req.user._id}, function (err, song) {
+            if (err) {
+                res.status(400).send('Invalid input');
+                console.log(err);
+            } else {
+                if (song) {
+                    song.artist = req.body.artist;
+                    song.title = req.body.title;
+                    song.album = req.body.album;
+                    song.year = req.body.year;
+
+                    song.save(function (err) {
+                        if (err) {
+                            console.log('error updating the document');
+                            console.log(err);
+                            res.status(400).send('Invalid input');
+                        } else {
+                            res.send(song);
+                        }
+                    });
+                } else {
+                    console.log('document not found');
+                    res.status(401).send('Not Authorized');
+                }
+            }
+        });
+    } else {
+        console.log('invalid put request');
+        res.status(400).send('Invalid input');
+    }
+});
+
 function objectsExistsAndBelongsTo(userID, query, callback, failed) {
     var songCollection = database.db.collection('song');
 
     if (userID && query) {
         songCollection.findOne(query, function (err, doc) {
             if (err) {
+                console.log(err);
                 failed();
             } else {
                 if (doc != null && JSON.parse(JSON.stringify(doc)).owner_id == userID) {

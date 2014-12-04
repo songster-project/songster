@@ -67,7 +67,6 @@ function Player() {
         var ret = false;
         if (song._id) {
             this.forEach(function (element) {
-                console.log('comparing ' + element._id + ' and ' + song._id);
                 if (element._id && element._id == song._id) {
                     ret = true;
                 }

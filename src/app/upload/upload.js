@@ -68,6 +68,17 @@ angular.module('ngBoilerplate.upload')
                     });
                 });
             });
+
+
+        // TODO this should be moved to the library controller
+        $scope.updateSongMetadata = function(song) {
+            if (song && song._id) {
+                console.log(song);
+                return $http.put('/song/' + song._id, song);
+            } else {
+                return false;
+            }
+        };
     })
 
     .run(function ($rootScope) {
