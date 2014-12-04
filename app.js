@@ -108,4 +108,3 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-require('./routes/sockets/notification_example_socket');
