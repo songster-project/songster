@@ -13,8 +13,9 @@ angular.module('ngBoilerplate.upload')
         });
     })
 
-    .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http) {
+    .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http, $player) {
         $scope.uploadedFiles = [];
+        $scope.player = $player;
 
         // generic function to remove elements from an ng-repeat array
         $scope.remove = function (array, index) {
@@ -67,6 +68,28 @@ angular.module('ngBoilerplate.upload')
                     });
                 });
             });
+
+
+        // TODO this should be moved to the library controller
+        $scope.updateSongMetadata = function(song) {
+            if (song && song._id) {
+                return $http.put('/song/' + song._id, song);
+            } else {
+                return false;
+            }
+        };
+
+        // TODO this should be moved to the library controller
+        $scope.updateCover = function(song) {
+            if (song && song._id) {
+                $http.put('/song/' + song._id + '/updateCover', song)
+                    .success(function(data, status, headers, config) {
+                        song.cover = data.cover;
+                    });
+            } else {
+                console.log('updateCover() got passed an invalid song');
+            }
+        };
     })
 
     .run(function ($rootScope) {
