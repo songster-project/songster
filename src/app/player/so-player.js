@@ -15,14 +15,6 @@ function SoPlayerDirective() {
             $scope.player = $player;
             $scope.queue = $player.getQueue();
 
-            $http.get('/song/')
-                .success(function (data) {
-                    $scope.songs = data;
-                    data.forEach(function (song) {
-                        $player.add(song);
-                    });
-                });
-
             $scope.seekPercentage = function ($event) {
                 var percentage = ($event.offsetX / $event.target.offsetWidth);
                 if (percentage <= 1) {
