@@ -1,6 +1,6 @@
 angular
     .module('songster.player')
-    .directive('soPlayer', [SoPlayerDirective])
+    .directive('soPlayer', SoPlayerDirective);
 
 function SoPlayerDirective() {
     return {
