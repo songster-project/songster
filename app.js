@@ -21,10 +21,13 @@ var event = require('./routes/event');
 var settings = require('./config/settings.js');
 
 var app = express();
+
+module.exports = app;
+
 //add express-ws
-require('./lib/express-ws')(app);
+require('./lib/express-ws')();
 //initialize notification_server
-require('./lib/notification_server')(app,cookieParser,session,passport,settings,MongoStore);
+require('./lib/notification_server')();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -105,6 +108,3 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-module.exports = app;
