@@ -2,16 +2,28 @@ angular
     .module('songster.player.services')
     .provider('$player', PlayerProvider);
 
-
 function Player() {
 
     // this contains the song elements with metadata - DONT recreate this array we need the references
     var queue = [];
 
+
+    function queueContainsSong(obj) {
+        var ret = false;
+        if (obj._id) {
+            queue.forEach(function (element) {
+                if (element._id && element._id == obj._id) {
+                    ret = true;
+                }
+            });
+        }
+        return ret;
+    }
+
     this.add = function add(song) {
-        if (song._id && song.addedDate && song.file_id && !queue.containsSong(song)) {
             song['src'] = '/song/' + song.file_id + '/raw';
             song['type'] = 'audio/mp3';
+        if (song._id && song.addedDate && song.file_id && !queueContainsSong(song)) {
             queue.push(song);
         } else {
             console.log('attempted to add invalid or duplicate song-object to playlist');
@@ -27,9 +39,9 @@ function Player() {
     };
 
     this.addFirst = function addFirst(song) {
-        if (song._id && song.addedDate && song.file_id && !queue.containsSong(song)) {
             song['src'] = '/song/' + song.file_id + '/raw';
             song['type'] = 'audio/mp3';
+        if (song._id && song.addedDate && song.file_id && !queueContainsSong(song)) {
             queue.unshift(song);
         } else {
             console.log('attempted to add invalid or duplicate song-object to playlist');
@@ -54,18 +66,6 @@ function Player() {
         } else {
             console.log('index to remove larger than queue length');
         }
-    };
-
-    Array.prototype.containsSong = function (song) {
-        var ret = false;
-        if (song._id) {
-            this.forEach(function (element) {
-                if (element._id && element._id == song._id) {
-                    ret = true;
-                }
-            });
-        }
-        return ret;
     };
 }
 
