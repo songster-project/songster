@@ -21,8 +21,6 @@ function Player() {
     }
 
     this.add = function add(song) {
-            song['src'] = '/song/' + song.file_id + '/raw';
-            song['type'] = 'audio/mp3';
         if (song._id && song.addedDate && song.file_id && !queueContainsSong(song)) {
             queue.push(song);
         } else {
@@ -39,8 +37,6 @@ function Player() {
     };
 
     this.addFirst = function addFirst(song) {
-            song['src'] = '/song/' + song.file_id + '/raw';
-            song['type'] = 'audio/mp3';
         if (song._id && song.addedDate && song.file_id && !queueContainsSong(song)) {
             queue.unshift(song);
         } else {

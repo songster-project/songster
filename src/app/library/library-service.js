@@ -1,30 +1,38 @@
-angular.module('songster.library')
+angular
+    .module('songster.library.services')
+    .provider('$library', LibraryProvider);
 
-    .controller('LibraryController', function EventCtrl($scope, $http) {
 
-        $scope.searchRequest = {};
-        $scope.results = [];
+function Library($http) {
 
-        // TODO create a library service and put it into there
-        function search(query) {
-            var url = '/search/song';
-            if (!!query) {
-                url += '/' + query;
-            }
-            $http.get(url)
-                .success(function (res) {
-                    $scope.total = res.hits.total;
-                    $scope.results = _.map(res.hits.hits, function (hit) {
-                        return hit._source;
-                    });
-                });
+    this.search = function search(query) {
+        var url = '/search/song';
+        if (!!query) {
+            url += '/' + query;
         }
+        return $http.get(url);
+    };
 
-        $scope.search = function (searchRequest) {
-            search(searchRequest.query);
-        };
+    this.updateSongMetadata = function(song) {
+        if (song && song._id) {
+            return $http.put('/song/' + song._id, song);
+        } else {
+            return false;
+        }
+    };
 
-        search();
-    });
+    this.updateCover = function(song) {
+        if (song && song._id) {
+            return $http.put('/song/' + song._id + '/updateCover', song)
+        } else {
+            console.log('updateCover() got passed an invalid song');
+            return false;
+        }
+    };
+}
 
-
+function LibraryProvider() {
+    this.$get = function ($http) {
+        return new Library($http);
+    };
+}
