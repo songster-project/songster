@@ -56,13 +56,6 @@ function Player() {
         }
     };
 
-    Array.prototype.swap = function (x, y) {
-        var b = this[x];
-        this[x] = this[y];
-        this[y] = b;
-        return this;
-    };
-
     Array.prototype.containsSong = function (song) {
         var ret = false;
         if (song._id) {
