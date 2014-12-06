@@ -2,7 +2,7 @@ angular
     .module('songster.library')
 
     .config(['$menuProvider', function ($menuProvider) {
-        $menuProvider.addMenuEntry('main', 'Library', 'fa-music', 'library', 3);
+        $menuProvider.addMenuEntry('main', 'Library', 'fa-music', 'library', 800);
     }])
 
     .config(function config($stateProvider) {
