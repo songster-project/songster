@@ -104,7 +104,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
 });
 
 router.put('/:id/updateCover', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
-    if (req && req.body && req.body._id) {
+    if (req && req.body && req.body._id && req.body._id === req.user._id) {
         database.Song.findOne({"_id": mongo.ObjectID(req.body._id), "owner_id": req.user._id}, function (err, song) {
             albumArt(song.artist, song.album, 'large', function (err, url) {
                 console.log('metadata url: ' + url);
@@ -152,7 +152,7 @@ router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
 });
 
 router.put('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
-    if (req && req.body && req.body._id) {
+    if (req && req.body && req.body._id && req.body._id === req.user._id) {
         database.Song.findOne({"_id": mongo.ObjectID(req.body._id), "owner_id": req.user._id}, function (err, song) {
             if (err) {
                 res.status(400).send('Invalid input');
@@ -175,7 +175,7 @@ router.put('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
                     });
                 } else {
                     console.log('document not found');
-                    res.status(401).send('Not Authorized');
+                    res.status(404).send('document not found');
                 }
             }
         });
@@ -185,7 +185,7 @@ router.put('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
     }
 });
 
-function objectsExistsAndBelongsTo(userID, query, callback, failed) {
+function songObjectsExistsAndBelongsTo(userID, query, callback, failed) {
     var songCollection = database.db.collection('song');
 
     if (userID && query) {
@@ -211,7 +211,7 @@ router.get('/:id/raw', passport.ensureAuthenticated, passport.ensureNotAnonymous
         _id: req.param("id")
     };
 
-    objectsExistsAndBelongsTo(req.user._id, { "file_id": mongo.ObjectID(req.param("id")) }, function () {
+    songObjectsExistsAndBelongsTo(req.user._id, { "file_id": mongo.ObjectID(req.param("id")) }, function () {
         database.gfs.exist(options, function (err, found) {
             if (err || !found) {
                 res.status(404).send('song not found');
@@ -274,7 +274,7 @@ router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymo
         _id: req.param('id')
     };
 
-    objectsExistsAndBelongsTo(req.user._id, { cover: mongo.ObjectID(req.param("id")) }, function () {
+    songObjectsExistsAndBelongsTo(req.user._id, { cover: mongo.ObjectID(req.param("id")) }, function () {
         if (database.gfs.exist(options, function (err, found) {
             if (err) {
                 res.status(500).send('Internal server error');
