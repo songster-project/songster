@@ -37,7 +37,7 @@ function Player() {
     };
 
     this.pushSongUp = function pushSongUp(index) {
-        if (index >= 0 && index >= 1 && index < queue.length) {
+        if (index >= 0 && index < queue.length) {
             queue.swap(index, index - 1);
         }
     };
