@@ -1,65 +1,37 @@
 <div class="row" ng-controller="UploadCtrl">
-  <h1 class="page-header">
-    Upload form
-    <small>by Thomas</small>
-  </h1>
-  <h2>Upload new files</h2>
+    <div class="page-header">
+        <h1><i class="fa fa-cloud-upload"></i> Upload</h1>
+    </div>
 
-  <div>
-    <input type="text" ng-model="myModelObj" style="display: none">
-    <!--
-      Multi-file picker for upload
-    <input type="file" ng-file-select="onFileSelect($files)" multiple accept="audio/*">
-    -->
+    <div>
+        <input type="text" ng-model="myModelObj" style="display: none">
+        <!--
+          Multi-file picker for upload
+        <input type="file" ng-file-select="onFileSelect($files)" multiple accept="audio/*">
+        -->
 
-    <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
-    <div id="drop-zone" class="upload-drop-zone" ng-file-drop="onFileSelect($files)"
-         ng-file-drag-over-class="optional-css-class-name-or-function" ng-show="dropSupported">
-      Just drag and drop files here
-    </div>
-    <div id="no-drop-zone" class="upload-drop-zone" ng-file-drop-available="dropSupported=true"
-         ng-show="!dropSupported">HTML5 Drop File is not supported!
-    </div>
-    </div>
-  <h2>All files</h2>
-  <!-- Upload Finished -->
-  <div class="js-upload-finished">
-    <div class="list-group" ng:repeat="file in uploadedFiles">
-      <a ng-if="file.finished" href="javascript:void(0)" ng-click="remove(uploadedFiles, $index)"
-         class="list-group-item list-group-item-success">
-        <span class="badge alert-success pull-right">Upload complete</span>{{ file.name }}
-      </a>
-      <a ng-if="!file.finished" href="javascript:void(0)" ng-click="remove(uploadedFiles, $index)"
-         class="list-group-item list-group-item-info">
-        <span class="badge alert-info pull-right">Upload in progress</span>{{ file.name }}
-      </a>
-    </div>
-    </div>
-  <table class="table table-striped">
-    <tr>
-      <th>Cover</th>
-      <th>Title</th>
-      <th>Artist</th>
-      <th>Album</th>
-      <th>Year</th>
-      <th>File</th>
-      <th>Add</th>
-    </tr>
-    <tr ng:repeat="song in songs">
-      <td>
-        <img class="img-rounded medium-albumart"
-             ng-src="{{ song.cover ? ('/song/' + song.cover + '/cover') : 'assets/no_cover.jpg'}}">
-
-        <div>
-          <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload cover</a>
+        <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
+        <div id="drop-zone" class="upload-drop-zone" ng-file-drop="onFileSelect($files)"
+             ng-file-drag-over-class="optional-css-class-name-or-function" ng-show="dropSupported">
+            Just drag and drop files here
         </div>
-      </td>
-      <td><a href="#" editable-text="song.title" onaftersave="updateSongMetadata(song)">{{ song.title || "empty" }}</a></td>
-      <td><a href="#" editable-text="song.artist" onaftersave="updateSongMetadata(song)">{{ song.artist || "empty" }}</a></td>
-      <td><a href="#" editable-text="song.album" onaftersave="updateSongMetadata(song)">{{ song.album || "empty" }}</a></td>
-      <td><a href="#" editable-number="song.year" onaftersave="updateSongMetadata(song)">{{ song.year || "empty" }}</a></td>
-      <td><a href="/song/{{ song.file_id }}/raw">Play raw</a></td>
-      <td><a ng-click="player.addFirst(song)">+</a></td>
-    </tr>
-  </table>
+        <div id="no-drop-zone" class="upload-drop-zone" ng-file-drop-available="dropSupported=true"
+             ng-show="!dropSupported">HTML5 Drop File is not supported!
+        </div>
+    </div>
+    <h2>Upload Queue</h2>
+    <!-- Upload Finished -->
+    <div class="js-upload-finished">
+        <div class="list-group" ng:repeat="file in uploadedFiles">
+            <a ng-if="file.finished" href="javascript:void(0)" ng-click="remove(uploadedFiles, $index)"
+               class="list-group-item list-group-item-success">
+                <span class="badge alert-success pull-right">Upload complete</span>{{ file.name }}
+            </a>
+            <a ng-if="!file.finished" href="javascript:void(0)" ng-click="remove(uploadedFiles, $index)"
+               class="list-group-item list-group-item-info">
+                <span class="badge alert-info pull-right">Upload in progress</span>{{ file.name }}
+            </a>
+        </div>
+        <div ng-if="!uploadedFiles || uploadedFiles.length == 0">No files.</div>
+    </div>
 </div>

@@ -1,7 +1,6 @@
 angular
     .module('songster.player')
-    .directive('soPlayer', [SoPlayerDirective])
-    .run(SoPlayerRun);
+    .directive('soPlayer', SoPlayerDirective);
 
 function SoPlayerDirective() {
     return {
@@ -15,14 +14,6 @@ function SoPlayerDirective() {
 
             $scope.player = $player;
             $scope.queue = $player.getQueue();
-
-            $http.get('/song/')
-                .success(function (data) {
-                    $scope.songs = data;
-                    data.forEach(function (song) {
-                        $player.add(song);
-                    });
-                });
 
             $scope.seekPercentage = function ($event) {
                 var percentage = ($event.offsetX / $event.target.offsetWidth);
@@ -52,14 +43,4 @@ function SoPlayerDirective() {
         controllerAs: 'vm',
         templateUrl: 'player/so-player.tpl.html'
     };
-}
-
-function SoPlayerRun(editableOptions, editableThemes) {
-    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-
-    // use font awesome and not bs3 glyphicons
-    editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary"><i class="fa fa-check"></i></span></button>';
-    editableThemes['bs3'].cancelTpl = '<button type="button" class="btn btn-default" ng-click="$form.$cancel()">' +
-        '<i class="fa fa-times"></i>' +
-        '</button>'
 }

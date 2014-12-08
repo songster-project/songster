@@ -1,0 +1,39 @@
+<div>
+  <ul class="list-unstyled" sv-root sv-part="queue">
+    <li ng-repeat="item in queue track by item._id" sv-element="opts">
+      <div class="media">
+        <div class="pull-left">
+          <span sv-handle class="draggable-icon">
+              <i class="fa fa-ellipsis-v"></i>
+              <i class="fa fa-ellipsis-v"></i>
+          </span>
+          <a ng-click="mediaPlayer.play($index)" href="javascript:void(0)">
+            <!-- can possibly be done more "beautiful" -->
+            <img class="small-albumart-active img-rounded"
+                 ng-if="$index === mediaPlayer.currentTrack - 1"
+                 ng-src="{{item.getCoverSrc()}}">
+
+            <img class="small-albumart img-rounded"
+                 ng-if="$index !== mediaPlayer.currentTrack - 1"
+                 ng-src="{{item.getCoverSrc()}}">
+          </a>
+        </div>
+        <div class="pull-right">
+          <ul class="queue-action-list">
+            <li ng-click="player.removeSong($index); player.play($index);">
+              <i class="fa fa-times"></i>
+            </li>
+          </ul>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">{{ item.title || "Unknown Track" }}</h4>
+          <div>{{ item.artist || "Unknown Artist" }}</div>
+          <div>{{ item.album }}</div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div ng-if="player.getQueue().length == 0" style="text-align: center">
+    <h4>Your playlist is empty</h4>
+  </div>
+</div>

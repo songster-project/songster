@@ -12,6 +12,7 @@ var request = require('request');
 var GridStore = require('mongodb').GridStore;
 var ObjectID = require('mongodb').ObjectID;
 var mongoose = require('mongoose');
+var elasticSearchService = require('../backend/services/elasticSearchService');
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     try {
@@ -57,12 +58,15 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                         var saveMetadata = function () {
                             var collection = database.db.collection('song');
                             metadata['file_id'] = writeStream.id;
-                            collection.insert(metadata, function () {
+                            collection.insert(metadata, function (err, records) {
+                                var record = records[0];
                                 console.log('saved metadata to mongo');
                                 fs.unlink(files.file.path, function (err) {
                                     if (err) {
                                         console.log('error deleting the temp-file');
                                         console.log(err);
+                                    } else {
+                                        elasticSearchService.indexSong(record);
                                     }
                                 });
                             });
@@ -275,7 +279,7 @@ router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymo
     };
 
     objectsExistsAndBelongsTo(req.user._id, { cover: mongo.ObjectID(req.param("id")) }, function () {
-        if (database.gfs.exist(options, function (err, found) {
+        database.gfs.exist(options, function (err, found) {
             if (err) {
                 res.status(500).send('Internal server error');
                 console.log(err);
@@ -288,7 +292,7 @@ router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymo
                 res.status(404).send('cover not found');
                 return;
             }
-        }));
+        });
     },
     function() {
         res.status(401).send('not authorized');

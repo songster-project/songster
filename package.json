@@ -28,7 +28,8 @@
     "express-validator": "~2.6.0",
     "formidable": "~1.0",
     "album-art": "~1.0.2",
-    "request": "~2.48.0"
+    "request": "~2.48.0",
+    "elasticsearch": "~2.4.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
