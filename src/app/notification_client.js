@@ -64,12 +64,12 @@ angular.module("songster.notificationClient", []).
                 connected = true;
                 for (var i in eventmap) {
                     if (eventmap.hasOwnProperty(i)) {
-                            var resp = {
-                                event_type: event,
-                                register: true,
-                                payload: eventmap[event].payload
-                            };
-                            ws.send(JSON.stringify(resp));
+                        var resp = {
+                            event_type: i,
+                            register: true,
+                            payload: eventmap[i].payload
+                        };
+                        ws.send(JSON.stringify(resp));
                     }
                 }
             };
