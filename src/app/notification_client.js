@@ -118,10 +118,10 @@ angular.module("songster.notificationClient", []).
          * @returns {number} waiting time
          */
         function getnextWaitingtime(k) {
-            if (k > 7) {
-                k = 7;
+            if (k > 10) {
+                k = 10;
             }
-            return Math.random() * (Math.pow(2, k) - 100);
+            return Math.random() * (Math.pow(2, k) * 10);
         }
 
         return service;
