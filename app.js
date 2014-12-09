@@ -10,6 +10,15 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var expressValidator = require('express-validator');
 
+var app = express();
+
+module.exports = app;
+
+//add express-ws
+require('./lib/express-ws')();
+//initialize notification_server
+require('./lib/notification_server')();
+
 var routes = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
@@ -20,14 +29,6 @@ var registration = require('./routes/registration');
 var event = require('./routes/event');
 var settings = require('./config/settings.js');
 
-var app = express();
-
-module.exports = app;
-
-//add express-ws
-require('./lib/express-ws')();
-//initialize notification_server
-require('./lib/notification_server')();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
