@@ -87,9 +87,9 @@ function sendSongs(id, clients) {
             console.log(err);
             return;
         }
+        response.nextSongs = JSON.parse(logEntries[0].message).nextSongs;
         logEntries.forEach(function (entry) {
             response.lastSongs.unshift(JSON.parse(entry.message).currentSong);
-            response.nextSongs = JSON.parse(entry.message).nextSongs;
         });
         response.currentSong = response.lastSongs[response.lastSongs.length - 1];
         response.lastSongs.splice(response.lastSongs.length - 1, 1);
