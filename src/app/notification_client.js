@@ -14,8 +14,9 @@ angular.module("songster.notificationClient", []).
          *
          * @param event name of the event you want to register to
          * @param callback function to call if event occurs
+         * @param payload data you want to send to the server on registration
          */
-        service.register_to_event = function register_to_event(event, callback) {
+        service.register_to_event = function register_to_event(event, callback, payload) {
             if (!eventmap[event]) {
                 eventmap[event] = {
                     callback: callback,
@@ -24,14 +25,20 @@ angular.module("songster.notificationClient", []).
             } else {
                 eventmap[event].callback = callback;
             }
+            if(payload){
+                eventmap[event].payload = payload;
+            }
 
             //register to event messages from server
             if (connected) {
                 if (!eventmap[event].registered) {
                     eventmap[event].registered = true;
-                    ws.send('{' +
-                    '"event_type":"' + event + '",' +
-                    '"register" : true}');
+                    var resp = {
+                        event_type: event,
+                        register: true,
+                        payload: eventmap[event].payload
+                    };
+                    ws.send(JSON.stringify(resp));
                 }
             }
         };
@@ -40,12 +47,14 @@ angular.module("songster.notificationClient", []).
          * sends message for the event to the server
          *
          * @param event name of the event that occured
-         * @param payload data you want to send to the server as JSON
+         * @param payload data you want to send to the server
          */
         service.send_event = function send_event(event, payload) {
-            ws.send('{' +
-            '"event_type":"' + event + '",' +
-            '"payload":' + payload + '}');
+            var event_message = {
+                event_type: event,
+                payload: payload
+            };
+            ws.send(JSON.stringify(event_message));
         };
 
         function setupsocketconnection() {
@@ -60,10 +69,13 @@ angular.module("songster.notificationClient", []).
                 for (var i in eventmap) {
                     if (eventmap.hasOwnProperty(i)) {
                         if (!eventmap[i].registered) {
-                            eventmap[i].registered = true;
-                            ws.send('{' +
-                            '"event_type":"' + i + '",' +
-                            '"register" : true}');
+                            eventmap[event].registered = true;
+                            var resp = {
+                                event_type: event,
+                                register: true,
+                                payload: eventmap[event].payload
+                            };
+                            ws.send(JSON.stringify(resp));
                         }
                     }
                 }
