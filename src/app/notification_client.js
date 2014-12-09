@@ -19,27 +19,23 @@ angular.module("songster.notificationClient", []).
         service.register_to_event = function register_to_event(event, callback, payload) {
             if (!eventmap[event]) {
                 eventmap[event] = {
-                    callback: callback,
-                    registered: false
+                    callback: callback
                 };
             } else {
                 eventmap[event].callback = callback;
             }
-            if(payload){
+            if (payload) {
                 eventmap[event].payload = payload;
             }
 
             //register to event messages from server
             if (connected) {
-                if (!eventmap[event].registered) {
-                    eventmap[event].registered = true;
-                    var resp = {
-                        event_type: event,
-                        register: true,
-                        payload: eventmap[event].payload
-                    };
-                    ws.send(JSON.stringify(resp));
-                }
+                var resp = {
+                    event_type: event,
+                    register: true,
+                    payload: eventmap[event].payload
+                };
+                ws.send(JSON.stringify(resp));
             }
         };
 
@@ -68,15 +64,12 @@ angular.module("songster.notificationClient", []).
                 connected = true;
                 for (var i in eventmap) {
                     if (eventmap.hasOwnProperty(i)) {
-                        if (!eventmap[i].registered) {
-                            eventmap[event].registered = true;
                             var resp = {
                                 event_type: event,
                                 register: true,
                                 payload: eventmap[event].payload
                             };
                             ws.send(JSON.stringify(resp));
-                        }
                     }
                 }
             };
@@ -98,11 +91,6 @@ angular.module("songster.notificationClient", []).
              */
             ws.onclose = function () {
                 connected = false;
-                for (var i in eventmap) {
-                    if (eventmap.hasOwnProperty(i)) {
-                        eventmap[i].registered = false;
-                    }
-                }
                 var waittime = getnextWaitingtime(connectatempts);
                 setTimeout(function () {
                     connectatempts++;
