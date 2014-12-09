@@ -5,7 +5,7 @@ var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 var Event = db.Event;
-
+var songwebsocket = require('../websockets/event_songs');
 
 router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({owner_id: req.user._id}, function (err, playlists) {
@@ -77,6 +77,7 @@ router.put('/current/end', passport.ensureAuthenticated, passport.ensureNotAnony
             return;
         }
         if (event) {
+            songwebsocket.removeEvent(event._id);
             res.status(200).send(event);
             return;
         }
@@ -131,6 +132,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                 res.status(500).send('Internal server error');
                 return;
             }
+            songwebsocket.addEvent(event._id);
             res.status(201).send(event);
         });
 

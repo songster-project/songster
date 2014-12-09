@@ -3,6 +3,7 @@ var passport = require('../config/passport');
 var db = require('../config/database');
 var router = express.Router();
 var util = require('util');
+var songwebsocket = require('../websockets/event_songs');
 
 //Posts an eventlog entry to event defined by :id
 //the event must be active and only i, the owner of the event, can post this
@@ -36,6 +37,7 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
                 console.log(err);
                 res.status(500).send('Internal server error');
             }
+            songwebsocket.newSong(eventlog.event_id);
             res.status(201).send(eventlog);
         });
     });
