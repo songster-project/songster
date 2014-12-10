@@ -19,6 +19,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var songTypes = 'file youtube'.split(' ');
 var voteTypes = 'vote suggestion'.split(' ');
 var voteStates = 'new played'.split(' ');
+var logTypes = 'songplayed eventstart eventend'.split(' ');
 
 //Indices:
 //Every schema has default a primary key _id of type ObjectID.
@@ -94,8 +95,9 @@ var voteSchema = new Schema({
 var eventLogSchema = new Schema({
     event_id: {type: ObjectId, index: true}, //Referencing to the event that log comes from
     logDate: {type: Date, default: Date.now},
-    message: {} //Any Json object you want to log
+    message: {}, //Any Json object you want to log
     //Examples that will be logged: start,end, song_id+timestamp
+    type: {type: String, enum: logTypes}
 }, {collection: 'eventLog'});
 
 //For storing the state of the queue
