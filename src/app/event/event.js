@@ -15,7 +15,7 @@ angular.module('songster.event')
     })
 
 
-    .controller('EventCtrl', function EventCtrl($scope,$location, $http) {
+    .controller('EventCtrl',function EventCtrl($scope, $location, $http,eventService) {
         $scope.location=$location;
         // $scope.eventActive = false;
         //First we check if we have an event ...
@@ -37,6 +37,8 @@ angular.module('songster.event')
                 $scope.event.owner_id = data.id;
                 $http.post('/event', $scope.event).
                     success(function (data, status, headers, config) {
+                        eventService.setEventActive(true);
+                        eventService.setEventData(data);
                         $scope.eventActive = true;
                         $scope.event = data;
                     }).
@@ -49,6 +51,8 @@ angular.module('songster.event')
         $scope.endEvent = function () {
             $http.put('/event/current/end', {}).
                 success(function (data, status, headers, config) {
+                    eventService.setEventActive(false);
+                    eventService.setEventData({});
                     $scope.eventActive = false;
                     $scope.event = {};
                     $scope.setStandardValuesForEvent();
