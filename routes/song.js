@@ -43,7 +43,8 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                             album: tags.album || '',
                             artist: tags.artist || '',
                             year: tags.year || '',
-                            owner_id: req.user._id
+                            owner_id: req.user._id,
+                            active: true
                         };
 
                         // the parser sometimes outputs utf-8 junk :-/
