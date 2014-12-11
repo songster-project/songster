@@ -10,6 +10,15 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var expressValidator = require('express-validator');
 
+var app = express();
+
+module.exports = app;
+
+//add express-ws
+require('./lib/express-ws')();
+//initialize notification_server
+require('./lib/notification_server')();
+
 var routes = require('./routes/index');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
@@ -18,9 +27,11 @@ var song = require('./routes/song');
 var playlist = require('./routes/playlist');
 var registration = require('./routes/registration');
 var event = require('./routes/event');
+var search = require('./routes/search');
+var eventlog = require('./routes/eventlog');
 var settings = require('./config/settings.js');
+var voting = require('./routes/voting');
 
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,9 +51,8 @@ app.use(expressValidator(
             isBool: function (value) {
                 return typeof value === 'boolean';
             },
-
-            isInArray: function(value, array) {
-             return array.indexOf(value) >= 0;
+            isInArray: function (value, array) {
+                return array.indexOf(value) >= 0;
             }
         }
     }
@@ -108,6 +118,3 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-module.exports = app;
