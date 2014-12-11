@@ -83,17 +83,25 @@ function sendSongs(id, clients) {
         event_id: id,
         type: 'songplayed'
     }).sort('-logDate').limit(numprevSongs + 1).exec(function (err, logEntries) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        response.nextSongs = JSON.parse(logEntries[0].message).nextSongs;
-        logEntries.forEach(function (entry) {
-            response.lastSongs.unshift(JSON.parse(entry.message).currentSong);
-        });
-        response.currentSong = response.lastSongs[response.lastSongs.length - 1];
-        response.lastSongs.splice(response.lastSongs.length - 1, 1);
-        nserver.send_Notifications('music_changed', response, clients);
-    });
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (logEntries[0]) {
 
+                if (logEntries[0].message) {
+                    response.nextSongs = JSON.parse(logEntries[0].message).nextSongs;
+                }
+                logEntries.forEach(function (entry) {
+                    response.lastSongs.unshift(JSON.parse(entry.message).currentSong);
+                });
+                if (response.lastSongs.length > 0) {
+
+                    response.currentSong = response.lastSongs[response.lastSongs.length - 1];
+                    response.lastSongs.splice(response.lastSongs.length - 1, 1);
+                }
+            }
+            nserver.send_Notifications('music_changed', response, clients);
+        }
+    );
 }
