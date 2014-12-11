@@ -7,23 +7,38 @@
    </p>
 
     <div class="row">
+        <form>
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="searchRequest.query" placeholder="Search for songs...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" ng-click="search(searchRequest)">Search</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
+            <h2> Votes </h2>
             <table class="table table-striped">
                 <tr>
+                    <th></th>
                     <th>Votes</th>
                     <th>Title</th>
                     <th>Artist</th>
-                    <th ng-if="hasActions()">Actions</th>
                 </tr>
                 <tr ng:repeat="song in songs">
+                    <td >
+                        <div class="btn-group" role="group">
+                            <button title="Vote up" ng-click="voteUp(song)" class="btn btn-xs btn-default"><i class="fa fa-star"></i> Vote </button>
+                        </div>
+                    </td>
                     <td>{{ song.value || "0"}}</td>
                     <td>{{ song._id.title || "-" }}</td>
                     <td>{{ song._id.artist || "-" }}</td>
-                    <td ng-if="hasActions()">
-                        <div class="btn-group" role="group">
-                            <button ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(song)" class="btn btn-xs btn-default"><i class="fa" ng-class="action.icon"></i></button>
-                        </div>
-                    </td>
+
                 </tr>
             </table>
         </div>
