@@ -1,8 +1,32 @@
 <div class="VotingCtrl">
 
-   <p>  On Voting for: {{eventid}} <br/>
+   <p>  On Voting for abc: {{eventid}} <br/>
       You anonymous? {{anonymousUser ? anonymousUser : "nope ... logged in"}}
-      {{anonymousUser}}
+      {{anonymousUser}} <br/>
+       {{message}}
    </p>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table table-striped">
+                <tr>
+                    <th>Votes</th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th ng-if="hasActions()">Actions</th>
+                </tr>
+                <tr ng:repeat="song in songs">
+                    <td>{{ song.value || "0"}}</td>
+                    <td>{{ song._id.title || "-" }}</td>
+                    <td>{{ song._id.artist || "-" }}</td>
+                    <td ng-if="hasActions()">
+                        <div class="btn-group" role="group">
+                            <button ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(song)" class="btn btn-xs btn-default"><i class="fa" ng-class="action.icon"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
 </div>
