@@ -2,14 +2,17 @@ var express = require('express');
 var passport = require('../config/passport');
 var db = require('../config/database');
 var expressValidator = require('express-validator');
-var random = require('mongoose-random');
 var router = express.Router();
 var util = require('util');
 var Event = db.Event;
 var Song = db.Song;
+var mongoose = require('mongoose');
+var mongo = require('mongodb');
+var ObjectID = require('mongodb').ObjectID;
 
 
-router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
+
+/*router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -40,10 +43,12 @@ router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req,
             res.send({});
         });
     });
-});
+}); */
 
 
 router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, res){
+
+    console.log('in votedsongs');
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -54,7 +59,8 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
         }
 
         if(event == null) {
-            res.send({});
+            console.log('event not found');
+            res.status(400).send('Bad Request');
             return;
         }
 
@@ -96,7 +102,7 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
     // for anonym user it must equal the session for only one vote per song
     // console.log(req.user);
     // console.log(req.session);
-    req.assert('owner_id', 'Owner_id is not the same as users password').equals(req.user._id);
+    req.assert('owner_id', 'Owner_id is not the same as users id').equals(req.user._id);
     req.assert('type', 'Type does not match vote types').isInArray(('vote suggestion').split(' '));
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
     req.checkBody('song_id', 'Song ID must not be empty').notEmpty();
@@ -118,6 +124,8 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
 
         // check that song is in db
+
+        //db.Song.findOne({"_id": mongo.ObjectID(req.param('song_id'))}, function(err, song){
         db.Song.findOne({_id: req.param('song_id'), active:true}, function(err, song){
             if(err) {
                 console.log(err);
@@ -126,7 +134,7 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
             }
 
             if (song == null) {
-                console.log('event is not active');
+                console.log('song is not active');
                 res.status(400).send('Bad Request');
                 return;
             }
@@ -137,7 +145,7 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
             vote.type = req.body.type;
             vote.state = req.body.state;
             vote.song_id = req.body.song_id;
-            vote.event_id = req.body.event_id;
+            vote.event_id = req.param('event_id');
 
             vote.save( function(err, vote){
                 if(err)  {
@@ -154,5 +162,6 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 });
 
 router.get('/:id', passport.redirectVoting);
+
 
 module.exports = router;
