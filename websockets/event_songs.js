@@ -11,6 +11,13 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
         //check if client is already registered
         if (eventmap[data.eventid].clients.indexOf(ws) == -1) {
             eventmap[data.eventid].clients.push(ws);
+        }else{
+            eventmap[data.eventid].clients.splice(eventmap[data.eventid].clients.indexOf(ws)-1, 1);
+            eventmap[data.eventid].clients.push(ws);
+        }
+        //send the songs to the new client
+        if (eventmap[data.eventid]) {
+            sendSongs(data.eventid, [ws]);
         }
     } else {//add entry for event if event exists
         db.Event.findOne({'_id': data.eventid}, function (err, events) {
@@ -25,11 +32,11 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
                 clients: []
             };
             eventmap[data.eventid].clients.push(ws);
+            //send the songs to the new client
+            if (eventmap[data.eventid]) {
+                sendSongs(data.eventid, [ws]);
+            }
         });
-    }
-    //send the songs to the new client
-    if (eventmap[data.eventid]) {
-        sendSongs(data.eventid, [ws]);
     }
 });
 
@@ -90,7 +97,10 @@ function sendSongs(id, clients) {
             if (logEntries[0]) {
 
                 if (logEntries[0].message) {
-                    response.nextSongs = JSON.parse(logEntries[0].message).nextSongs;
+                    var msg = JSON.parse(logEntries[0].message);
+                    if (msg.nextSongs) {
+                        response.nextSongs = msg.nextSongs;
+                    }
                 }
                 logEntries.forEach(function (entry) {
                     response.lastSongs.unshift(JSON.parse(entry.message).currentSong);
