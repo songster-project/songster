@@ -1,3 +1,5 @@
+angular.module('songster.event.services', []);
+
 angular
     .module('songster.eventService', [
         'ui.router',
@@ -8,9 +10,8 @@ angular
 
 angular
     .module('songster.event', [
+        'songster.event.services',
         'ui.router',
-        'placeholders',
-        'ui.bootstrap',
         'songster.eventService',
         'songster.menu'
     ]);
