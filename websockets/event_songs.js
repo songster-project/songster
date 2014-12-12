@@ -11,8 +11,8 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
         //check if client is already registered
         if (eventmap[data.eventid].clients.indexOf(ws) == -1) {
             eventmap[data.eventid].clients.push(ws);
-        }else{
-            eventmap[data.eventid].clients.splice(eventmap[data.eventid].clients.indexOf(ws)-1, 1);
+        } else {
+            eventmap[data.eventid].clients.splice(eventmap[data.eventid].clients.indexOf(ws) - 1, 1);
             eventmap[data.eventid].clients.push(ws);
         }
         //send the songs to the new client
@@ -28,10 +28,12 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
             if (events === null) {
                 return;
             }
-            eventmap[data.eventid] = {
-                clients: []
-            };
-            eventmap[data.eventid].clients.push(ws);
+            if (events.end != null) {
+                eventmap[data.eventid] = {
+                    clients: []
+                };
+                eventmap[data.eventid].clients.push(ws);
+            }
             //send the songs to the new client
             if (eventmap[data.eventid]) {
                 sendSongs(data.eventid, [ws]);
