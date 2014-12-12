@@ -99,20 +99,35 @@ exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
 }
 
 exports.redirectVoting = function redirectVoting(req, res, next) {
-    id = req.params.id;
+    var id = req.params.id;
+    console.log('in redirect voting');
+    console.log(id);
 
+    db.Event.findOne({_id: id, end:null }, function (err, event) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
 
-    //If we are authenticated and NOT the anonymous user
-    if (req.isAuthenticated() && req.user.username != anonymoususer.username) {
-        res.redirect('/app/#/voting/' + id);
-    }
-    //I need to be logged in and redirected to the anon page
-    else {
-        req.body = anonymoususer;
-        passport.authenticate('local')(req, res, function () {
-            console.log('authenticated anon and redirect to /app/#/voting/'+id+'/anon');
-            return res.redirect('/app/#/voting/'+id+'/anon');
-        });
-    }
+        if (event == null) {
+            console.log('event is not active');
+            res.status(400).send('Bad Request');
+            return;
+        }
+
+        //If we are authenticated and NOT the anonymous user
+        if (req.isAuthenticated() && req.user.username != anonymoususer.username) {
+            res.redirect('/app/#/voting/' + event._id);
+        }
+        //I need to be logged in and redirected to the anon page
+        else {
+            req.body = anonymoususer;
+            passport.authenticate('local')(req, res, function () {
+                console.log('authenticated anon and redirect to /app/#/voting/' + event._id + '/anon');
+                return res.redirect('/app/#/voting/' + event._id + '/anon');
+            });
+        }
+    });
 };
 
