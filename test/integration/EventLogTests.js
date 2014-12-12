@@ -441,7 +441,9 @@ describe('EventLogApi', function () {
                                     expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
                                     expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
                                     expect(msg.nextSongs.length).to.equal(0);
-                                    done();
+                                    api.put('/event/current/end').send({}).end(function (err, res) {
+                                        done();
+                                    });
                                 }
                             }, data);
                         });
