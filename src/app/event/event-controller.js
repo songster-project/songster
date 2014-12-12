@@ -1,6 +1,10 @@
 angular.module('songster.event')
 
-    .controller('EventCtrl',function EventCtrl($scope, $location, $http,eventService, $stateParams) {
+    .controller('EventCtrl',function EventCtrl($scope, $location, $http,eventService, $stateParams, $auth) {
+
+        //ToDo: Manuel => as discussed in the last week of september, you said you are going to continue at this point
+        //by going to manage that the availability of the menu ...
+        $auth.setAnonymous(!!$stateParams.anonymous);
 
         $scope.eventId = $stateParams.eventId;
 

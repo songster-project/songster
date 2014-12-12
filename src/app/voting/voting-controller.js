@@ -23,9 +23,5 @@ angular.module('songster.voting')
 
         // load votes for the first time
         votingService.loadVotes($scope.event_id);
-
-        //ToDo: Manuel => as discussed in the last week of september, you said you are going to continue at this point
-        //by going to manage that the availability of the menu ...
-        $rootScope.anonymousUser = !!$stateParams.anonymous;
     });
 
