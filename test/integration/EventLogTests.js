@@ -6,7 +6,7 @@ var supertest = require('supertest');
 var api = supertest.agent('http://localhost:3000');
 var database = require('../lib/database');
 
-describe('EventApi', function () {
+describe('EventLogApi', function () {
     var eid;
     this.timeout(10000);
     //Callback - Magic provided by: https://github.com/visionmedia/superagent/issues/314
@@ -49,7 +49,7 @@ describe('EventApi', function () {
             expect(err).to.not.exist;
             expect(res.body).to.be.empty;
             var postdata = {
-                "name": "myEvent",
+                "name": "websocketEvent1",
                 "accessKey": "theKey",
                 "owner_id": "5489e22a2b6671a414dcab8f",
                 "suggestionEnabled": true,
@@ -410,7 +410,7 @@ describe('EventApi', function () {
         };
         api.put('/event/current/end').send({}).end(function (err, res) {
             var eventdata = {
-                "name": "myEvent",
+                "name": "websocketEvent2",
                 "accessKey": "theKey",
                 "owner_id": "5489e22a2b6671a414dcab8f",
                 "suggestionEnabled": true,

@@ -1,4 +1,4 @@
-describe('Event Songs', function () {
+/*describe('Event Songs', function () {
     beforeEach(function () {
         browser.driver.get('http://localhost:3000/login');
         browser.driver.wait(function () {
@@ -71,4 +71,4 @@ describe('Event Songs', function () {
         browser.get('http://localhost:3000/');
         expect(browser.getTitle()).toEqual('Home | ngBoilerplate');
     });
-});
+});*/
