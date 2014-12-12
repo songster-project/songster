@@ -6,8 +6,8 @@ function SoLibrarySearchDirective() {
     return {
         restrict: 'AE',
         scope: {
-            actions: "="
             /*
+             this is how an action array looks like:
              actions = [
                 {
                     'title': 'Title of the action',
@@ -18,12 +18,22 @@ function SoLibrarySearchDirective() {
                 }
              ];
              */
+            actions: "=",
+
+            // optional: you can specify a custom view for the results
+            customView: "="
         },
         replace: true,
         controller: ['$scope', '$http', '$library', function SoLibrarySearchDirective($scope, $http, $library) {
             $scope.total = 0;
             $scope.searchRequest = {};
             $scope.songs = [];
+
+            if (!!$scope.customView) {
+                $scope.resultView = $scope.customView;
+            } else {
+                $scope.resultView = 'library/so-library-search-result.tpl.html';
+            }
 
             function search(query) {
                 $library.search(query).success(function (res) {
