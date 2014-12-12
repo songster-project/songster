@@ -5,6 +5,7 @@ angular.module('ngBoilerplate', [
     'ngBoilerplate.about',
     'ngBoilerplate.upload',
     'songster.domain',
+    'songster.authentication',
     'songster.menu',
     'songster.main-menu',
     'songster.player',

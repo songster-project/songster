@@ -1,0 +1,8 @@
+<div>
+    <div ng-if="isAuthorized">
+        <div ng-transclude></div>
+    </div>
+    <p ng-if="!isAuthorized && showMessage">
+        You need to login to use this features.
+    </p>
+</div>
