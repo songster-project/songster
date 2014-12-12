@@ -120,13 +120,13 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
 
         //If we are authenticated and NOT the anonymous user
         if (req.isAuthenticated() && req.user.username != anonymoususer.username) {
-            res.cookie('anonymous', 'false', { maxAge: 30000, httpOnly: true});
+            res.cookie('anonymous', 'false', {maxAge: 30000, httpOnly: false});
             return res.redirect(redirectUrl);
         }
         else {
             req.body = anonymoususer;
             passport.authenticate('local')(req, res, function () {
-                res.cookie('anonymous', 'true', { maxAge: 30000, httpOnly: true});
+                res.cookie('anonymous', 'true', {maxAge: 30000, httpOnly: false});
                 return res.redirect(redirectUrl);
             });
         }

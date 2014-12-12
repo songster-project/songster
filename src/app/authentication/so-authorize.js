@@ -6,6 +6,7 @@ function SoAuthorizeDirective() {
     return {
         restrict: 'AE',
         transclude: true,
+        replace: true,
         scope: {
             isAuthorized: "=shouldBe",
             showMessage: "="

@@ -3,21 +3,21 @@ angular
     .provider('$auth', AuthProvider);
 
 
-function Auth($http, $q) {
+function Auth() {
 
-    var _isAnonymous = true;
-
-    this.setAnonymous = function(isAnonymous) {
-        _isAnonymous = isAnonymous;
-    };
+    var _isAnonymous = false;
 
     this.isAnonymous = function() {
         return _isAnonymous;
-    }
+    };
+
+    this.makeAnonymous = function () {
+        _isAnonymous = true;
+    };
 }
 
 function AuthProvider() {
-    this.$get = function ($http, $q) {
-        return new Auth($http, $q);
+    this.$get = function () {
+        return new Auth();
     };
 }
