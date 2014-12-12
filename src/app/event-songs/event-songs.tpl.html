@@ -4,11 +4,11 @@
     </h2>
     <label for="inputEventId">Event id</label>
     <input id="inputEventId" type="text" name="eventid" ng-model="eventid"/>
-    <button ng-click="register_to_event()" class="btn btn-default">Get Songs!</button>
+    <button ng-click="register_to_event()" class="btn btn-default" id="getEventSongsButton">Get Songs!</button>
     <h2>
         Last Songs
     </h2>
-    <table class="table table-striped">
+    <table class="table table-striped" id="EventSongsTableLastSongs">
         <tr>
             <th>Title</th>
             <th>Artist</th>
@@ -23,9 +23,9 @@
         </tr>
     </table>
     <h2>
-        Current Songs
+        Current Song
     </h2>
-    <table class="table table-striped">
+    <table class="table table-striped" id="EventSongsTableCurrentSong">
         <tr>
             <th>Title</th>
             <th>Artist</th>
@@ -42,7 +42,7 @@
     <h2>
         Next Songs
     </h2>
-    <table class="table table-striped">
+    <table class="table table-striped" id="EventSongsTableNextSongs">
         <tr>
             <th>Title</th>
             <th>Artist</th>
