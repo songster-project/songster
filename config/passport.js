@@ -103,7 +103,7 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
 
 
     //If we are authenticated and NOT the anonymous user
-    if (req.isAuthenticated() && req.user.username != user.username) {
+    if (req.isAuthenticated() && req.user.username != anonymoususer.username) {
         res.redirect('/app/#/voting/' + id);
     }
     //I need to be logged in and redirected to the anon page
