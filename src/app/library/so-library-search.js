@@ -36,11 +36,9 @@ function SoLibrarySearchDirective() {
             }
 
             function search(query) {
-                $library.search(query).success(function (res) {
-                    $scope.total = res.hits.total;
-                    $scope.songs = _.map(res.hits.hits, function (hit) {
-                        return new window.Song(hit._source);
-                    });
+                $library.search(query).then(function (searchResult) {
+                    $scope.total = searchResult.total;
+                    $scope.songs = searchResult.results;
                 });
             }
 
