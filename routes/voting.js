@@ -95,14 +95,12 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
     });
 });
 
+
+
 router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
     console.log('in voting post');
-
-    // for anonym user it must equal the session for only one vote per song
-    // console.log(req.user);
-    // console.log(req.session);
-    req.assert('owner_id', 'Owner_id is not the same as users id').equals(req.user._id);
+   // for anonym user it must equal the session for only one vote per song
     req.assert('type', 'Type does not match vote types').isInArray(('vote suggestion').split(' '));
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
     req.checkBody('song_id', 'Song ID must not be empty').notEmpty();
@@ -141,7 +139,7 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
             // TODO: implementing vote on song from one user is only once allowed - verify on session id or something like this
             var vote = db.Vote();
-            vote.owner_id = req.body.owner_id;
+            vote.owner_id = req.user.id;
             vote.type = req.body.type;
             vote.state = req.body.state;
             vote.song_id = req.body.song_id;

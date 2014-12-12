@@ -25,10 +25,8 @@ function VotingService($http, $rootScope, $q) {
 
     this.postVote = function (event_id, song_id) {
         var deferred = $q.defer();
-        // if (!!event_id || !!song_id) {
-        $http.get('/account/id').success(function (data) {
+        if (!!event_id || !!song_id) {
             var vote = {
-                owner_id: data.id,
                 event_id: event_id,
                 song_id: song_id,
                 type: 'vote',
@@ -39,13 +37,11 @@ function VotingService($http, $rootScope, $q) {
             }).error(function(err) {
                 deferred.reject(err);
             });
-        });
 
-
-        //  } else {
-        //       console.log('postVote() got passed invalid data for vote');
-        //     return false;
-        //     }
+          } else {
+             console.log('postVote() got passed invalid data for vote');
+            return false;
+             }
 
         return deferred.promise;
     };
