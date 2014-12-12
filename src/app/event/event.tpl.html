@@ -1,38 +1,26 @@
 <div class="EventCtrl">
     <div ng-show="eventActive">
         <h1>Event: {{event.name}}</h1>
-        <table class="table">
-            <tr>
-                <td>Name</td>
-                <td>{{event.name}}</td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td>{{event.description}}</td>
-            </tr>
-            <tr>
-                <td>Public link:</td>
-                <td>http://{{location.host()}}:{{location.port()}}/voting/{{event._id}}</td>
-            </tr>
-            <tr>
-                <td>Voting</td>
-                <td>{{event.votingEnabled ? 'enabled' : 'disabled'}}</td>
-            </tr>
-            <tr>
-                <td>Suggestions:</td>
-                <td>{{event.suggestionEnabled ? 'enabled' : 'disabled'}}</td>
-            </tr>
-            <tr>
-                <td>Preview</td>
-                <td>{{event.previewEnabled ? 'enabled' : 'disabled'}}</td>
-            </tr>
-            <tr>
-                <td>Started</td>
-                <td>{{event.start | date: 'd.M H:m'}}</td>
-            </tr>
-
-        </table>
-        <button ng-click="endEvent()" class="btn btn-default">End Event</button>
+        <tabset>
+            <tab>
+                <tab-heading>
+                    Home
+                </tab-heading>
+                <div ng-include="'event/event-home.tpl.html'"></div>
+            </tab>
+            <tab>
+                <tab-heading>
+                    Votings
+                </tab-heading>
+                <div ng-include="'event/event-votings.tpl.html'"></div>
+            </tab>
+            <tab>
+                <tab-heading>
+                    Suggestion
+                </tab-heading>
+                <div ng-include="'event/event-suggestions.tpl.html'"></div>
+            </tab>
+        </tabset>
     </div>
 
     <div ng-show="!eventActive">
