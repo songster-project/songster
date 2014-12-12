@@ -4,10 +4,10 @@ angular.module('songster.library')
 
         $scope.actions = [
             {
-                'title': 'Add to playlist',
+                'title': 'Add to queue',
                 'icon': 'fa-plus',
                 'fn': function(song) {
-                    $player.addFirst(song);
+                    $player.add(song);
                 }
             },{
                 'title': 'Play raw',
