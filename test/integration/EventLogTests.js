@@ -7,14 +7,14 @@ var api = supertest.agent('http://localhost:3000');
 var database = require('../lib/database');
 
 describe('EventApi', function () {
-    var eventid;
+    var eid = '5489e2462b6671a414dcab90';
     this.timeout(10000);
     //Callback - Magic provided by: https://github.com/visionmedia/superagent/issues/314
     //Basically solves that we can be logged in
     beforeEach(function (done) {
         var postdata = {
-            "username": "user1",
-            "password": "user1"
+            "username": "user2",
+            "password": "user2"
         };
         var cb = function (x) {
             return;
@@ -40,32 +40,6 @@ describe('EventApi', function () {
         });
     });
 
-    it('should return no events in the start of the tests', function (done) {
-        api.get('/event').end(function (err, res) {
-            expect(err).to.not.exist;
-            expect(res.body).to.be.empty;
-            done();
-        });
-    });
-
-    it('should respond with the event when i post a valid event', function (done) {
-            var postdata = {
-                "name": "myEvent",
-                "accessKey": "theKey",
-                "owner_id": "546b16fa2e3a10ea162d9355",
-                "suggestionEnabled": true,
-                "votingEnabled": true,
-                "previewEnabled": true
-            };
-            api.post('/event').send(postdata).end(function (err, res) {
-                expect(err).to.not.exist;
-                expect(res.body).to.contain.key('start');
-                eventid = res.body._id;
-                done();
-            });
-        }
-    );
-
     //Logged In
     //#########################################################################################
 
@@ -73,7 +47,7 @@ describe('EventApi', function () {
         var first = true;
         var nClient = require('../lib/notification_client');
         var data = {
-            eventid: eventid
+            eventid: eid
         };
         nClient.register_to_event('music_changed', function (msg) {
             if (first) {
@@ -119,12 +93,12 @@ describe('EventApi', function () {
             },
             type: "songplayed"
         };
-        api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.statusCode).to.equal(201);
 
             database.EventLog.find({
-                event_id: eventid,
+                event_id: eid,
                 type: 'songplayed'
             }).sort('-logDate').limit(1).exec(function (err, logEntries) {
                     if (logEntries[0]) {
@@ -159,12 +133,12 @@ describe('EventApi', function () {
             type: "songplayed"
         };
 
-        api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.statusCode).to.equal(201);
 
             database.EventLog.find({
-                event_id: eventid,
+                event_id: eid,
                 type: 'songplayed'
             }).sort('-logDate').limit(1).exec(function (err, logEntries) {
                     if (logEntries[0]) {
@@ -182,7 +156,7 @@ describe('EventApi', function () {
         var postdata = {
             type: "songplayed"
         }
-        api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.statusCode).to.equal(400);
             done();
@@ -191,7 +165,7 @@ describe('EventApi', function () {
 
     it('should return 400, if message and type are missing in request', function (done) {
         var postdata = {};
-        api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.statusCode).to.equal(400);
             done();
@@ -231,7 +205,7 @@ describe('EventApi', function () {
                 }]
             }
         };
-        api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.statusCode).to.equal(400);
             done();
@@ -276,7 +250,7 @@ describe('EventApi', function () {
         api.put('/event/current/end').send({}).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body.end).to.not.equal(null);
-            api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
                 expect(err).to.not.be.ok;
                 expect(res.statusCode).to.equal(500);
                 done();
@@ -295,7 +269,7 @@ describe('EventApi', function () {
         api.put('/event/current/end').send({}).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body.end).to.not.equal(null);
-            api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
                 expect(err).to.not.be.ok;
                 expect(res.statusCode).to.equal(201);
                 done();
@@ -314,7 +288,7 @@ describe('EventApi', function () {
         api.put('/event/current/end').send({}).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body.end).to.not.equal(null);
-            api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
                 expect(err).to.not.be.ok;
                 expect(res.statusCode).to.equal(201);
                 done();
@@ -356,99 +330,90 @@ describe('EventApi', function () {
             },
             type: "songplayed"
         };
-        api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.statusCode).to.equal(201);
 
-            api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
                 expect(err).to.not.be.ok;
                 expect(res.statusCode).to.equal(201);
-
+                var started = true;
                 var nClient = require('../lib/notification_client');
                 var data = {
-                    eventid: eventid
+                    eventid: eid
                 };
                 nClient.register_to_event('music_changed', function (msg) {
                     expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
                     expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
                     expect(msg.nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
-                    done();
+                    if (started) {
+                        started = false;
+                        done();
+                    }
                 }, data);
             });
         });
     });
 
-    it('schould send websocket request if data is correct', function (done) {
-        api.put('/event/current/end').send({}).end(function (err, res) {
-            expect(err).to.not.exist;
-            expect(res.body.end).to.not.equal(null);
-            var postdata = {
-                "name": "myEvent",
-                "accessKey": "theKey",
-                "owner_id": "546b16fa2e3a10ea162d9355",
-                "suggestionEnabled": true,
-                "votingEnabled": true,
-                "previewEnabled": false
-            };
-            api.post('/event').send(postdata).end(function (err, res) {
-                expect(err).to.not.exist;
-                expect(res.body).to.contain.key('start');
-                eventid = res.body._id;
-                var postdata = {
-                    message: {
-                        currentSong: {
-                            id: "5489e267663534a4148bdfdrt",
-                            _id: "5489e267663534a4148bdfcc",
-                            title: "Contrails",
-                            artist: "Glowworm",
-                            album: "The Coachlight Woods",
-                            year: "",
-                            cover: "5489e2672b6671a414dcab9a",
-                            file_id: "5489e2612b6671a414dcab94",
-                            addedDate: "2014-12-11T18:28:49.672Z",
-                            src: "/song/5489e2612b6671a414dcab94/raw",
-                            type: "audio/mp3",
-                            $$hashKey: "00U"
-                        },
-                        nextSongs: [{
-                            id: "5489e268663534a4148bdgrtdd",
-                            _id: "5489e268663534a4148bdfcd",
-                            title: "Meet The Enemy",
-                            artist: "Eluveitie",
-                            album: "Helvetios",
-                            year: "",
-                            cover: "5489e2682b6671a414dcab9c",
-                            file_id: "5489e2612b6671a414dcab93",
-                            addedDate: "2014-12-11T18:28:49.658Z",
-                            src: "/song/5489e2612b6671a414dcab93/raw",
-                            type: "audio/mp3",
-                            $$hashKey: "00T"
-                        }]
-                    },
-                    type: "songplayed"
+    it('next songs should be empty if preview is deativated', function (done) {
+        var id = '548ad8c6641d12a03923d639';
+        var postdata = {
+            message: {
+                currentSong: {
+                    id: "5489e267663534a4148bdfdrt",
+                    _id: "5489e267663534a4148bdfcc",
+                    title: "Contrails",
+                    artist: "Glowworm",
+                    album: "The Coachlight Woods",
+                    year: "",
+                    cover: "5489e2672b6671a414dcab9a",
+                    file_id: "5489e2612b6671a414dcab94",
+                    addedDate: "2014-12-11T18:28:49.672Z",
+                    src: "/song/5489e2612b6671a414dcab94/raw",
+                    type: "audio/mp3",
+                    $$hashKey: "00U"
+                },
+                nextSongs: [{
+                    id: "5489e268663534a4148bdgrtdd",
+                    _id: "5489e268663534a4148bdfcd",
+                    title: "Meet The Enemy",
+                    artist: "Eluveitie",
+                    album: "Helvetios",
+                    year: "",
+                    cover: "5489e2682b6671a414dcab9c",
+                    file_id: "5489e2612b6671a414dcab93",
+                    addedDate: "2014-12-11T18:28:49.658Z",
+                    src: "/song/5489e2612b6671a414dcab93/raw",
+                    type: "audio/mp3",
+                    $$hashKey: "00T"
+                }]
+            },
+            type: "songplayed"
+        };
+        api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+
+            api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
+                expect(err).to.not.be.ok;
+                expect(res.statusCode).to.equal(201);
+                var started = true;
+                var nClient = require('../lib/notification_client');
+                var data = {
+                    eventid: id
                 };
-                api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
-                    expect(err).to.not.be.ok;
-                    expect(res.statusCode).to.equal(201);
-
-                    api.post('/eventlog/' + eventid).send(postdata).end(function (err, res) {
-                        expect(err).to.not.be.ok;
-                        expect(res.statusCode).to.equal(201);
-
-                        var nClient = require('../lib/notification_client');
-                        var data = {
-                            eventid: eventid
-                        };
-                        nClient.register_to_event('music_changed', function (msg) {
-                            expect(msg.lastSongs.length).to.equal(1);
-                            expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
-                            expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
-                            expect(msg.nextSongs.length).to.equal(0);
-                            done();
-                        }, data);
-                    });
-                });
+                nClient.register_to_event('music_changed', function (msg) {
+                    if (started) {
+                        started = false;
+                        expect(msg.lastSongs.length).to.equal(1);
+                        expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
+                        expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
+                        expect(msg.nextSongs.length).to.equal(0);
+                        done();
+                    }
+                }, data);
             });
         });
     });
+
 });
