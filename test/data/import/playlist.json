@@ -1,3 +1,3 @@
-{ "_id" : { "$oid" : "546d3c5ee96b9ce414130aaa" }, "__v" : 0, "owner_id" : { "$oid" : "546b16fa2e3a10ea162d9aaa" }, "name" : "testPlaylistThatisNotMine", "songs" : [] }
-{ "_id" : { "$oid" : "546d3e88021c21731917fed6" }, "__v" : 0, "owner_id" : { "$oid" : "546b16fa2e3a10ea162d9355" }, "name" : "this ones gonna be deleted", "songs" : [] }
-{ "_id" : { "$oid" : "546d3e88021c21731917fed7" }, "__v" : 0, "owner_id" : { "$oid" : "546b16fa2e3a10ea162d9355" }, "name" : "this ones gonna get a song!", "songs" : [] }
+{ "__v" : 0, "owner_id" : "546b16fa2e3a10ea162d9AAA", "name" : "testPlaylistThatisNotMine", "_id" : "546d3c5ee96b9ce414130AAA", "songs" : [] }
+{ "__v" : 0, "owner_id" : "546b16fa2e3a10ea162d9355", "name" : "this ones gonna be deleted", "_id" : "546d3e88021c21731917fed6", "songs" : [] }
+{ "__v" : 0, "owner_id" : "546b16fa2e3a10ea162d9355", "name" : "this ones gonna get a song!", "_id" : "546d3e88021c21731917fed7", "songs" : [] }
