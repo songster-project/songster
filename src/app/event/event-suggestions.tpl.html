@@ -10,13 +10,17 @@
             <tab-heading>
                 My library
             </tab-heading>
-            <div ng-include="'event/event-suggestions-user.tpl.html'"></div>
+            <so-authorize should-be="!isAnonymous()" show-message="true">
+                <div ng-include="'event/event-suggestions-user.tpl.html'"></div>
+            </so-authorize>
         </tab>
         <tab>
             <tab-heading>
                 Youtube link
             </tab-heading>
-            <div ng-include="'event/event-suggestions-youtube.tpl.html'"></div>
+            <so-authorize should-be="!isAnonymous()" show-message="true">
+                <div ng-if="!isAnonymous()" ng-include="'event/event-suggestions-youtube.tpl.html'"></div>
+            </so-authorize>
         </tab>
     </tabset>
 </div>
