@@ -1,20 +1,5 @@
 angular.module('songster.event')
 
-
-    .config(function config($stateProvider) {
-        $stateProvider.state('event', {
-            url: '/event',
-            views: {
-                "main": {
-                    controller: 'EventCtrl',
-                    templateUrl: 'event/event.tpl.html'
-                }
-            },
-            data: {pageTitle: 'Mange your events!'}
-        });
-    })
-
-
     .controller('EventCtrl',function EventCtrl($scope, $location, $http,eventService) {
         $scope.location=$location;
         // $scope.eventActive = false;
