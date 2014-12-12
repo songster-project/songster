@@ -1,14 +1,16 @@
 angular
-    .module('songster.votingService', [
-        'ui.router',
-        'placeholders',
-        'ui.bootstrap'
+    .module('songster.voting.services.votingService', [
+        'ui.router'
+    ]);
+
+angular
+    .module('songster.voting.services', [
+        'songster.voting.services.votingService'
     ]);
 
 angular
     .module('songster.voting', [
+        'songster.voting.services',
         'ui.router',
-        'placeholders',
-        'ui.bootstrap',
-        'songster.votingService'
+        'ui.bootstrap'
     ]);

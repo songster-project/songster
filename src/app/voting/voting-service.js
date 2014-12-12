@@ -1,5 +1,5 @@
 angular
-    .module('songster.votingService')
+    .module('songster.voting.services.votingService')
     .provider('votingService', function () {
         this.$get = function ($http, $rootScope, $q) {
             return new VotingService($http, $rootScope, $q);
