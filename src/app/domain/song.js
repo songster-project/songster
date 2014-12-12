@@ -7,7 +7,7 @@ angular.module('songster.domain.song')
             //window.PersistentEntity.call(this, data);
 
             this.id = data ? data.id : undefined;
-            this._id = data ? data._id : data.id; // TODO we only have this here, so that the player functions properly. but it should be migrated to 'id'
+            this._id = data ? (data._id ? data._id : data.id) : undefined; // TODO we only have this here, so that the player functions properly. but it should be migrated to 'id'
             this.title = data ? data.title : undefined;
             this.artist = data ? data.artist : undefined;
             this.album = data ? data.album : undefined;
