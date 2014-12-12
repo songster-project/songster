@@ -116,18 +116,21 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
             return;
         }
 
+        var redirectUrl = '/app/#/voting/' + event._id;
+
         //If we are authenticated and NOT the anonymous user
         if (req.isAuthenticated() && req.user.username != anonymoususer.username) {
-            res.redirect('/app/#/voting/' + event._id);
+            res.cookie('anonymous', 'false', { maxAge: 30000, httpOnly: true});
+            return res.redirect(redirectUrl);
         }
-        //I need to be logged in and redirected to the anon page
         else {
             req.body = anonymoususer;
             passport.authenticate('local')(req, res, function () {
-                console.log('authenticated anon and redirect to /app/#/voting/' + event._id + '/anon');
-                return res.redirect('/app/#/voting/' + event._id + '/anon');
+                res.cookie('anonymous', 'true', { maxAge: 30000, httpOnly: true});
+                return res.redirect(redirectUrl);
             });
         }
+
     });
 };
 
