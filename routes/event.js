@@ -45,7 +45,7 @@ router.get('/current', passport.ensureAuthenticated, passport.ensureNotAnonymous
 });
 
 
-router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+router.get('/:id', passport.ensureAuthenticated, function (req, res) {
     req.checkParams('id', 'ID is not an ID').isMongoID();
     var errors = req.validationErrors();
     if (errors) {

@@ -12,6 +12,16 @@ angular
             },
             data: {pageTitle: 'Mange your events!'}
         });
+
+        $stateProvider.state('voting', {
+            url: '/voting/:eventId/:anonymous',
+            views: {
+                "main": {
+                    controller: 'EventCtrl',
+                    templateUrl: 'event/event.tpl.html'
+                }
+            }
+        });
     })
 
     .config(['$menuProvider', function ($menuProvider) {
