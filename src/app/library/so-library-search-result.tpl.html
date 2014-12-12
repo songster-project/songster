@@ -1,0 +1,33 @@
+<div>
+    <div class="col-lg-12">
+        <table class="table table-striped">
+            <tr>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Year</th>
+                <th ng-if="hasActions()">Actions</th>
+            </tr>
+            <tr ng:repeat="song in songs">
+                <td>
+                    <img class="img-rounded medium-albumart"
+                         ng-src="{{song.getCoverSrc()}}">
+
+                    <div>
+                        <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload cover</a>
+                    </div>
+                </td>
+                <td><a href="#" editable-text="song.title" onaftersave="updateSongMetadata(song)">{{ song.title || "-" }}</a></td>
+                <td><a href="#" editable-text="song.artist" onaftersave="updateSongMetadata(song)">{{ song.artist || "-" }}</a></td>
+                <td><a href="#" editable-text="song.album" onaftersave="updateSongMetadata(song)">{{ song.album || "-" }}</a></td>
+                <td><a href="#" editable-number="song.year" onaftersave="updateSongMetadata(song)">{{ song.year || "-" }}</a></td>
+                <td ng-if="hasActions()">
+                    <div class="btn-group" role="group">
+                        <button ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(song)" class="btn btn-xs btn-default"><i class="fa" ng-class="action.icon"></i></button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
