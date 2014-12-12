@@ -53,7 +53,8 @@ service.send_event = function send_event(event, payload) {
 };
 
 function setupsocketconnection() {
-    ws = new WebSocket("ws://localhost:3000/event");
+    var port = process.env.PORT || 3000;
+    ws = new WebSocket("ws://localhost:"+port+"/event");
 
     /**
      * registers for the events at the server after connection is established

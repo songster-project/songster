@@ -7,7 +7,7 @@ var api = supertest.agent('http://localhost:3000');
 var database = require('../lib/database');
 
 describe('EventApi', function () {
-    var eid = '5489e2462b6671a414dcab90';
+    var eid;
     this.timeout(10000);
     //Callback - Magic provided by: https://github.com/visionmedia/superagent/issues/314
     //Basically solves that we can be logged in
@@ -21,7 +21,7 @@ describe('EventApi', function () {
         };
         api.post('/login')
             .send(postdata)
-            .end(function (err, res) {
+            .end(function (err) {
                 expect(err).to.not.exist;
 
                 process.nextTick(function () {
@@ -44,19 +44,37 @@ describe('EventApi', function () {
     //#########################################################################################
 
     it('schould send empty websocket request if there is no log', function (done) {
-        var first = true;
-        var nClient = require('../lib/notification_client');
-        var data = {
-            eventid: eid
-        };
-        nClient.register_to_event('music_changed', function (msg) {
-            if (first) {
-                expect(msg.lastSongs.length).to.equal(0);
-                expect(msg.nextSongs.length).to.equal(0);
-                first = false;
-                done();
-            }
-        }, data);
+
+        api.get('/event').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.be.empty;
+            var postdata = {
+                "name": "myEvent",
+                "accessKey": "theKey",
+                "owner_id": "5489e22a2b6671a414dcab8f",
+                "suggestionEnabled": true,
+                "votingEnabled": true,
+                "previewEnabled": true
+            };
+            api.post('/event').send(postdata).end(function (err, res) {
+                expect(err).to.not.exist;
+                expect(res.body).to.contain.key('start');
+                eid = res.body._id;
+                var first = true;
+                var nClient = require('../lib/notification_client');
+                var data = {
+                    eventid: eid
+                };
+                nClient.register_to_event('music_changed', function (msg) {
+                    if (first) {
+                        expect(msg.lastSongs.length).to.equal(0);
+                        expect(msg.nextSongs.length).to.equal(0);
+                        first = false;
+                        done();
+                    }
+                }, data);
+            });
+        });
     });
 
     it('schould log songs if message is correct', function (done) {
@@ -112,7 +130,7 @@ describe('EventApi', function () {
         });
     });
 
-    it('schould log songs if message is correct', function (done) {
+    it('should log songs if message is correct', function (done) {
         var postdata = {
             message: {
                 currentSong: {
@@ -155,7 +173,7 @@ describe('EventApi', function () {
     it('should return 400, if message is missing in request', function (done) {
         var postdata = {
             type: "songplayed"
-        }
+        };
         api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.statusCode).to.equal(400);
@@ -356,7 +374,7 @@ describe('EventApi', function () {
     });
 
     it('next songs should be empty if preview is deativated', function (done) {
-        var id = '548ad8c6641d12a03923d639';
+        var id;
         var postdata = {
             message: {
                 currentSong: {
@@ -390,28 +408,45 @@ describe('EventApi', function () {
             },
             type: "songplayed"
         };
-        api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
-            expect(err).to.not.be.ok;
-            expect(res.statusCode).to.equal(201);
+        api.put('/event/current/end').send({}).end(function (err, res) {
+            var eventdata = {
+                "name": "myEvent",
+                "accessKey": "theKey",
+                "owner_id": "5489e22a2b6671a414dcab8f",
+                "suggestionEnabled": true,
+                "votingEnabled": true,
+                "previewEnabled": false
+            };
+            api.get('/event').end(function (err, res) {
+                api.post('/event').send(eventdata).end(function (err, res) {
+                    expect(err).to.not.exist;
+                    expect(res.body).to.contain.key('start');
+                    id = res.body._id;
+                    api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
+                        expect(err).to.not.be.ok;
+                        expect(res.statusCode).to.equal(201);
 
-            api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
-                expect(err).to.not.be.ok;
-                expect(res.statusCode).to.equal(201);
-                var started = true;
-                var nClient = require('../lib/notification_client');
-                var data = {
-                    eventid: id
-                };
-                nClient.register_to_event('music_changed', function (msg) {
-                    if (started) {
-                        started = false;
-                        expect(msg.lastSongs.length).to.equal(1);
-                        expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
-                        expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
-                        expect(msg.nextSongs.length).to.equal(0);
-                        done();
-                    }
-                }, data);
+                        api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
+                            expect(err).to.not.be.ok;
+                            expect(res.statusCode).to.equal(201);
+                            var started = true;
+                            var nClient = require('../lib/notification_client');
+                            var data = {
+                                eventid: id
+                            };
+                            nClient.register_to_event('music_changed', function (msg) {
+                                if (started) {
+                                    started = false;
+                                    expect(msg.lastSongs.length).to.equal(1);
+                                    expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
+                                    expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
+                                    expect(msg.nextSongs.length).to.equal(0);
+                                    done();
+                                }
+                            }, data);
+                        });
+                    });
+                });
             });
         });
     });
