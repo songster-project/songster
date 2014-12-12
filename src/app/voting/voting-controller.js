@@ -16,12 +16,12 @@ angular.module('songster.voting')
 
         };
 
-        $scope.$on('VOTINGS_UPDATED', function() {
-            $scope.songs = votingService.getVotings();
+        $scope.$on('VOTES_UPDATED', function() {
+            $scope.songs = votingService.getVotes();
         });
 
 
-        // load votings for the first time
+        // load votes for the first time
         votingService.loadVotes($scope.event_id);
 
         //ToDo: Manuel => as discussed in the last week of september, you said you are going to continue at this point

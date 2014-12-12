@@ -8,7 +8,7 @@ angular
 
 function VotingService($http, $rootScope, $q) {
     var self = this;
-    var _votings = [];
+    var _votes = [];
 
     this.loadVotes = function (event_id) {
         var url = '/voting/votedsongs';
@@ -16,7 +16,10 @@ function VotingService($http, $rootScope, $q) {
             url += '/' + event_id;
         }
         $http.get(url).success(function(data, status, headers, config){
-            self.setVotings(data);
+           var votes = _.map(data, function(vote) {
+                return new window.ReceivedVote(vote);
+            });
+            self.setVotes(votes);
         }).
         error(function( data, status, headers, config){
             // TODO
@@ -26,12 +29,9 @@ function VotingService($http, $rootScope, $q) {
     this.postVote = function (event_id, song_id) {
         var deferred = $q.defer();
         if (!!event_id || !!song_id) {
-            var vote = {
-                event_id: event_id,
-                song_id: song_id,
-                type: 'vote',
-                state: 'new'
-            };
+
+            var vote = new window.PostingVote(event_id, song_id);
+
             $http.post('/voting/' + event_id, vote).success(function() {
                 deferred.resolve();
             }).error(function(err) {
@@ -46,13 +46,13 @@ function VotingService($http, $rootScope, $q) {
         return deferred.promise;
     };
 
-    this.getVotings = function() {
-        return _votings;
+    this.getVotes = function() {
+        return _votes;
     };
 
-    this.setVotings = function(votings) {
-        _votings = votings;
-        $rootScope.$broadcast('VOTINGS_UPDATED');
+    this.setVotes = function (votes) {
+        _votes = votes;
+        $rootScope.$broadcast('VOTES_UPDATED');
     };
 
 }
