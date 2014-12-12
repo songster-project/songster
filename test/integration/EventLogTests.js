@@ -264,15 +264,10 @@ describe('EventLogApi', function () {
             },
             type: "wrong type"
         };
-
-        api.put('/event/current/end').send({}).end(function (err, res) {
-            expect(err).to.not.exist;
-            expect(res.body.end).to.not.equal(null);
-            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
-                expect(err).to.not.be.ok;
-                expect(res.statusCode).to.equal(500);
-                done();
-            });
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(500);
+            done();
         });
     });
 
@@ -284,14 +279,10 @@ describe('EventLogApi', function () {
             type: "eventstart"
         };
 
-        api.put('/event/current/end').send({}).end(function (err, res) {
-            expect(err).to.not.exist;
-            expect(res.body.end).to.not.equal(null);
-            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
-                expect(err).to.not.be.ok;
-                expect(res.statusCode).to.equal(201);
-                done();
-            });
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+            done();
         });
     });
 
@@ -303,14 +294,10 @@ describe('EventLogApi', function () {
             type: "eventend"
         };
 
-        api.put('/event/current/end').send({}).end(function (err, res) {
-            expect(err).to.not.exist;
-            expect(res.body.end).to.not.equal(null);
-            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
-                expect(err).to.not.be.ok;
-                expect(res.statusCode).to.equal(201);
-                done();
-            });
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+            done();
         });
     });
 
