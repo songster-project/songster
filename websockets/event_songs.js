@@ -7,12 +7,19 @@ var numprevSongs = 5;
  * get registrations for music_changed event
  */
 nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) {
+    ws.on('close', function () {
+        if (eventmap[data.eventid]) {
+            if (eventmap[data.eventid].clients.indexOf(ws) >= 0) {
+                eventmap[data.eventid].clients.splice(eventmap[data.eventid].clients.indexOf(ws), 1);
+            }
+        }
+    });
     if (eventmap[data.eventid]) {
         //check if client is already registered
         if (eventmap[data.eventid].clients.indexOf(ws) == -1) {
             eventmap[data.eventid].clients.push(ws);
         } else {
-            eventmap[data.eventid].clients.splice(eventmap[data.eventid].clients.indexOf(ws) - 1, 1);
+            eventmap[data.eventid].clients.splice(eventmap[data.eventid].clients.indexOf(ws), 1);
             eventmap[data.eventid].clients.push(ws);
         }
         //send the songs to the new client
