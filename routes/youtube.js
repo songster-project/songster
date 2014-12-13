@@ -65,9 +65,11 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                 .withAudioCodec('libmp3lame')
                 .toFormat('mp3')
                 .duration('10:00')
-                .on('error', function (err) {
+                .on('error', function (err, stdout, stderr) {
                     console.log(err);
                     streamfailed = true;
+                    console.log("stdout: " + stdout);
+                    console.log("stderr: " + stderr);
                     res.status(500).send('Internal Server Error');
                 })
                 .pipe(writeStream);
