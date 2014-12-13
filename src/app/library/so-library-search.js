@@ -21,7 +21,9 @@ function SoLibrarySearchDirective() {
             actions: "=",
 
             // optional: you can specify a custom view for the results
-            customView: "="
+            customView: "=",
+
+            eventId: "="
         },
         replace: true,
         controller: ['$scope', '$http', '$library', function SoLibrarySearchDirective($scope, $http, $library) {
@@ -36,7 +38,7 @@ function SoLibrarySearchDirective() {
             }
 
             function search(query) {
-                $library.search(query).then(function (searchResult) {
+                $library.search(query, $scope.eventId).then(function (searchResult) {
                     $scope.total = searchResult.total;
                     $scope.songs = searchResult.results;
                 });

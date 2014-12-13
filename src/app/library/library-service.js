@@ -5,10 +5,18 @@ angular
 
 function Library($http, $q) {
 
-    this.search = function search(query) {
-        var url = '/search/song';
-        if (!!query) {
-            url += '/' + query;
+    this.search = function search(query, eventId) {
+        var url = '/search/';
+        if (eventId !== undefined) {
+            url += 'eventsongs/' + eventId + '/';
+            if (!!query) {
+                url += query;
+            }
+        } else {
+            url += 'song';
+            if (!!query) {
+                url += '/' + query;
+            }
         }
 
         var deferred = $q.defer();
