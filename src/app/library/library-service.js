@@ -6,11 +6,17 @@ angular
 function Library($http, $q) {
 
     this.search = function search(query, eventId) {
+        var deferred = $q.defer();
+
         var url = '/search/';
         if (eventId !== undefined) {
             url += 'eventsongs/' + eventId + '/';
             if (!!query) {
                 url += query;
+            } else {
+                // we do not query if there is no query for event songs
+                deferred.reject();
+                return deferred.promise;
             }
         } else {
             url += 'song';
@@ -18,8 +24,6 @@ function Library($http, $q) {
                 url += '/' + query;
             }
         }
-
-        var deferred = $q.defer();
         $http.get(url).success(function(res) {
             var searchResult = new window.SearchResult();
             searchResult.fillWithResponse(res, window.Song);
