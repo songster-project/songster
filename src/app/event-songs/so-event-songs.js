@@ -8,11 +8,11 @@ function SoEventSongsDirective() {
         scope: {
             eventId: "="
         },
-        controller: function EventCtrl($scope, nClient) {
+        controller: function EventCtrl($scope, $nClient) {
             var data = {
                 eventid: $scope.eventId
             };
-            nClient.register_to_event('music_changed', function (msg) {
+            $nClient.register_to_event('music_changed', function (msg) {
                 $scope.lastSongs = msg.lastSongs;
                 $scope.currentSong = msg.currentSong;
                 $scope.nextSongs = msg.nextSongs;

@@ -18,7 +18,7 @@ angular
         //$menuProvider.addMenuEntry('main', 'Event_songs', 'fa-bell', 'event-songs', 400);
     }])
 
-    .run(function config($rootScope, eventService, nClient/* TODO this is a dirty workaround, because the service does not initialize properly */) {
+    .run(function config($rootScope, eventService) {
         // TODO this needs to be removed
         $rootScope.$on('BROADCAST_STARTED', function (event /*event of the listener*/, broadcastEvent) {
             eventService.setEventActive(true);
