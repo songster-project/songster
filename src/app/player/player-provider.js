@@ -51,13 +51,13 @@ function Player() {
     };
 
     this.pushSongDown = function pushSongDown(index) {
-        if (index < queue.length - 1) {
+        if (index >= 0 && index < queue.length - 1) {
             queue.swap(index, index + 1);
         }
     };
 
     this.removeSong = function remove(index) {
-        if (index < queue.length) {
+        if (index >= 0 && index < queue.length) {
             queue.splice(index, 1);
         } else {
             console.log('index to remove larger than queue length');
