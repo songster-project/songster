@@ -4,6 +4,13 @@ var passport = require('../config/passport');
 var elasticSearchService = require('../backend/services/elasticSearchService');
 var db = require('../config/database');
 
+var searchableFields = [
+    "title",
+    "artist",
+    "album",
+    "year"
+];
+
 router.get('/song', passport.ensureAuthenticated, function (req, res) {
     elasticSearchService.getClient().search({
         index: 'songster',
@@ -40,12 +47,7 @@ router.get('/song/:query', passport.ensureAuthenticated, function (req, res) {
                             "query": parsedQuery,
                             "type":  'cross_fields',
                             "operator": 'or',
-                            "fields": [
-                                "title",
-                                "artist",
-                                "album",
-                                "year"
-                            ]
+                            "fields": searchableFields
                         }
                     },
                     "filter": {
@@ -92,12 +94,7 @@ router.get('/eventsongs/:eventid/:query', passport.ensureAuthenticated, function
                         "query": {
                             "multi_match": {
                                 "query": parsedQuery,
-                                "fields": [
-                                    "title",
-                                    "artist",
-                                    "album",
-                                    "year"
-                                ]
+                                "fields": searchableFields
                             }
                         },
                         "filter": {

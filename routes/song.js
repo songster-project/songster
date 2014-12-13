@@ -67,7 +67,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                                         console.log('error deleting the temp-file');
                                         console.log(err);
                                     } else {
-                                        elasticSearchService.createSong(record);
+                                        elasticSearchService.indexSong(record);
                                     }
                                 });
                             });
@@ -128,7 +128,7 @@ router.put('/:id/updateCover', passport.ensureAuthenticated, passport.ensureNotA
                                     console.log('error saving new cover-id to mongo');
                                     res.status(400).send('Bad Request');
                                 } else {
-                                    elasticSearchService.updateSong(song);
+                                    elasticSearchService.indexSong(song);
                                     res.status(200).send(song);
                                 }
                             });
@@ -158,7 +158,7 @@ router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
 });
 
 router.put('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
-    if (req && req.body && req.body._id && req.body._id === req.user._id) {
+    if (req && req.body && req.body._id) {
         database.Song.findOne({"_id": mongo.ObjectID(req.body._id), "owner_id": req.user._id}, function (err, song) {
             if (err) {
                 res.status(400).send('Invalid input');
@@ -170,12 +170,14 @@ router.put('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
                     song.album = req.body.album;
                     song.year = req.body.year;
 
-                    song.save(function (err) {
+                    song.save(function (err, sog) {
                         if (err) {
                             console.log('error updating the document');
                             console.log(err);
                             res.status(400).send('Invalid input');
                         } else {
+                            console.log(song);
+                            elasticSearchService.indexSong(song);
                             res.send(song);
                         }
                     });

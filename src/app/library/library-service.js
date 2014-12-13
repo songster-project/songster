@@ -36,7 +36,8 @@ function Library($http, $q) {
 
     this.updateSongMetadata = function(song) {
         if (song && song._id) {
-            return $http.put('/song/' + song._id, song);
+            var updateSong = new window.UpdateSong(song);
+            return $http.put('/song/' + updateSong._id, updateSong);
         } else {
             return false;
         }
@@ -44,7 +45,8 @@ function Library($http, $q) {
 
     this.updateCover = function(song) {
         if (song && song._id) {
-            return $http.put('/song/' + song._id + '/updateCover', song)
+            var updateSong = new window.UpdateSong(song);
+            return $http.put('/song/' + updateSong._id + '/updateCover', updateSong)
         } else {
             console.log('updateCover() got passed an invalid song');
             return false;

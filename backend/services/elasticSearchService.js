@@ -6,49 +6,38 @@ var elasticSearchClient = new elasticSearch.Client({
     log: 'info'
 });
 
-function errorCallback(error, response) {
-    console.log('elastic search error:');
-    console.log(error);
+function callback(error, response) {
+    if (error) {
+        console.log('elastic search error:');
+        console.log(error);
+    }
 }
 
-function create(type, obj) {
-    // normalize id, because elastic search complains about the usage of _id
+function index(type, obj) {
+    // normalize id, because elastic search can not store _id (because it already exists as an internal id)
     var id = obj['_id'];
     obj['id'] = obj['_id'];
     delete obj['_id'];
 
-    return elasticSearchClient.create({
+    return elasticSearchClient.index({
         index: settings.elasticSearch_index,
         type: type,
         id: '' + id,
         body: obj
-    }, errorCallback);
-}
-
-function update(type, obj) {
-    var id = obj['_id'];
-    obj['id'] = obj['_id'];
-    delete obj['_id'];
-
-    return elasticSearchClient.update({
-        index: settings.elasticSearch_index,
-        type: type,
-        id: '' + id,
-        body: obj
-    }, errorCallback);
+    }, callback);
 }
 
 function reindex(type) {
     var collection = database.db.collection(type);
     collection.find().toArray(function (err, docs) {
         if (err) {
-            res.status(500).send('Internal server error');
             console.log(err);
             return;
         }
         docs.forEach(function (doc) {
-            create(type, doc);
+            index(type, doc);
         });
+        console.log("Reindex " + type);
     });
 }
 
@@ -57,19 +46,15 @@ exports.dropAllIndices = function dropAllIndices() {
         index: '_all'
     }).then(function () {
         console.log("Dropped elastic search indices")
-    }, errorCallback);
+    }, callback);
 };
 
 exports.reindexSongs = function () {
     return reindex('song');
 };
 
-exports.createSong = function createSong(song) {
-    return create('song', song);
-};
-
-exports.updateSong = function updateSong(song) {
-    return update('song', song);
+exports.indexSong = function createSong(song) {
+    return index('song', song);
 };
 
 exports.escape = function escape(str) {

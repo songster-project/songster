@@ -12,7 +12,6 @@ function SoLibrarySearchDirective() {
                 {
                     'title': 'Title of the action',
                     'icon': 'fa-cool-icon',
-             'controller': 'MyController'
                     'fn': function(song) {
                         // your function
                     }
