@@ -1,6 +1,8 @@
-<div class="EventCtrl">
-    <div ng-show="eventActive">
-        <h1>Event: {{event.name}}</h1>
+<div>
+    <div ng-if="eventActive">
+        <div class="page-header">
+            <h1><i class="fa fa-bullhorn"></i> {{event.name}}</h1>
+        </div>
         <tabset>
             <tab>
                 <tab-heading>
@@ -29,7 +31,11 @@
         </tabset>
     </div>
 
-    <div ng-show="!eventActive">
+    <div ng-if="!eventActive">
+        <div class="page-header">
+            <h1><i class="fa fa-bullhorn"></i> Create Event</h1>
+        </div>
+
         <div ng-include="'event/event-create.tpl.html'"></div>
     </div>
 

@@ -12,7 +12,7 @@ angular
             },
             resolve: {
                 event: function ($event) {
-                    return $event.loadCurrentEvent();
+                    return $event.loadBroadcastEvent();
                 }
             }
         });
