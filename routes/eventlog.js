@@ -24,8 +24,9 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
             res.status(500).send('Internal server error');
             return;
         }
-        if (event.owner_id !== req.user.id) {
+        if (event.owner_id != req.user.id) {
             res.status(403).send('Not allowed because you are not the owner of the event');
+            return;
         }
         var evLog = new db.EventLog();
         if (!event.previewEnabled) {
