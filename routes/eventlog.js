@@ -24,10 +24,15 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
             res.status(500).send('Internal server error');
             return;
         }
-        if (event.owner_id != req.user.id) {
+        if (event.owner_id !== req.user.id) {
             res.status(403).send('Not allowed because you are not the owner of the event');
         }
         var evLog = new db.EventLog();
+        if (!event.previewEnabled) {
+            if (req.body.message.nextSongs) {
+                delete req.body.message.nextSongs;
+            }
+        }
         evLog.event_id = event.id;
         //Date is set by mongoose
         evLog.message = JSON.stringify(req.body.message);
@@ -36,8 +41,11 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
             if (err) {
                 console.log(err);
                 res.status(500).send('Internal server error');
+                return;
             }
-            songwebsocket.newSong(eventlog.event_id);
+            if (eventlog.type === 'songplayed') {
+                songwebsocket.newSong(eventlog.event_id);
+            }
             res.status(201).send(eventlog);
         });
     });
