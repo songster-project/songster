@@ -15,6 +15,9 @@ before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
 - nohup bash -c "webdriver-manager start 2>&1 &"
+- sudo apt-add-repository ppa:jon-severinsson/ffmpeg
+- sudo apt-get update
+- sudo apt-get install ffmpeg libavcodec-extra-53
 after_success:
 - chmod +x misc/deploy.sh
 - misc/deploy.sh
