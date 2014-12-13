@@ -9,6 +9,7 @@ angular
 function VotingService($http, $rootScope, $q) {
     var self = this;
     var _votes = [];
+    var _votesMap = {}; // song id to votes count
 
     this.loadVotes = function (event_id) {
         var url = '/voting/votedsongs';
@@ -46,13 +47,25 @@ function VotingService($http, $rootScope, $q) {
         return deferred.promise;
     };
 
+    this.getVotesForSong = function (song) {
+        return _votesMap[song._id];
+    };
+
     this.getVotes = function() {
         return _votes;
     };
 
     this.setVotes = function (votes) {
         _votes = votes;
+        updateVotesMap();
         $rootScope.$broadcast('VOTES_UPDATED');
     };
+
+    function updateVotesMap() {
+        _votesMap = {};
+        _.each(_votes, function (vote) {
+            _votesMap[vote.song._id] = vote.value;
+        });
+    }
 
 }

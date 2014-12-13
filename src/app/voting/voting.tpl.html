@@ -1,24 +1,30 @@
 <div ng-controller="VotingCtrl">
     <div class="row">
         <div class="col-lg-12">
-            <h2> Votes </h2>
+            <h2>
+                Votes
+                <button class="btn btn-default btn-xs pull-right" ng-click="refresh()">Refresh</button>
+            </h2>
             <table class="table table-striped">
                 <tr>
-                    <th></th>
-                    <th>Votes</th>
                     <th>Title</th>
                     <th>Artist</th>
+                    <th></th>
                 </tr>
-                <tr ng:repeat="song in songs">
+                <tr ng:repeat="vote in votes">
+                    <td>{{ vote.song.title || "-" }}{{song}}</td>
+                    <td>{{ vote.song.artist || "-" }}</td>
                     <td >
-                        <div class="btn-group" role="group">
-                            <button title="Vote up" ng-click="voteUp(song)" class="btn btn-xs btn-default"><i class="fa fa-star"></i> Vote </button>
+                        <div class="pull-right">
+                            <span class="badge badge-info">{{ vote.value || "0"}}</span>
+
+                            <div class="btn-group" role="group">
+                                <button title="Vote up" ng-controller="VoteController" ng-click="voteUp(vote.song)"
+                                        class="btn btn-xs btn-primary"><i class="fa fa-thumbs-o-up"></i> Vote
+                                </button>
+                            </div>
                         </div>
                     </td>
-                    <td>{{ song.value || "0"}}</td>
-                    <td>{{ song._id.title || "-" }}</td>
-                    <td>{{ song._id.artist || "-" }}</td>
-
                 </tr>
             </table>
         </div>

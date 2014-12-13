@@ -3,22 +3,24 @@
         <div class="col-lg-12">
             <h2>Search Result</h2>
             <table class="table table-striped">
-                <tr>
-                    <th></th>
-                    <th>Votes</th>
                     <th>Title</th>
                     <th>Artist</th>
+                <th></th>
                 </tr>
                 <tr ng:repeat="song in songs">
-                    <td >
-                        <div class="btn-group" role="group">
-                            <button title="Vote up" ng-click="voteUp(song)" class="btn btn-xs btn-default"><i class="fa fa-star"></i> Vote </button>
+                    <td>{{ song.title || "-" }}</td>
+                    <td>{{ song.artist || "-" }}</td>
+                    <td>
+                        <div class="pull-right" ng-controller="VoteController">
+                            <span class="badge badge-info">{{ getVotesForSong(song) || "0"}}</span>
+
+                            <div class="btn-group" role="group">
+                                <button title="Vote up" ng-click="voteUp(song)" class="btn btn-xs btn-primary"><i
+                                        class="fa fa-thumbs-o-up"></i> Vote
+                                </button>
+                            </div>
                         </div>
                     </td>
-                    <td>{{ song.value || "0"}}</td>
-                    <td>{{ song._id.title || "-" }}</td>
-                    <td>{{ song._id.artist || "-" }}</td>
-
                 </tr>
             </table>
         </div>

@@ -12,6 +12,7 @@ function SoLibrarySearchDirective() {
                 {
                     'title': 'Title of the action',
                     'icon': 'fa-cool-icon',
+             'controller': 'MyController'
                     'fn': function(song) {
                         // your function
                     }
@@ -25,6 +26,7 @@ function SoLibrarySearchDirective() {
 
             eventId: "="
         },
+        transclude: true,
         replace: true,
         controller: ['$scope', '$http', '$library', function SoLibrarySearchDirective($scope, $http, $library) {
             $scope.total = 0;

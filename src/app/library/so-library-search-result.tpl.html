@@ -18,10 +18,10 @@
                         <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload cover</a>
                     </div>
                 </td>
-                <td>{{song.title || "-" }}</td>
-                <td>{{ song.artist || "-" }}</td>
-                <td>{{ song.album || "-" }}</td>
-                <td>{{ song.year || "-" }}</td>
+                <td>{{song.title || "-"}}</td>
+                <td>{{song.artist || "-"}}</td>
+                <td>{{song.album || "-"}}</td>
+                <td>{{song.year || "-"}}</td>
                 <td ng-if="hasActions()">
                     <div class="btn-group" role="group">
                         <button ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(song)" class="btn btn-xs btn-default"><i class="fa" ng-class="action.icon"></i></button>
