@@ -19,7 +19,7 @@
             <tab-heading>
                 Youtube link
             </tab-heading>
-            <so-authorize should-be="!isAnonymous()" show-message="true">
+            <so-authorize should-be="!isAnonymous()" show-message="isAnonymous()">
                 <div ng-if="!isAnonymous()" ng-include="'event/event-suggestions-youtube.tpl.html'"></div>
             </so-authorize>
         </tab>

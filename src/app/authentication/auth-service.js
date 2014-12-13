@@ -11,8 +11,8 @@ function Auth() {
         return _isAnonymous;
     };
 
-    this.makeAnonymous = function () {
-        _isAnonymous = true;
+    this.setAnonymous = function (isAnonymous) {
+        _isAnonymous = isAnonymous;
     };
 }
 
