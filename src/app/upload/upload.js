@@ -1,7 +1,30 @@
 angular.module('ngBoilerplate.upload')
 
-    .controller('UploadCtrl', function UploadCtrl($scope, $upload) {
+    .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http) {
         $scope.uploadedFiles = [];
+
+        $scope.sendUrl = function () {
+            var msg = {
+                youtubeurl: $scope.youtubeurl
+            };
+            $scope.uploadedFiles.push({
+                name: $scope.youtubeurl,
+                finished: false
+            });
+            $http.post('/youtube/', msg)
+                .success(function (data) {
+                    // file is uploaded successfully
+                    for (var i = 0; i < $scope.uploadedFiles.length; i++) {
+                        if ($scope.uploadedFiles[i].name === $scope.youtubeurl) {
+                            $scope.uploadedFiles.splice(i, 1);
+                        }
+                    }
+                    $scope.uploadedFiles.push({
+                        name: $scope.youtubeurl,
+                        finished: true
+                    });
+                });
+        };
 
         $scope.onFileSelect = function ($files) {
             // $files: an array of files selected, each file has name, size, and type.
