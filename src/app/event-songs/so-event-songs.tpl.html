@@ -1,0 +1,53 @@
+<div class="row">
+    <h2>
+        Upcoming Songs
+    </h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Year</th>
+        </tr>
+        <tr ng:repeat="song in nextSongs track by $index">
+            <td>{{ song.title }}</td>
+            <td>{{ song.artist }}</td>
+            <td>{{ song.album }}</td>
+            <td>{{ song.year }}</td>
+        </tr>
+    </table>
+    <h2>
+        Current Song
+    </h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Year</th>
+        </tr>
+        <tr>
+            <td>{{ currentSong.title }}</td>
+            <td>{{ currentSong.artist }}</td>
+            <td>{{ currentSong.album }}</td>
+            <td>{{ currentSong.year }}</td>
+        </tr>
+    </table>
+    <h2>
+        Previous Songs
+    </h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Year</th>
+        </tr>
+        <tr ng:repeat="song in lastSongs track by $index">
+            <td>{{ song.title }}</td>
+            <td>{{ song.artist }}</td>
+            <td>{{ song.album }}</td>
+            <td>{{ song.year }}</td>
+        </tr>
+    </table>
+</div>

@@ -1,18 +1,5 @@
 angular.module('songster.event-songs')
 
-    .config(function config($stateProvider) {
-        $stateProvider.state('event-songs', {
-            url: '/event-songs',
-            views: {
-                "main": {
-                    controller: 'event-songsCtrl',
-                    templateUrl: 'event-songs/event-songs.tpl.html'
-                }
-            },
-            data: {pageTitle: 'Event Songs'}
-        });
-    })
-
     .controller('event-songsCtrl', function EventCtrl($scope, nClient) {
         $scope.register_to_event = function () {
             var data = {
