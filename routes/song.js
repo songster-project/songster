@@ -67,7 +67,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                                         console.log('error deleting the temp-file');
                                         console.log(err);
                                     } else {
-                                        elasticSearchService.indexSong(record);
+                                        elasticSearchService.createSong(record);
                                     }
                                 });
                             });
@@ -123,11 +123,12 @@ router.put('/:id/updateCover', passport.ensureAuthenticated, passport.ensureNotA
                             console.log('wrote album art to mongodb');
                             song.cover = mongoose.Types.ObjectId(imageWriteStream.id);
 
-                            song.save(function (err) {
+                            song.save(function (err, song) {
                                 if (err) {
                                     console.log('error saving new cover-id to mongo');
                                     res.status(400).send('Bad Request');
                                 } else {
+                                    elasticSearchService.updateSong(song);
                                     res.status(200).send(song);
                                 }
                             });

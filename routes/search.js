@@ -26,13 +26,9 @@ router.get('/song', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-
-
-
-
-
 router.get('/song/:query', passport.ensureAuthenticated, function (req, res) {
     var escapedQuery = elasticSearchService.escape(req.params.query);
+    var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
     elasticSearchService.getClient().search({
         index: 'songster',
         type: 'song',
@@ -41,7 +37,9 @@ router.get('/song/:query', passport.ensureAuthenticated, function (req, res) {
                 "filtered": {
                     "query": {
                         "multi_match": {
-                            "query": escapedQuery,
+                            "query": parsedQuery,
+                            "type":  'cross_fields',
+                            "operator": 'or',
                             "fields": [
                                 "title",
                                 "artist",
@@ -84,6 +82,7 @@ router.get('/eventsongs/:eventid/:query', passport.ensureAuthenticated, function
         }
 
         var escapedQuery = elasticSearchService.escape(req.params.query);
+        var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
         elasticSearchService.getClient().search({
             index: 'songster',
             type: 'song',
@@ -92,7 +91,7 @@ router.get('/eventsongs/:eventid/:query', passport.ensureAuthenticated, function
                     "filtered": {
                         "query": {
                             "multi_match": {
-                                "query": escapedQuery,
+                                "query": parsedQuery,
                                 "fields": [
                                     "title",
                                     "artist",
