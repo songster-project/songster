@@ -29,6 +29,7 @@ var registration = require('./routes/registration');
 var event = require('./routes/event');
 var search = require('./routes/search');
 var eventlog = require('./routes/eventlog');
+var youtube = require('./routes/youtube');
 var settings = require('./config/settings.js');
 
 
@@ -82,6 +83,7 @@ app.use('/registration', registration);
 app.use('/event', event);
 app.use('/search', search);
 app.use('/eventlog', eventlog);
+app.use('/youtube', youtube);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
