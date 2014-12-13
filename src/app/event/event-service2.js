@@ -5,7 +5,7 @@ angular
 
 function Event($http, $q, $rootScope) {
 
-    var _broadcast = undefined;
+    var _broadcastEvent = undefined;
     var _event = undefined;
 
     var EVENT_BROADCAST_STARTED = 'BROADCAST_STARTED';
@@ -36,7 +36,7 @@ function Event($http, $q, $rootScope) {
                 event = undefined;
             }
 
-            _broadcast = event;
+            _broadcastEvent = event;
             _event = event; // because it is also in current event view
 
             // notifiy our listeners
@@ -59,6 +59,8 @@ function Event($http, $q, $rootScope) {
             $http.post('/event', event).
                 success(function (data, status, headers, config) {
                     $rootScope.$broadcast(EVENT_BROADCAST_STARTED, event);
+                    _broadcastEvent = event;
+                    _event = event;
                     deferred.resolve(event);
                 }).
                 error(function (data, status, headers, config) {
@@ -72,7 +74,7 @@ function Event($http, $q, $rootScope) {
         var deferred = $q.defer();
         $http.put('/event/current/end', {}).
             success(function (data, status, headers, config) {
-                _broadcast = undefined;
+                _broadcastEvent = undefined;
                 $rootScope.$broadcast(EVENT_BROADCAST_STOPPED);
                 deferred.resolve(event);
             }).
@@ -82,21 +84,14 @@ function Event($http, $q, $rootScope) {
         return deferred.promise;
     };
 
-    this.getBroadcast = function () {
-        return _broadcast;
-    };
-
-    this.setBroadcast = function (broadcast) {
-        _broadcast = broadcast;
+    this.getBroadcastEvent = function () {
+        return _broadcastEvent;
     };
 
     this.getEvent = function () {
         return _event;
     };
 
-    this.setEvent = function (event) {
-        _event = event;
-    }
 }
 
 function EventProvider() {
