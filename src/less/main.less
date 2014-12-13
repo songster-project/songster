@@ -329,6 +329,14 @@ h2 {
   color: @colorOnAir;
 }
 
+.queue li {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  &.current-song {
+    background-color: @colorMainLight;
+  }
+}
+
 /**
  * Now that all app-wide styles have been applied, we can load the styles for
  * all the submodules and components we are using. 

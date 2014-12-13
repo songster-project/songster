@@ -1,6 +1,8 @@
 <div>
-  <ul class="list-unstyled" sv-root sv-part="queue">
-    <li ng-repeat="item in queue track by item._id" sv-element="opts">
+  <ul class="list-unstyled queue" sv-root sv-part="queue">
+    <li ng-repeat="item in queue track by item._id" sv-element="opts"
+        ng-class="{'current-song': $index === mediaPlayer.currentTrack - 1}">
+
       <div class="media">
         <div class="pull-left">
           <span sv-handle class="draggable-icon">
@@ -18,6 +20,7 @@
                  ng-src="{{item.getCoverSrc()}}">
           </a>
         </div>
+
         <div class="pull-right">
           <ul class="queue-action-list">
             <li ng-click="player.removeSong($index); player.play($index);">
