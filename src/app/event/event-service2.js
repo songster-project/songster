@@ -41,7 +41,7 @@ function Event($http, $q, $rootScope) {
 
             // notifiy our listeners
             event !== undefined ?
-                $rootScope.$broadcast(EVENT_BROADCAST_STARTED) :
+                $rootScope.$broadcast(EVENT_BROADCAST_STARTED, event) :
                 $rootScope.$broadcast(EVENT_BROADCAST_STOPPED);
 
             deferred.resolve(event);
@@ -58,7 +58,7 @@ function Event($http, $q, $rootScope) {
             event.owner_id = data.id;
             $http.post('/event', event).
                 success(function (data, status, headers, config) {
-                    $rootScope.$broadcast(EVENT_BROADCAST_STARTED);
+                    $rootScope.$broadcast(EVENT_BROADCAST_STARTED, event);
                     deferred.resolve(event);
                 }).
                 error(function (data, status, headers, config) {

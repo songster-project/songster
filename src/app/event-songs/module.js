@@ -4,5 +4,6 @@ angular
         'placeholders',
         'ui.bootstrap',
         'songster.menu',
+        'songster.event',
         'songster.notificationClient'
     ]);

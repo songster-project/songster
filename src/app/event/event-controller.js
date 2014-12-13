@@ -15,9 +15,6 @@ angular.module('songster.event')
         $scope.startEvent = function () {
             $event.startBroadcast($scope.editEvent).then(
                 function (event) {
-                    // TODO enable again
-                    //eventService.setEventActive(true);
-                    //eventService.setEventData(event);
                     $scope.eventActive = true;
                 }, function (err) {
                     $scope.eventErrors = err;
@@ -26,9 +23,6 @@ angular.module('songster.event')
 
         $scope.endEvent = function () {
             $event.stopBroadcast().then(function () {
-                    // TODO enable again
-                    //eventService.setEventActive(false);
-                    //eventService.setEventData({});
                     $scope.eventActive = false;
                     $scope.editEvent = {};
                     setStandardValuesForEvent();

@@ -87,7 +87,10 @@ function sendSongs(id, clients) {
             console.log(err);
             return;
         }
-        response.nextSongs = JSON.parse(logEntries[0].message).nextSongs;
+        // TODO I dont know if this is a proper check, but if there are not logEntries, it fails
+        if (logEntries && logEntries.length > 0) {
+            response.nextSongs = JSON.parse(logEntries[0].message).nextSongs;
+        }
         logEntries.forEach(function (entry) {
             response.lastSongs.unshift(JSON.parse(entry.message).currentSong);
         });

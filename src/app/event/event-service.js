@@ -1,3 +1,5 @@
+// TODO this service needs to merge with event-service2.js
+
 angular.module('songster.eventService')
     .factory('eventService', function ($http) {
         var service = {};

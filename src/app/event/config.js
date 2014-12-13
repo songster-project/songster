@@ -35,4 +35,8 @@ angular
 
     .config(['$menuProvider', function ($menuProvider) {
         $menuProvider.addMenuEntry('main', 'Event', 'fa-bullhorn', 'event', 499);
+    }])
+
+    .run(['$event', function ($event) {
+        $event.loadBroadcastEvent();
     }]);
