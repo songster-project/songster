@@ -7,7 +7,6 @@ angular.module('songster.voting')
 
         $scope.$on('VOTES_UPDATED', function() {
             $scope.votes = votingService.getVotes();
-            console.log($scope.votes);
         });
 
         $scope.refresh = function () {
