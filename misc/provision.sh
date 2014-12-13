@@ -43,11 +43,11 @@ echo "Installing node.js..."
 apt-get install -y nodejs git
 
 echo "Installing firefox and Xvfb..."
-apt-get install Xvfb firefox.
+apt-get install -y Xvfb firefox.
 
 echo "Installing ffmpeg..."
-apt-add-repository ppa:jon-severinsson/ffmpeg
+apt-add-repository -y ppa:jon-severinsson/ffmpeg
 apt-get update
-apt-get install ffmpeg libavcodec-extra-53
+apt-get install -y ffmpeg libavcodec-extra-53
 
 echo "Finished provisioning. Elasticsearch: http://localhost:9200/_plugin/head/; NodeJS: http://localhost:3000"
