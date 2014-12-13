@@ -10,15 +10,24 @@ angular
                     templateUrl: 'event/event.tpl.html'
                 }
             },
-            data: {pageTitle: 'Mange your events!'}
+            resolve: {
+                event: function ($event) {
+                    return $event.loadCurrentEvent();
+                }
+            }
         });
 
         $stateProvider.state('voting', {
-            url: '/voting/:eventId/:anonymous',
+            url: '/voting/:eventId',
             views: {
                 "main": {
                     controller: 'EventCtrl',
                     templateUrl: 'event/event.tpl.html'
+                }
+            },
+            resolve: {
+                event: function ($event, $stateParams) {
+                    return $event.loadEvent($stateParams.eventId);
                 }
             }
         });

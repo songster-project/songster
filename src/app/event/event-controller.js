@@ -1,27 +1,18 @@
 angular.module('songster.event')
 
-    .controller('EventCtrl',function EventCtrl($scope, $location, $http,eventService, $stateParams, $auth) {
+    .controller('EventCtrl', function EventCtrl($scope, $location, $http, eventService, $event) {
+        $scope.event = $event.getEvent();
+        $scope.location = $location;
 
-        //ToDo: Manuel => as discussed in the last week of september, you said you are going to continue at this point
-        //by going to manage that the availability of the menu ...
-        $auth.setAnonymous(!!$stateParams.anonymous);
-
-        $scope.eventId = $stateParams.eventId;
-
-        if(!!$scope.eventId) {
-            $http.get('/event/' + $scope.eventId)
-                .success(function (data) {
-                    $scope.event = data;
-                    $scope.eventActive = true;
-                });
+        if (!!$scope.event) {
+            $scope.eventActive = true;
         } else {
-            $scope.location=$location;
             // $scope.eventActive = false;
             //First we check if we have an event ...
-            $http.get('/event/current')
-                .success(function (data) {
-                    $scope.event = data;
-                    if (_.isEmpty(data)) {
+            $event.getCurrentEvent()
+                .then(function (event) {
+                    $scope.event = event;
+                    if (_.isEmpty(event)) {
                         $scope.eventActive = false;
                         //Set standard values
                         $scope.setStandardValuesForEvent();
