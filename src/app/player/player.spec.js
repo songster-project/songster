@@ -22,7 +22,7 @@ describe('player', function () {
     describe('queue', function () {
 
         var queueTestData = [
-            {
+            new window.Song({
                 "_id": "547f8c17c832ca870272c914",
                 "addedDate": "2014-12-03T22:17:53.494Z",
                 "album": "The Black Market",
@@ -32,8 +32,8 @@ describe('player', function () {
                 "owner_id": "547f3e6bc2683a1707365155",
                 "title": "The Black Market",
                 "year": "2014"
-            },
-            {
+            }),
+            new window.Song({
                 "addedDate": "2014-12-03T22:17:53.486Z",
                 "title": "Tragedy + Time",
                 "album": "The Black Market",
@@ -43,8 +43,8 @@ describe('player', function () {
                 "cover": "547f8c17fadc7287023a15b6",
                 "file_id": "547f8c11fadc7287023a1575",
                 "_id": "547f8c17c832ca870272c915"
-            },
-            {
+            }),
+            new window.Song({
                 "_id": "547f8c1ac832ca870272c916",
                 "addedDate": "2014-12-03T22:17:51.903Z",
                 "album": "The Black Market",
@@ -54,7 +54,7 @@ describe('player', function () {
                 "owner_id": "547f3e6bc2683a1707365155",
                 "title": "The Great Die-Off",
                 "year": "2014"
-            }
+            })
         ];
 
         beforeEach(function () {
