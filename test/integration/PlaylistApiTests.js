@@ -24,8 +24,9 @@ describe('PlaylistApi', function () {
 
                 process.nextTick(function () {
                     cb(err);
+                    done();
                 });
-                done();
+
             })
 
 
