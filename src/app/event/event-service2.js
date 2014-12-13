@@ -59,6 +59,8 @@ function Event($http, $q, $rootScope) {
             $http.post('/event', event).
                 success(function (data, status, headers, config) {
                     $rootScope.$broadcast(EVENT_BROADCAST_STARTED, event);
+                    _broadcast = event;
+                    _event = event;
                     deferred.resolve(event);
                 }).
                 error(function (data, status, headers, config) {
