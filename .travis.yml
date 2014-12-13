@@ -17,7 +17,12 @@ before_script:
 - nohup bash -c "webdriver-manager start 2>&1 &"
 - sudo apt-add-repository -y ppa:jon-severinsson/ffmpeg
 - sudo apt-get update
-- sudo apt-get install -y ffmpeg libavcodec-extra-53
+- sudo apt-get install -y wget tar bzip2 flvtool2 ffmpeg libavcodec-extra-53
+- wget http://ffmpeg.gusari.org/static/64bit/ffmpeg.static.64bit.latest.tar.gz
+- tar zxf ffmpeg.static.64bit.latest.tar.gz
+- sudo cp ffmpeg ffprobe /usr/bin
+- export ALT_FFMPEG_PATH=$(pwd)/ffmpeg
+- export ALT_FFPROBE_PATH=$(pwd)/ffprobe
 after_success:
 - chmod +x misc/deploy.sh
 - misc/deploy.sh
