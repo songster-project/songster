@@ -69,7 +69,7 @@ router.post('/', function (req, res, next) {
                 }
 
                 passport.authenticate('local')(req, res, function () {
-                    var redirectUrl = req.cookies.refererevent ? '/app/#/voting/' + req.cookies.refererevent : '/';
+                    var redirectUrl = req.cookies.refererevent ? '/app/#/event/' + req.cookies.refererevent : '/';
                     res.clearCookie('refererevent');
                     return res.redirect(redirectUrl);
                 });

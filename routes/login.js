@@ -29,7 +29,7 @@ router.post('/', function (req, res, next) {
             }
 
 
-            var redirectUrl = req.cookies.refererevent ? '/app/#/voting/' + req.cookies.refererevent : '/';
+            var redirectUrl = req.cookies.refererevent ? '/app/#/event/' + req.cookies.refererevent : '/';
             res.clearCookie('refererevent');
             console.log(redirectUrl);
             return res.redirect(redirectUrl);
