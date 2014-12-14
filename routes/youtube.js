@@ -10,6 +10,9 @@ var util = require('util');
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     try {
+        //variable used to end execution if there is a error during steaming
+        //needed because of the nested function calls
+        //TODO if there is a better way change it
         var streamfailed = false;
         req.checkBody('youtubeurl', 'URL is empty').notEmpty();
         var errors = req.validationErrors();
@@ -30,18 +33,18 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
             var ytdlstream = ytdl(req.body.youtubeurl, {quality: 18})
                 //if error occurs during video downlaod send status 500
                 .on('error', function (err) {
-                if (!streamfailed) {
-                    console.log(err);
-                    streamfailed = true;
-                    res.status(500).send('Internal Server Error');
-                }
-            });;
+                    if (!streamfailed) {
+                        console.log(err);
+                        streamfailed = true;
+                        res.status(500).send('Internal Server Error');
+                    }
+            });
             //create stream to conver youtube video stream into mp3 stream
             var ffmpegstream = new Ffmpeg({source: ytdlstream})
                 .withAudioCodec('libmp3lame')
                 .toFormat('mp3')
                 .duration('10:00')
-                .on('error', function (err, stdout, stderr) {
+                .on('error', function (err) {
                     if (!streamfailed) {
                         console.log(err);
                         streamfailed = true;
