@@ -17,11 +17,8 @@
                     <td >
                         <div class="pull-right">
                             <span class="badge badge-info">{{ vote.value || "0"}}</span>
-
                             <div class="btn-group" role="group">
-                                <button title="Vote up" ng-controller="VoteController" ng-click="voteUp(vote.song)"
-                                        class="btn btn-xs btn-primary"><i class="fa fa-thumbs-o-up"></i> Vote
-                                </button>
+                                <button ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(vote)" class="{{action.class}}"><i class="fa" ng-class="action.icon"></i> {{action.text}}</button>
                             </div>
                         </div>
                     </td>
