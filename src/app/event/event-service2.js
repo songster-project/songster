@@ -92,6 +92,10 @@ function Event($http, $q, $rootScope) {
         return _event;
     };
 
+    this.isDj = function() {
+        return _broadcastEvent !== undefined && _broadcastEvent == _event ? true : false;
+    }
+
 }
 
 function EventProvider() {
