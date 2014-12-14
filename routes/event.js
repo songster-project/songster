@@ -59,6 +59,9 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
             return;
         }
         if (event) {
+            if(req.cookies.anonymous === 'true') {
+                res.cookie('refererevent', event._id, {httpOnly: true});
+            }
             res.status(200).send(event);
             return;
         }
