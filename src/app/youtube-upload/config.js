@@ -1,5 +1,5 @@
 angular
-    .module('ngBoilerplate.upload')
+    .module('songster.youtube-upload')
 
     .config(function config($stateProvider) {
         $stateProvider.state('youtube-upload', {
