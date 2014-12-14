@@ -43,7 +43,7 @@ describe('EventLogApi', function () {
     //Logged In
     //#########################################################################################
 
-    it('schould send empty websocket request if there is no log', function (done) {
+    it('should send empty websocket request if there is no log', function (done) {
 
         api.get('/event').end(function (err, res) {
             expect(err).to.not.exist;
@@ -77,7 +77,7 @@ describe('EventLogApi', function () {
         });
     });
 
-    it('schould log songs if message is correct', function (done) {
+    it('should log songs if message is correct', function (done) {
         var postdata = {
             message: {
                 currentSong: {
@@ -118,8 +118,8 @@ describe('EventLogApi', function () {
                 type: 'songplayed'
             }).sort('-logDate').limit(1).exec(function (err, logEntries) {
                     if (logEntries[0]) {
-                        expect(JSON.parse(logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
-                        expect(JSON.parse(logEntries[0].message).nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
+                        expect((logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
+                        expect((logEntries[0].message).nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
                         expect(logEntries[0].type).to.equal(postdata.type);
                         done();
                     }
@@ -157,8 +157,8 @@ describe('EventLogApi', function () {
                 type: 'songplayed'
             }).sort('-logDate').limit(1).exec(function (err, logEntries) {
                     if (logEntries[0]) {
-                        expect(JSON.parse(logEntries[0].message).nextSongs).to.not.be.ok;
-                        expect(JSON.parse(logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
+                        expect((logEntries[0].message).nextSongs).to.not.be.ok;
+                        expect((logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
                         expect(logEntries[0].type).to.equal(postdata.type);
                         done();
                     }
@@ -267,7 +267,7 @@ describe('EventLogApi', function () {
     it('should log event start message', function (done) {
         var postdata = {
             message: {
-                "$date": 1418368318934
+                "date": 1418368318934
             },
             type: "eventstart"
         };
@@ -282,7 +282,7 @@ describe('EventLogApi', function () {
     it('should log event end message', function (done) {
         var postdata = {
             message: {
-                "$date": 1418368318934
+                "date": 1418368318934
             },
             type: "eventend"
         };
@@ -294,7 +294,7 @@ describe('EventLogApi', function () {
         });
     });
 
-    it('schould send websocket request if data is correct', function (done) {
+    it('should send websocket request if data is correct', function (done) {
         var postdata = {
             message: {
                 currentSong: {
@@ -339,7 +339,7 @@ describe('EventLogApi', function () {
                     eventid: eid
                 };
                 nClient.register_to_event('music_changed', function (msg) {
-                    expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
+                    expect(msg.lastSongs[0].id).to.equal(postdata.message.currentSong.id);
                     expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
                     expect(msg.nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
                     if (started) {

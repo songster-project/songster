@@ -3,7 +3,7 @@ var passport = require('../config/passport');
 var db = require('../config/database');
 var router = express.Router();
 var util = require('util');
-var songwebsocket = require('../websockets/event_songs');
+var songwebsocket = require('../backend/websockets/event_songs');
 
 //Posts an eventlog entry to event defined by :id
 //the event must be active and only i, the owner of the event, can post this

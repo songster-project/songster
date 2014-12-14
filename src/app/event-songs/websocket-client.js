@@ -1,5 +1,5 @@
-angular.module("songster.notificationClient", [])
-    .provider("$nClient", WebsocketClientProvider);
+angular.module("songster.websocket-client", [])
+    .provider("$websocket", WebsocketClientProvider);
 
 function WebsocketClient() {
     //connect websocket connection to server
@@ -8,8 +8,6 @@ function WebsocketClient() {
     var eventmap = {};
     var connected = false;
     var connectatempts = 1;
-    var service = {};
-    setupsocketconnection();
 
     /**
      * registers a callback to an event
@@ -55,7 +53,7 @@ function WebsocketClient() {
         ws.send(JSON.stringify(event_message));
     };
 
-    function setupsocketconnection() {
+    this.setupsocketconnection=function setupsocketconnection() {
         ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/event");
 
         /**
@@ -116,7 +114,9 @@ function WebsocketClient() {
 }
 
 function WebsocketClientProvider() {
+    var ws = new WebsocketClient();
+    ws.setupsocketconnection();
     this.$get = function () {
-        return new WebsocketClient();
+        return ws;
     };
 }

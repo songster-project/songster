@@ -5,5 +5,5 @@ angular
         'ui.bootstrap',
         'songster.menu',
         'songster.event',
-        'songster.notificationClient'
+        'songster.websocket-client'
     ]);
