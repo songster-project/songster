@@ -26,9 +26,9 @@ describe('EventLogApi', function () {
 
                 process.nextTick(function () {
                     cb(err);
+                    done();
                 });
-                done();
-            })
+            });
 
 
     });
@@ -91,8 +91,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab94",
                     addedDate: "2014-12-11T18:28:49.672Z",
                     src: "/song/5489e2612b6671a414dcab94/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00U"
+                    type: "audio/mp3"
                 },
                 nextSongs: [{
                     id: "5489e268663534a4148bdfcd",
@@ -105,8 +104,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab93",
                     addedDate: "2014-12-11T18:28:49.658Z",
                     src: "/song/5489e2612b6671a414dcab93/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00T"
+                    type: "audio/mp3"
                 }]
             },
             type: "songplayed"
@@ -145,7 +143,6 @@ describe('EventLogApi', function () {
                     addedDate: "2014-12-11T18:28:49.672Z",
                     src: "/song/5489e2612b6671a414dcab94/raw",
                     type: "audio/mp3",
-                    $$hashKey: "00U"
                 }
             },
             type: "songplayed"
@@ -204,8 +201,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab94",
                     addedDate: "2014-12-11T18:28:49.672Z",
                     src: "/song/5489e2612b6671a414dcab94/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00U"
+                    type: "audio/mp3"
                 },
                 nextSongs: [{
                     id: "5489e268663534a4148bdfcd",
@@ -218,8 +214,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab93",
                     addedDate: "2014-12-11T18:28:49.658Z",
                     src: "/song/5489e2612b6671a414dcab93/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00T"
+                    type: "audio/mp3"
                 }]
             }
         };
@@ -244,8 +239,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab94",
                     addedDate: "2014-12-11T18:28:49.672Z",
                     src: "/song/5489e2612b6671a414dcab94/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00U"
+                    type: "audio/mp3"
                 },
                 nextSongs: [{
                     id: "5489e268663534a4148bdfcd",
@@ -258,8 +252,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab93",
                     addedDate: "2014-12-11T18:28:49.658Z",
                     src: "/song/5489e2612b6671a414dcab93/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00T"
+                    type: "audio/mp3"
                 }]
             },
             type: "wrong type"
@@ -315,8 +308,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab94",
                     addedDate: "2014-12-11T18:28:49.672Z",
                     src: "/song/5489e2612b6671a414dcab94/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00U"
+                    type: "audio/mp3"
                 },
                 nextSongs: [{
                     id: "5489e268663534a4148bdgfddd",
@@ -329,8 +321,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab93",
                     addedDate: "2014-12-11T18:28:49.658Z",
                     src: "/song/5489e2612b6671a414dcab93/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00T"
+                    type: "audio/mp3"
                 }]
             },
             type: "songplayed"
@@ -375,8 +366,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab94",
                     addedDate: "2014-12-11T18:28:49.672Z",
                     src: "/song/5489e2612b6671a414dcab94/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00U"
+                    type: "audio/mp3"
                 },
                 nextSongs: [{
                     id: "5489e268663534a4148bdgrtdd",
@@ -389,8 +379,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab93",
                     addedDate: "2014-12-11T18:28:49.658Z",
                     src: "/song/5489e2612b6671a414dcab93/raw",
-                    type: "audio/mp3",
-                    $$hashKey: "00T"
+                    type: "audio/mp3"
                 }]
             },
             type: "songplayed"

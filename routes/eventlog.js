@@ -36,7 +36,7 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
         }
         evLog.event_id = event.id;
         //Date is set by mongoose
-        evLog.message = JSON.stringify(req.body.message);
+        evLog.message = req.body.message;
         evLog.type = req.body.type;
         evLog.save(function (err, eventlog) {
             if (err) {

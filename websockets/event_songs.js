@@ -23,13 +23,13 @@ function sendSongs(id, clients) {
             if (logEntries[0]) {
 
                 if (logEntries[0].message) {
-                    var msg = JSON.parse(logEntries[0].message);
+                    var msg = logEntries[0].message;
                     if (msg.nextSongs) {
                         response.nextSongs = msg.nextSongs;
                     }
                 }
                 logEntries.forEach(function (entry) {
-                    response.lastSongs.unshift(JSON.parse(entry.message).currentSong);
+                    response.lastSongs.unshift(entry.message.currentSong);
                 });
                 if (response.lastSongs.length > 0) {
                     response.currentSong = response.lastSongs[response.lastSongs.length - 1];
