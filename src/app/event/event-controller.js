@@ -1,6 +1,6 @@
 angular.module('songster.event')
 
-    .controller('EventCtrl', function EventCtrl($scope, $location, $http, eventService, $event) {
+    .controller('EventCtrl', function EventCtrl($scope, $location, $http, $event) {
         $scope.event = $event.getEvent();
         $scope.editEvent = {};
 
