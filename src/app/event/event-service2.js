@@ -26,22 +26,20 @@ function EventService($http, $q, $rootScope) {
     this.loadBroadcastEvent = function () {
         var deferred = $q.defer();
         $http.get('/event/current').success(function (data) {
-            var event = new window.Event(data);
-
             // check if we get an empty event from the server
             // this means, that we have no current event ongoing
-            if (_.isEmpty(event)) {
-                event = undefined;
+            if (_.isEmpty(data)) {
+                data = undefined;
             }
 
-            _broadcastEvent = event;
+            if (!!data) {
+                _broadcastEvent = new window.Event(data);
+                $rootScope.$broadcast(EVENT_BROADCAST_STARTED, _broadcastEvent)
+            } else {
+                $rootScope.$broadcast(EVENT_BROADCAST_STOPPED)
+            }
 
-            // notifiy our listeners
-            event !== undefined ?
-                $rootScope.$broadcast(EVENT_BROADCAST_STARTED, event) :
-                $rootScope.$broadcast(EVENT_BROADCAST_STOPPED);
-
-            deferred.resolve(event);
+            deferred.resolve(_broadcastEvent);
         }).error(function (err) {
             deferred.reject(err);
         });
