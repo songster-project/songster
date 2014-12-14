@@ -19,16 +19,14 @@ function SoPlayerDirective() {
                 $scope.mediaPlayer.on('loadstart', function () {
                     var currevent = $event.getBroadcastEvent();
                     if (currevent !== undefined) {
-                        var currtrackidx=(($scope.mediaPlayer.currentTrack==0)?0:$scope.mediaPlayer.currentTrack - 1);
+                        var currtrackidx = (($scope.mediaPlayer.currentTrack == 0) ? 0 : $scope.mediaPlayer.currentTrack - 1);
                         var msg = {
                             message: {nextSongs: [], currentSong: $scope.player.getQueue()[currtrackidx]},
                             type: 'songplayed'
                         };
-                        for (var i = 1; i <= 3 && i<$scope.player.getQueue().length; i++) {
+                        for (var i = 1; i <= 3 && currtrackidx + i < $scope.player.getQueue().length; i++) {
                             var idx = currtrackidx + i;
-                            if ((idx) >= 0 && (idx) < $scope.player.getQueue().length) {
-                                msg.message.nextSongs.push($scope.player.getQueue()[idx]);
-                            }
+                            msg.message.nextSongs.push($scope.player.getQueue()[idx]);
                         }
                         $http.post('/eventlog/' + currevent._id, msg);
                     }
@@ -44,11 +42,11 @@ function SoPlayerDirective() {
                 }
             };
 
-            $scope.dragStart = function(e, ui) {
+            $scope.dragStart = function (e, ui) {
                 ui.item.data('start', ui.item.index());
             };
 
-            $scope.dragEnd = function(e, ui) {
+            $scope.dragEnd = function (e, ui) {
                 var start = ui.item.data('start'),
                     end = ui.item.index();
 
