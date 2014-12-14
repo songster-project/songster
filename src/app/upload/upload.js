@@ -1,6 +1,6 @@
 angular.module('ngBoilerplate.upload')
 
-    .controller('UploadCtrl', function UploadCtrl($scope, $upload, $http) {
+    .controller('UploadCtrl', function UploadCtrl($scope, $upload) {
         $scope.uploadedFiles = [];
 
         $scope.onFileSelect = function ($files) {
