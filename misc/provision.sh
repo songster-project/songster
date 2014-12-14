@@ -48,6 +48,6 @@ apt-get install -y Xvfb firefox
 echo "Installing ffmpeg..."
 apt-add-repository -y ppa:jon-severinsson/ffmpeg
 apt-get update
-apt-get install -y ffmpeg libavcodec-extra-53
+apt-get install -y ffmpeg libav-tools
 
 echo "Finished provisioning. Elasticsearch: http://localhost:9200/_plugin/head/; NodeJS: http://localhost:3000"
