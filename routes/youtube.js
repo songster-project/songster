@@ -4,46 +4,60 @@ var passport = require('../config/passport');
 var database = require('../config/database');
 var elasticSearchService = require('../backend/services/elasticSearchService');
 var ytdl = require('ytdl-core');
-var ffmpeg = require('fluent-ffmpeg');
+var Ffmpeg = require('fluent-ffmpeg');
 var util = require('util');
 
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     try {
-        var streamfailed = false,title,errors,stream;
+        var streamfailed = false;
         req.checkBody('youtubeurl', 'URL is empty').notEmpty();
-        errors = req.validationErrors();
+        var errors = req.validationErrors();
         if (errors) {
             res.status(400).send('There have been validation errors: ' + util.inspect(errors));
             return;
         }
 
         ytdl.getInfo(req.body.youtubeurl, function (err, info) {
-            if (err) {
+            //if error occurs or youtube link is not valid send status 400
+            if (err || info.title === undefined) {
                 console.log(err);
                 res.status(400).send('Bad request');
                 return;
             }
-            title = info.title;
-            if (info.title === undefined) {
-                res.status(400).send('Bad request');
-                return;
-            }
-
+            var title = info.title;
+            //create stream to download from youtube (with 380p video quality)
+            var ytdlstream = ytdl(req.body.youtubeurl, {quality: 18})
+                //if error occurs during video downlaod send status 500
+                .on('error', function (err) {
+                if (!streamfailed) {
+                    console.log(err);
+                    streamfailed = true;
+                    res.status(500).send('Internal Server Error');
+                }
+            });;
+            //create stream to conver youtube video stream into mp3 stream
+            var ffmpegstream = new Ffmpeg({source: ytdlstream})
+                .withAudioCodec('libmp3lame')
+                .toFormat('mp3')
+                .duration('10:00')
+                .on('error', function (err, stdout, stderr) {
+                    if (!streamfailed) {
+                        console.log(err);
+                        streamfailed = true;
+                        res.status(500).send('Internal Server Error');
+                    }
+                });
+            //create stream to stream song into database
             var writeStream = database.gfs.createWriteStream({
                 mode: 'w',
                 filename: title + '.mp3'
             });
 
-            stream = ytdl(req.body.youtubeurl, {quality: 18});
-
-            stream.on('error',function(err){
-                console.log(err);
-                streamfailed = true;
-                res.status(500).send('Internal Server Error');
-            });
+            //pipe mp3 stream into database
+            ffmpegstream.pipe(writeStream);
             writeStream.on('close', function () {
-                if (!streamfailed){
+                if (!streamfailed) {
                     var metadata = {
                         addedDate: new Date(),
                         title: title || '',
@@ -61,17 +75,8 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                     });
                 }
             });
-            new ffmpeg({source: stream})
-                .withAudioCodec('libmp3lame')
-                .toFormat('mp3')
-                .duration('10:00')
-                .on('error', function (err, stdout, stderr) {
-                    console.log(err);
-                    streamfailed = true;
-                    res.status(500).send('Internal Server Error');
-                })
-                .pipe(writeStream);
         });
+        //sometimes the error didn't get caught on the on error listeners
     } catch (err) {
         console.log(err);
         res.status(500).send('Internal server error');
