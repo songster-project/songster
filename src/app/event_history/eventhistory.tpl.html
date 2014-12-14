@@ -4,5 +4,11 @@
             <a>Event: {{event.name}}</a>
         </div>
     </div>
-    <div>Showing for event {{event.name}}</div>
+    <div>Showing for event {{event ? event.name : ""}}
+
+        Songs:
+        <div ng-repeat="song in songs">
+           Song: {{song.name}}
+        </div>
+    </div>
 </div>
