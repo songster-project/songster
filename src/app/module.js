@@ -12,7 +12,7 @@ angular.module('ngBoilerplate', [
     'songster.event',
     'songster.library',
     'songster.voting',
-    'songster.notificationClient',
+    'songster.websocket-client',
     'songster.event-songs',
     'ui.router'
 ]);
