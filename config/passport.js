@@ -86,7 +86,7 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
         return next();
     }
     res.redirect('/login');
-}
+};
 
 exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     //Only non anonymous user has access
@@ -96,7 +96,7 @@ exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     //TODO: currently it is restricted, maybe because of useability we want to redirect to a certain page here
     //or go to the login-page. For now (3-12-2014) it's enough to restrict the access.
     res.status(403).send('Forbidden for anonymous user');
-}
+};
 
 exports.redirectVoting = function redirectVoting(req, res, next) {
     var id = req.params.id;
@@ -116,7 +116,7 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
             return;
         }
 
-        var redirectUrl = '/app/#/voting/' + event._id;
+        var redirectUrl = '/app/#/event/' + event._id;
 
         //If we are authenticated and NOT the anonymous user
         if (req.isAuthenticated() && req.user.username != anonymoususer.username) {

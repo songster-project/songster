@@ -5,7 +5,7 @@ angular
 function SoOnAirDirective() {
     return {
         restrict: 'AE',
-        controller: function ($scope) {
+        controller: function ($scope, $event, $state) {
             $scope.isOnAir = false;
 
             $scope.$on('BROADCAST_STARTED', function () {
@@ -14,6 +14,12 @@ function SoOnAirDirective() {
             $scope.$on('BROADCAST_STOPPED', function () {
                 $scope.isOnAir = false;
             });
+            $scope.redirectToBroadcastEvent = function () {
+                var broadcastEvent = $event.getBroadcastEvent();
+                $state.go('eventDetail', {
+                    id: broadcastEvent._id
+                })
+            }
         },
         templateUrl: 'event/so-on-air.tpl.html'
     };

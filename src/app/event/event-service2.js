@@ -1,9 +1,9 @@
 angular
     .module('songster.event.services')
-    .provider('$event', EventProvider);
+    .provider('$event', EventServiceProvider);
 
 
-function Event($http, $q, $rootScope) {
+function EventService($http, $q, $rootScope) {
 
     var _broadcastEvent = undefined;
     var _event = undefined;
@@ -14,8 +14,7 @@ function Event($http, $q, $rootScope) {
     this.loadEvent = function (eventId) {
         var deferred = $q.defer();
         $http.get('/event/' + eventId).success(function (data) {
-            var event = data;
-            // TODO create domain object
+            var event = new window.Event(data);
             _event = event;
             deferred.resolve(event);
         }).error(function (err) {
@@ -27,8 +26,7 @@ function Event($http, $q, $rootScope) {
     this.loadBroadcastEvent = function () {
         var deferred = $q.defer();
         $http.get('/event/current').success(function (data) {
-            var event = data;
-            // TODO create domain object
+            var event = new window.Event(data);
 
             // check if we get an empty event from the server
             // this means, that we have no current event ongoing
@@ -37,7 +35,6 @@ function Event($http, $q, $rootScope) {
             }
 
             _broadcastEvent = event;
-            _event = event; // because it is also in current event view
 
             // notifiy our listeners
             event !== undefined ?
@@ -58,10 +55,10 @@ function Event($http, $q, $rootScope) {
             event.owner_id = data.id;
             $http.post('/event', event).
                 success(function (data, status, headers, config) {
-                    $rootScope.$broadcast(EVENT_BROADCAST_STARTED, event);
-                    _broadcastEvent = event;
-                    _event = event;
-                    deferred.resolve(event);
+                    var broadcastEvent = new window.Event(data);
+                    $rootScope.$broadcast(EVENT_BROADCAST_STARTED, broadcastEvent);
+                    _broadcastEvent = broadcastEvent;
+                    deferred.resolve(broadcastEvent);
                 }).
                 error(function (data, status, headers, config) {
                     deferred.reject(data);
@@ -93,13 +90,23 @@ function Event($http, $q, $rootScope) {
     };
 
     this.isDj = function() {
-        return _broadcastEvent !== undefined && _broadcastEvent == _event ? true : false;
-    }
+        return _broadcastEvent !== undefined && _broadcastEvent._id == _event._id;
+    };
 
+    this.getEvents = function () {
+        var deferred = $q.defer();
+        // TODO load from backend
+        if (!!_broadcastEvent) {
+            deferred.resolve([_broadcastEvent]);
+        } else {
+            deferred.resolve([]);
+        }
+        return deferred.promise;
+    };
 }
 
-function EventProvider() {
+function EventServiceProvider() {
     this.$get = function ($http, $q, $rootScope) {
-        return new Event($http, $q, $rootScope);
+        return new EventService($http, $q, $rootScope);
     };
 }

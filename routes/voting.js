@@ -86,7 +86,7 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
                     .find()
                     .populate({path: '_id', model: 'Song', select: '_id title artist album year'})
                     .exec( function(err, votes){
-                        console.log(votes)
+                        console.log(votes);
                         res.status(200).send(votes);
                     });
 

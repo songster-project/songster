@@ -1,0 +1,41 @@
+<div>
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-bullhorn"></i> {{event.name}}
+        </h1>
+    </div>
+
+    <so-authorize should-be="isDj()">
+        <div class="well">
+            <p>Welcome DJ. This is you event and you are live ON AIR!</p>
+            <button ng-click="endEvent()" class="btn btn-primary">End Event</button>
+        </div>
+    </so-authorize>
+
+    <tabset>
+        <tab>
+            <tab-heading>
+                Home
+            </tab-heading>
+            <div ng-include="'event/event-detail-home.tpl.html'"></div>
+        </tab>
+        <tab>
+            <tab-heading>
+                Playlist
+            </tab-heading>
+            <so-event-songs event-id="event._id"></so-event-songs>
+        </tab>
+        <tab>
+            <tab-heading>
+                Votings
+            </tab-heading>
+            <div ng-include="'event/event-detail-votings.tpl.html'"></div>
+        </tab>
+        <tab ng-if="!isDj()">
+            <tab-heading>
+                Suggestion
+            </tab-heading>
+            <div ng-include="'event/event-detail-suggestions.tpl.html'"></div>
+        </tab>
+    </tabset>
+</div>

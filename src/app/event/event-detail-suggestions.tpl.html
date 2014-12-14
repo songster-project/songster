@@ -4,7 +4,7 @@
             <tab-heading>
                 DJ Library
             </tab-heading>
-            <div ng-include="'event/event-suggestions-dj.tpl.html'"></div>
+            <div ng-include="'event/event-detail-suggestions-dj.tpl.html'"></div>
         </tab>
         <!-- TODO coming soon :) -->
         <!--<tab>-->
@@ -12,7 +12,7 @@
         <!--My library-->
         <!--</tab-heading>-->
         <!--<so-authorize should-be="!isAnonymous()" show-message="true">-->
-        <!--<div ng-include="'event/event-suggestions-user.tpl.html'"></div>-->
+        <!--<div ng-include="'event/event-detail-suggestions-user.tpl.html'"></div>-->
         <!--</so-authorize>-->
         <!--</tab>-->
         <tab>
@@ -20,7 +20,7 @@
                 Youtube link
             </tab-heading>
             <so-authorize should-be="!isAnonymous()" show-message="isAnonymous()">
-                <div ng-if="!isAnonymous()" ng-include="'event/event-suggestions-youtube.tpl.html'"></div>
+                <div ng-if="!isAnonymous()" ng-include="'event/event-detail-suggestions-youtube.tpl.html'"></div>
             </so-authorize>
         </tab>
     </tabset>

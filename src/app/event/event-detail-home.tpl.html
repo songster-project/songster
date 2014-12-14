@@ -29,7 +29,4 @@
             <td>{{event.start | date: 'd.M H:m'}}</td>
         </tr>
     </table>
-    <so-authorize should-be="!isAnonymous()">
-        <button ng-click="endEvent()" class="btn btn-default">End Event</button>
-    </so-authorize>
 </div>

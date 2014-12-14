@@ -1,0 +1,49 @@
+<div>
+    <div class="page-header">
+        <h1><i class="fa fa-bullhorn"></i> Events</h1>
+    </div>
+
+    <div>
+        <h1>Broadcast</h1>
+
+        <div ng-if="broadcastEvent" class="well clickable" ng-click="redirectToEvent(broadcastEvent)">
+            <h1 class="on-air">
+                <i class="fa fa-wifi"></i> You are ON AIR.
+            </h1>
+
+            <p class="text-center text-muted">Click to go to the event.</p>
+        </div>
+        <div ng-if="!broadcastEvent">
+            <p>No broadcast is active.</p>
+            <a ui-sref="eventNew" class="btn btn-primary">Create Broadcast</a>
+        </div>
+    </div>
+
+    <div>
+        <h1>Events</h1>
+
+        <div class="table-responsive" ng-if="events && events.length > 0">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="event in events" ng-click="redirectToEvent(event)" class="clickable">
+                    <td>{{event.name}}</td>
+                    <td>{{event.description}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p ng-class="!events || events.length === 0">
+        No events available.
+    </p>
+</div>
