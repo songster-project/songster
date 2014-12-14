@@ -118,8 +118,8 @@ describe('EventLogApi', function () {
                 type: 'songplayed'
             }).sort('-logDate').limit(1).exec(function (err, logEntries) {
                     if (logEntries[0]) {
-                        expect(JSON.parse(logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
-                        expect(JSON.parse(logEntries[0].message).nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
+                        expect((logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
+                        expect((logEntries[0].message).nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
                         expect(logEntries[0].type).to.equal(postdata.type);
                         done();
                     }
@@ -157,8 +157,8 @@ describe('EventLogApi', function () {
                 type: 'songplayed'
             }).sort('-logDate').limit(1).exec(function (err, logEntries) {
                     if (logEntries[0]) {
-                        expect(JSON.parse(logEntries[0].message).nextSongs).to.not.be.ok;
-                        expect(JSON.parse(logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
+                        expect((logEntries[0].message).nextSongs).to.not.be.ok;
+                        expect((logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
                         expect(logEntries[0].type).to.equal(postdata.type);
                         done();
                     }
@@ -267,7 +267,7 @@ describe('EventLogApi', function () {
     it('should log event start message', function (done) {
         var postdata = {
             message: {
-                "$date": 1418368318934
+                "date": 1418368318934
             },
             type: "eventstart"
         };
@@ -282,7 +282,7 @@ describe('EventLogApi', function () {
     it('should log event end message', function (done) {
         var postdata = {
             message: {
-                "$date": 1418368318934
+                "date": 1418368318934
             },
             type: "eventend"
         };
