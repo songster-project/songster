@@ -43,7 +43,7 @@
             </table>
         </div>
     </div>
-    <p ng-class="!events || events.length === 0">
+    <p ng-if="!events || events.length === 0">
         No events available.
     </p>
 </div>
