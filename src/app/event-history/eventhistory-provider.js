@@ -6,8 +6,11 @@ angular
 function EventHistory($http) {
 
     this.getPastEvents = function() {
-        //ToDo: Show here my past events
-       return [{name: "1"},{ name: "2"},{name: "3"}];
+        $http.get('/event/current')
+            .success(function (data) {
+                return data;
+            });
+
     };
 
     this.getSongsFor = function(event) {
