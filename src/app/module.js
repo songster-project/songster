@@ -14,6 +14,6 @@ angular.module('ngBoilerplate', [
     'songster.voting',
     'songster.websocket-client',
     'songster.event-songs',
-    'songster.eventhistory',
+    'songster.eventHistory',
     'ui.router'
 ]);

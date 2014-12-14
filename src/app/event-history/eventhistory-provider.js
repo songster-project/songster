@@ -1,13 +1,15 @@
 angular
-    .module('songster.eventhistory.providers')
-    .provider('$eventhistory', EventHistoryProvider);
+    .module('songster.eventHistory.providers')
+    .provider('$eventHistory', EventHistoryProvider);
 
 
 function EventHistory($http) {
 
     this.getPastEvents = function() {
-        $http.get('/event/current')
+
+        $http.get('/event/past')
             .success(function (data) {
+                console.log(data);
                 return data;
             });
 
@@ -15,6 +17,7 @@ function EventHistory($http) {
 
     this.getSongsFor = function(event) {
         //ToDo: Request here the stuff i need
+        //.../eventlog/songs/:id
         return [{name: event.name},{ name: "2"}];
     };
 }

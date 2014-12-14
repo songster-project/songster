@@ -1,12 +1,10 @@
-angular.module('songster.eventhistory')
+angular.module('songster.eventHistory')
 
-    .controller('EventHistoryController', function EventCtrl($scope, $eventhistory ) {
-        //One question ... when is the getPastEvents() called acutally?
-        //Only once ... or more often - just wondering for the case that after i end an event. .. i want it to appear
-        $scope.events = $eventhistory.getPastEvents();
+    .controller('EventHistoryController', function EventCtrl($scope, $eventHistory ) {
 
+        $scope.events = $eventHistory.getPastEvents();
         $scope.showEvent = function(event) {
             $scope.event = event;
-            $scope.songs = $eventhistory.getSongsFor(event);
-        }
+            $scope.songs = $eventHistory.getSongsFor(event);
+        };
     });

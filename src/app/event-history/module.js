@@ -1,9 +1,9 @@
-angular.module('songster.eventhistory.providers', []);
+angular.module('songster.eventHistory.providers', []);
 
-angular.module('songster.eventhistory', [
+angular.module('songster.eventHistory', [
     'ui.router',
     'placeholders',
     'ui.bootstrap',
     'songster.menu',
-    'songster.eventhistory.providers',
+    'songster.eventHistory.providers'
 ]);
