@@ -5,7 +5,7 @@ var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 var Event = db.Event;
-var songwebsocket = require('../websockets/event_songs');
+var songwebsocket = require('../backend/websockets/event_songs');
 
 router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({owner_id: req.user._id}, function (err, playlists) {

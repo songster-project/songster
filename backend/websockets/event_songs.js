@@ -1,5 +1,5 @@
-var nserver = require('../lib/notification_server');
-var db = require('../config/database');
+var nserver = require('../services/notification_server');
+var db = require('../../config/database');
 var eventmap = {};
 var numprevSongs = 5;
 

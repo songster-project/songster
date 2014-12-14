@@ -15,9 +15,9 @@ var app = express();
 module.exports = app;
 
 //add express-ws
-require('./lib/express-ws')();
+require('./backend/services/express-ws')();
 //initialize notification_server
-require('./lib/notification_server')();
+require('./backend/services/notification_server')();
 
 var routes = require('./routes/index');
 var login = require('./routes/login');
