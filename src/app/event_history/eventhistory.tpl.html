@@ -1,4 +1,8 @@
 <div>
-
-    <p>HI. your event history.</p>
+    <div><!-- The Menu listing Events-->
+        <div ng-repeat="event in events" ng-click="showEvent(event)">>
+            <a>Event: {{event.name}}</a>
+        </div>
+    </div>
+    <div>Showing for event {{event.name}}</div>
 </div>
