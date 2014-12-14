@@ -43,7 +43,7 @@ describe('EventLogApi', function () {
     //Logged In
     //#########################################################################################
 
-    it('schould send empty websocket request if there is no log', function (done) {
+    it('should send empty websocket request if there is no log', function (done) {
 
         api.get('/event').end(function (err, res) {
             expect(err).to.not.exist;
@@ -77,7 +77,7 @@ describe('EventLogApi', function () {
         });
     });
 
-    it('schould log songs if message is correct', function (done) {
+    it('should log songs if message is correct', function (done) {
         var postdata = {
             message: {
                 currentSong: {
@@ -294,7 +294,7 @@ describe('EventLogApi', function () {
         });
     });
 
-    it('schould send websocket request if data is correct', function (done) {
+    it('should send websocket request if data is correct', function (done) {
         var postdata = {
             message: {
                 currentSong: {
@@ -339,7 +339,7 @@ describe('EventLogApi', function () {
                     eventid: eid
                 };
                 nClient.register_to_event('music_changed', function (msg) {
-                    expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
+                    expect(msg.lastSongs[0].id).to.equal(postdata.message.currentSong.id);
                     expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
                     expect(msg.nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
                     if (started) {

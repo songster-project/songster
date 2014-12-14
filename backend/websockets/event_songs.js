@@ -1,7 +1,10 @@
 var nserver = require('../services/notification_server');
 var db = require('../../config/database');
 var eventmap = {};
-var numprevSongs = 5;
+//number of previous songs to send
+var MAX_NUM_PREV_SONGS = 7;
+//number of next songs to send
+var MAX_NUM_NEXT_SONGS = 5;
 
 
 /*
@@ -15,25 +18,25 @@ function sendSongs(id, clients) {
     db.EventLog.find({
         event_id: id,
         type: 'songplayed'
-    }).sort('-logDate').limit(numprevSongs + 1).exec(function (err, logEntries) {
+    }).sort('-logDate').limit(MAX_NUM_PREV_SONGS + 1).exec(function (err, logEntries) {
             if (err) {
                 console.log(err);
                 return;
             }
-            if (logEntries[0]) {
+            if (logEntries && logEntries.length>0) {
 
                 if (logEntries[0].message) {
                     var msg = logEntries[0].message;
                     if (msg.nextSongs) {
-                        response.nextSongs = msg.nextSongs;
+                        response.nextSongs = msg.nextSongs.slice(0,MAX_NUM_NEXT_SONGS);
                     }
                 }
                 logEntries.forEach(function (entry) {
-                    response.lastSongs.unshift(entry.message.currentSong);
+                    response.lastSongs.push(entry.message.currentSong);
                 });
                 if (response.lastSongs.length > 0) {
-                    response.currentSong = response.lastSongs[response.lastSongs.length - 1];
-                    response.lastSongs.splice(response.lastSongs.length - 1, 1);
+                    response.currentSong = response.lastSongs[0];
+                    response.lastSongs.splice(0, 1);
                 }
             }
             nserver.send_Notifications('music_changed', response, clients);
