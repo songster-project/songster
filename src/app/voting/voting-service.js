@@ -61,6 +61,26 @@ function VotingService($http, $rootScope, $q) {
         $rootScope.$broadcast('VOTES_UPDATED');
     };
 
+    this.getSongFromVote = function (vote) {
+        var deferred = $q.defer();
+        var url = '/song/' + vote.song._id;
+        $http.get(url).success(function(data) {
+            deferred.resolve(data);
+        }).error(function(err){
+           deferred.reject(err);
+        });
+
+        return deferred.promise;
+    }
+
+    this.addClientVote = function (vote) {
+        _clientVotes.push(vote);
+    }
+
+    this.setVoteEnable = function () {
+
+    }
+
     function updateVotesMap() {
         _votesMap = {};
         _.each(_votes, function (vote) {
