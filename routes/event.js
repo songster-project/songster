@@ -44,6 +44,22 @@ router.get('/current', passport.ensureAuthenticated, passport.ensureNotAnonymous
     });
 });
 
+router.get('/past', passport.ensureAuthenticated,function(req,res){
+    db.Event.find({owner_id: req.user._id, end: {'$ne' : null}},null,{sort: {start: -1}}, function (err, event) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        if (event) {
+            console.log("Retunrning event: " + event);
+            res.send(event);
+            return;
+        }
+        console.log("Retunrning event: []");
+        res.send([]);
+    });
+});
 
 router.get('/:id', passport.ensureAuthenticated, function (req, res) {
     req.checkParams('id', 'ID is not an ID').isMongoID();
@@ -69,6 +85,8 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
         res.status(404).send();
     });
 });
+
+
 
 
 //For when you want to end the current event

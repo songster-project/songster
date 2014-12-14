@@ -26,8 +26,9 @@ describe('EventApi', function () {
 
                 process.nextTick(function () {
                     cb(err);
+                    done();
                 });
-                done();
+
             })
 
 
@@ -44,11 +45,20 @@ describe('EventApi', function () {
     //#########################################################################################
 
     it('should return no events in the start of the tests', function (done) {
-        console.log("requesting");
+
         api.get('/event').end(function (err, res) {
             console.log(res.text);
             expect(err).to.not.exist;
             expect(res.body).to.be.empty;
+            done();
+        });
+    });
+
+    it('should return no events when i have not closed an event',function(done){
+        api.get('/event/past').end(function (err, res) {
+            console.log(res.text);
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(0);
             done();
         });
     });
@@ -125,6 +135,15 @@ describe('EventApi', function () {
         });
     });
 
+    it('should not return the running event when quering a past event',function(done){
+        api.get('/event/past').end(function (err, res) {
+            console.log(res.text);
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(0);
+            done();
+        });
+    });
+
     it('should set the end date when ending the event', function (done) {
         api.put('/event/current/end').send({}).end(function (err, res) {
             expect(err).to.not.exist;
@@ -133,4 +152,55 @@ describe('EventApi', function () {
         });
     });
 
+    it('should return the closed event as a past event',function(done){
+        api.get('/event/past').end(function (err, res) {
+            console.log(res.text);
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(1);
+            done();
+        });
+    });
+
+    it('should return the closed event as a past event',function(done){
+        api.get('/event/past').end(function (err, res) {
+            console.log(res.text);
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(1);
+            expect(res.body[0]).to.contain.key('start');
+            done();
+        });
+    });
+
+
+    it('should return two events after start and end a next one',function(done){
+        var postdata = {
+            "name": "myEvent",
+            "accessKey": "theKey",
+            "owner_id": "546b16fa2e3a10ea162d9355",
+            "suggestionEnabled": true,
+            "votingEnabled": true,
+            "previewEnabled": true
+        }
+        api.post('/event').send(postdata).end(function (err, res) {
+                api.put('/event/current/end').send({}).end(function (err, res) {
+                    api.get('/event/past').end(function (err, res) {
+                        console.log(res.text);
+                        expect(err).to.not.exist;
+                        expect(res.body).to.have.length(2);
+                        done();
+                    });
+                });
+            }
+        );
+    });
+
+    it('should return the events descending to their start date',function(done){
+        api.get('/event/past').end(function (err, res) {
+            console.log(res.text);
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(2);
+            expect(res.body[0].start).to.be.greaterThan(res.body[1].start);
+            done();
+        });
+    });
 });
