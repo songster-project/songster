@@ -17,15 +17,14 @@ function SoPlayerDirective() {
 
             $timeout(function () {
                 var lastsongid;
-                //add listener to player events
+                //add listener to player 'playing' event
                 $scope.mediaPlayer.on('playing', function () {
                     var currevent = $event.getBroadcastEvent();
                     // check if broadcast event is running
                     if (currevent !== undefined) {
-                        //if currentTrack in mediaplayer is 0 we don't need to reduce it (happens at first event)
-                        var currtrackidx = (($scope.mediaPlayer.currentTrack == 0) ? 0 : $scope.mediaPlayer.currentTrack - 1);
-                        var currentSong = $scope.queue[currtrackidx];
-                        //compare current and last song to see if song has changed
+                        var currtrackidx = $scope.mediaPlayer.currentTrack;
+                        var currentSong = $scope.queue[currtrackidx-1];
+                        //see if song has changed
                         if (lastsongid != currentSong.id) {
                             //create message for server
                             var msg = {
@@ -33,12 +32,8 @@ function SoPlayerDirective() {
                                 type: 'songplayed'
                             };
                             lastsongid=currentSong.id;
-                            var queuelength=$scope.queue.length;
-                            //run for loop until we have enough songs or until there are no more songs in the queue
-                            for (var i = 1; i <= EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS && currtrackidx + i < queuelength; i++) {
-                                var idx = currtrackidx + i;
-                                msg.message.nextSongs.push($scope.queue[idx]);
-                            }
+                            //copy next five songs starting from current plus 1
+                            msg.message.nextSongs=$scope.queue.slice(currtrackidx,currtrackidx+EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS);
                             //send massege for current event to server;
                             $http.post('/eventlog/' + currevent._id, msg);
                         }
