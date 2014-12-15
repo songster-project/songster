@@ -63,9 +63,9 @@ function VotingService($http, $rootScope, $q) {
         $rootScope.$broadcast('VOTES_UPDATED');
     };
 
-    this.getSongFromVote = function (vote) {
+    this.getSongObjectFromVoteSong = function (song) {
         var deferred = $q.defer();
-        var url = '/song/' + vote.song._id;
+        var url = '/song/' + song._id;
         $http.get(url).success(function(data) {
             deferred.resolve(data);
         }).error(function(err){

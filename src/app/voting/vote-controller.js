@@ -8,12 +8,16 @@ angular.module('songster.voting')
             $scope.actions = [{
                 'title': 'Add to queue',
                 'text': '',
+                'disabled': function(song) {
+                    return false;
+                },
                 'icon': 'fa-plus',
-                'fn': function(vote) {
-                    votingService.getSongFromVote(vote).
+                'fn': function(song) {
+                    votingService.getSongObjectFromVoteSong(song).
                         then(function (data){
                             var song = new window.Song(data);
                             $player.add(song);
+                            // TODO set voting state to in queue or similar
                         }, function (err) {
                             $scope.message = err;
                         });
@@ -23,23 +27,30 @@ angular.module('songster.voting')
         } else {
             $scope.actions = [{
                 'title': 'Vote up',
-                'text': 'Vote up',
+                'text': 'Vote',
+                'disabled': function(song) {
+                    return votingService.hasClientVotedForSong(song);
+                },
                 'icon': 'fa fa-thumbs-o-up',
-                'fn':   function voteUp(vote) {
-                    votingService.postVote($scope.event._id, vote.song._id).
-                        then(function () {
-                            votingService.loadVotes($scope.event._id);
-                        }, function (err) {
-                            $scope.message = err;
-                        });
+                'fn':   function(song){
+                    $scope.voteUp(song);
                 },
                 'class': 'btn btn-xs btn-primary'
             }];
         }
 
-        $scope.disableVoteButton = function(song) {
-            return votingService.hasClientVotedForSong(song);
+        $scope.voteUp = function (song) {
+            votingService.postVote($scope.event._id, song._id).
+                then(function () {
+                    votingService.loadVotes($scope.event._id);
+                }, function (err) {
+                    $scope.message = err;
+                });
         }
+
+
+
+        $scope.disableVoteButton =
 
         $scope.getVotesForSong = function (song) {
             return votingService.getVotesForSong(song);
