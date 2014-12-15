@@ -9,7 +9,7 @@ function SoEventSongsDirective() {
             eventId: "="
         },
         controller: function EventCtrl($scope, $websocket, $event) {
-            $scope.previewEnabled=$event.getBroadcastEvent().previewEnabled;
+            $scope.previewEnabled=$event.getEvent().previewEnabled;
             var data = {
                 eventid: $scope.eventId
             };
