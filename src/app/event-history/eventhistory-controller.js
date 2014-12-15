@@ -5,6 +5,6 @@ angular.module('songster.eventHistory')
 
         $scope.showEvent = function(event) {
             $scope.event = event;
-            $scope.songs = $eventHistory.getSongsFor(event);
+            $eventHistory.getSongsFor(event,function(data) { $scope.songs = data;});
         };
     });
