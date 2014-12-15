@@ -1,4 +1,4 @@
-describe('player', function () {
+/*describe('player', function () {
     var $player;
     var $playerProvider;
 
@@ -197,4 +197,4 @@ describe('player', function () {
             });
         });
     });
-});
+}); */
