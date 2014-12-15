@@ -5,14 +5,12 @@ angular
 
 function EventHistory($http) {
 
-    this.getPastEvents = function() {
+    this.getPastEvents = function(assign){
 
-        $http.get('/event/past')
-            .success(function (data) {
-                console.log(data);
-                return data;
-            });
-
+    $http.get('/event/past')
+        .success(function (data) {
+            assign(data);
+        });
     };
 
     this.getSongsFor = function(event) {
