@@ -7,6 +7,13 @@ var util = require('util');
 var Event = db.Event;
 var songwebsocket = require('../backend/websockets/event_songs');
 
+//PS: avoids 304 in this module
+//Problem occurs when i want to request the /past, and it doesn't change
+router.get('/*', function(req, res, next){
+    res.setHeader('Last-Modified', (new Date()).toUTCString());
+    next();
+});
+
 router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({owner_id: req.user._id}, function (err, playlists) {
         if (err) {
