@@ -4,5 +4,6 @@ angular
     .module('songster.event', [
         'songster.event.services',
         'ui.router',
-        'songster.menu'
+        'songster.menu',
+        'songster.eventHistory'
     ]);

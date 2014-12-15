@@ -19,23 +19,29 @@
             </tab-heading>
             <div ng-include="'event/event-detail-home.tpl.html'"></div>
         </tab>
-        <tab>
+        <tab ng-if="!event.end">
             <tab-heading>
                 Playlist
             </tab-heading>
             <so-event-songs event-id="event._id"></so-event-songs>
         </tab>
-        <tab>
+        <tab ng-if="!event.end">
             <tab-heading>
                 Votings
             </tab-heading>
             <div ng-include="'event/event-detail-votings.tpl.html'"></div>
         </tab>
-        <tab ng-if="!isDj()">
+        <tab ng-if="!isDj() && !event.end">
             <tab-heading>
                 Suggestion
             </tab-heading>
             <div ng-include="'event/event-detail-suggestions.tpl.html'"></div>
+        </tab>
+        <tab ng-if="!!event.end">
+            <tab-heading>
+                Event-History
+            </tab-heading>
+        <so-event-history event-id="event._id"></so-event-history>
         </tab>
     </tabset>
 </div>

@@ -8,6 +8,7 @@ var songwebsocket = require('../backend/websockets/event_songs');
 //Posts an eventlog entry to event defined by :id
 //the event must be active and only i, the owner of the event, can post this
 router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+
     req.checkBody('message', 'message not specified').notEmpty();
     req.checkBody('type', 'type not specified').notEmpty();
     var errors = req.validationErrors();
@@ -46,6 +47,8 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
             }
             if (eventlog.type === 'songplayed') {
                 songwebsocket.newSong(eventlog.event_id);
+                //TODO Lisa: this is the method where we have to update our votes that they have been played
+                //Just go over the whole collection checking for eventid matches and that the song matches
             }
             res.status(201).send(eventlog);
         });
