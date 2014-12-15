@@ -68,7 +68,7 @@ router.post('/', function (req, res, next) {
                     return;
                 }
 
-                passport.authenticate('local')(req, res, function () {
+                passport.authenticate('local-only-registered')(req, res, function () {
                     var redirectUrl = req.cookies.refererevent ? '/app/#/event/' + req.cookies.refererevent : '/';
                     res.clearCookie('refererevent');
                     return res.redirect(redirectUrl);

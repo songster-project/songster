@@ -12,8 +12,7 @@ router.get('/', function (req, res) {
 
 
 router.post('/', function (req, res, next) {
-    console.log('in login');
-    passport.authenticate('local', function (err, user, info) {
+    passport.authenticate('local-only-registered', function (err, user, info) {
         if (err) {
             res.status(400);
             return res.render('login', {message: [info.message]});
@@ -28,10 +27,8 @@ router.post('/', function (req, res, next) {
                 return res.render('login', {message: [info.message]});
             }
 
-
             var redirectUrl = req.cookies.refererevent ? '/app/#/event/' + req.cookies.refererevent : '/';
             res.clearCookie('refererevent');
-            console.log(redirectUrl);
             return res.redirect(redirectUrl);
         });
     })(req, res, next);
