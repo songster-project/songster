@@ -1,7 +1,7 @@
 var path = require('path');
 var http = require('http');
 var WebSocketServer = require('ws').Server;
-var app = require('../app');
+var app = require('../../app');
 
 /*
  * modified version of HenningM's express-ws

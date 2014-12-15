@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="ngBoilerplate" ng-controller="AppCtrl" ng-strict-di>
 <head>
-    <title ng-bind="pageTitle"></title>
+    <title>Songster - you make the party!</title>
 
     <!-- social media tags -->
     <meta name="twitter:card" content="summary">
@@ -27,8 +27,8 @@
 </head>
 <body>
 
-<so-main-menu ng-if="!anonymousUser"></so-main-menu>
-<so-player ng-if="!anonymousUser"></so-player>
+<so-main-menu ng-if="!isAnonymous()"></so-main-menu>
+<so-player ng-if="!isAnonymous()"></so-player>
 
 <div class="container-fluid" ui-view="main"></div>
 

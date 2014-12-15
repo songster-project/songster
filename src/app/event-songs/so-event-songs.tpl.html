@@ -1,12 +1,6 @@
-<div class="row" ng-controller="event-songsCtrl">
+<div class="row">
     <h2>
-        Select Event
-    </h2>
-    <label for="inputEventId">Event id</label>
-    <input id="inputEventId" type="text" name="eventid" ng-model="eventid"/>
-    <button ng-click="register_to_event()" class="btn btn-default">Get Songs!</button>
-    <h2>
-        Last Songs
+        Upcoming Songs
     </h2>
     <table class="table table-striped">
         <tr>
@@ -15,7 +9,7 @@
             <th>Album</th>
             <th>Year</th>
         </tr>
-        <tr ng:repeat="song in lastSongs track by $index">
+        <tr ng:repeat="song in nextSongs track by $index">
             <td>{{ song.title }}</td>
             <td>{{ song.artist }}</td>
             <td>{{ song.album }}</td>
@@ -23,7 +17,7 @@
         </tr>
     </table>
     <h2>
-        Current Songs
+        Current Song
     </h2>
     <table class="table table-striped">
         <tr>
@@ -40,7 +34,7 @@
         </tr>
     </table>
     <h2>
-        Next Songs
+        Previous Songs
     </h2>
     <table class="table table-striped">
         <tr>
@@ -49,7 +43,7 @@
             <th>Album</th>
             <th>Year</th>
         </tr>
-        <tr ng:repeat="song in nextSongs track by $index">
+        <tr ng:repeat="song in lastSongs track by $index">
             <td>{{ song.title }}</td>
             <td>{{ song.artist }}</td>
             <td>{{ song.album }}</td>

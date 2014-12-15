@@ -1,0 +1,27 @@
+<div>
+    <tabset>
+        <tab>
+            <tab-heading>
+                DJ Library
+            </tab-heading>
+            <div ng-include="'event/event-detail-suggestions-dj.tpl.html'"></div>
+        </tab>
+        <!-- TODO coming soon :) -->
+        <!--<tab>-->
+        <!--<tab-heading>-->
+        <!--My library-->
+        <!--</tab-heading>-->
+        <!--<so-authorize should-be="!isAnonymous()" show-message="true">-->
+        <!--<div ng-include="'event/event-detail-suggestions-user.tpl.html'"></div>-->
+        <!--</so-authorize>-->
+        <!--</tab>-->
+        <tab>
+            <tab-heading>
+                Youtube link
+            </tab-heading>
+            <so-authorize should-be="!isAnonymous()" show-message="isAnonymous()">
+                <div ng-if="!isAnonymous()" ng-include="'event/event-detail-suggestions-youtube.tpl.html'"></div>
+            </so-authorize>
+        </tab>
+    </tabset>
+</div>

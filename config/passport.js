@@ -2,8 +2,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var db = require('../config/database.js');
 var crypto = require('crypto');
-var anonymoususer = {"username": "anon", "password": "123anon"};
-
+//var anonymoususer = {"username": "anon", "password": "123anon"};
+var anonUsernameCounter = 0;
+var promise = require("promise");
 
 function findById(id, fn) {
 
@@ -86,33 +87,88 @@ exports.ensureAuthenticated = function ensureAuthenticated(req, res, next) {
         return next();
     }
     res.redirect('/login');
-}
+};
 
 exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     //Only non anonymous user has access
-    if (req.user.username != anonymoususer.username) {
+    if (req.user.anonymous != true) {
         return next();
     }
     //TODO: currently it is restricted, maybe because of useability we want to redirect to a certain page here
     //or go to the login-page. For now (3-12-2014) it's enough to restrict the access.
     res.status(403).send('Forbidden for anonymous user');
-}
+};
+
+function saveAnonymousUserAndRedirect(req, res, redirectUrl, event_id) {
+    var l_anonymous = new db.User();
+    l_anonymous.username = new Date() + anonUsernameCounter;
+    anonUsernameCounter = anonUsernameCounter + 1;
+    l_anonymous.anonymous = true;
+
+    var salt = crypto.randomBytes(128).toString('base64');
+    crypto.pbkdf2('anonpassword' + l_anonymous.username, salt, 10000, 512, function (err, hashedKey) {
+        l_anonymous.password = hashedKey.toString('base64');
+        l_anonymous.salt = salt;
+        console.log(l_anonymous);
+
+        // save anonymous user in db
+        l_anonymous.save(function (err, user) {
+            if (err) throw err;
+
+            console.log('saved anonym');
+            console.log(user.username);
+
+            var authAnonUser = {
+                username: user.username,
+                password: 'anonpassword' + user.username
+            }
+
+            req.body = authAnonUser; // required for authentication by passport
+
+            passport.authenticate('local')(req, res, function () {
+                res.cookie('anonymous', 'true', {httpOnly: false});
+                res.cookie('refererevent', event_id, {httpOnly: true});
+                return res.redirect(redirectUrl);
+            });
+        });
+    })
+};
 
 exports.redirectVoting = function redirectVoting(req, res, next) {
-    id = req.params.id;
+    var id = req.params.id;
+    console.log('in redirect voting');
+    console.log(id);
 
+    db.Event.findOne({_id: id, end:null }, function (err, event) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
 
-    //If we are authenticated and NOT the anonymous user
-    if (req.isAuthenticated() && req.user.username != anonymoususer.username) {
-        res.redirect('/app/#/voting/' + id);
-    }
-    //I need to be logged in and redirected to the anon page
-    else {
-        req.body = anonymoususer;
-        passport.authenticate('local')(req, res, function () {
-            console.log('authenticated anon and redirect to /app/#/voting/'+id+'/anon');
-            return res.redirect('/app/#/voting/'+id+'/anon');
-        });
-    }
+        if (event == null) {
+            console.log('event is not active');
+            res.status(400).send('Bad Request');
+            return;
+        }
+
+        // set cookie that contains event_id for redirecting after anonymous registers or logs in
+        var redirectUrl = '/app/#/event/' + event._id;
+        //If we are authenticated and NOT the anonymous user
+
+        console.log(req.user);
+        // TODO: get user and check if not anomymous flag is set
+        if (req.isAuthenticated() && req.user.anonymous !== true) {
+            res.cookie('anonymous', 'false', {httpOnly: false});
+            return res.redirect(redirectUrl);
+        }
+        else {
+            return saveAnonymousUserAndRedirect(req, res, redirectUrl, event._id);
+
+        }
+    });
 };
+
+
+
 

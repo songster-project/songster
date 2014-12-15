@@ -324,6 +324,24 @@ h2 {
   cursor: pointer;
 }
 
+.on-air, .on-air a {
+  text-align: center;
+  color: @colorOnAir;
+  text-decoration: none;
+}
+
+.queue li {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  &.current-song {
+    background-color: @colorMainLight;
+  }
+}
+
+.clickable:hover {
+  cursor: pointer;
+}
+
 /**
  * Now that all app-wide styles have been applied, we can load the styles for
  * all the submodules and components we are using. 

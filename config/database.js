@@ -32,7 +32,8 @@ var userSchema = new Schema({
         email: String,
         first_name: String,
         last_name: String,
-        salt: String
+        salt: String,
+        anonymous: {type: Boolean, default: false}
     },
     {collection: 'user'}
 );
@@ -63,6 +64,7 @@ var songSchema = new Schema({
         cover: ObjectId
     },
     {collection: 'song'});
+
 //Index for support of getting all the non-deleted indices of a user
 songSchema.index({owner_id: 1, active: 1});
 
@@ -88,7 +90,7 @@ var voteSchema = new Schema({
     owner_id: ObjectId, //Referencing to users, might be null
     type: {type: String, enum: voteTypes},
     state: {type: String, enum: voteStates},
-    song_id: ObjectId, //Referencing to the song suggested
+    song_id: {type: ObjectId, ref: 'Song' }, //Referencing to the song suggested
     event_id: {type: ObjectId, index: true} //Referencing to the event that this vote was posted
 }, {collection: 'vote'});
 

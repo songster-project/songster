@@ -6,34 +6,38 @@ var elasticSearchClient = new elasticSearch.Client({
     log: 'info'
 });
 
-function errorCallback(error, response) {
-    console.log('elastic search error');
-    console.log(error);
+function callback(error, response) {
+    if (error) {
+        console.log('elastic search error:');
+        console.log(error);
+    }
 }
 
 function index(type, obj) {
-    // normalize id, because elastic search complains about the usage of _id
+    // normalize id, because elastic search can not store _id (because it already exists as an internal id)
+    var id = obj['_id'];
     obj['id'] = obj['_id'];
     delete obj['_id'];
 
     return elasticSearchClient.index({
-        index: 'songster',
+        index: settings.elasticSearch_index,
         type: type,
+        id: '' + id,
         body: obj
-    }, errorCallback);
+    }, callback);
 }
 
 function reindex(type) {
     var collection = database.db.collection(type);
     collection.find().toArray(function (err, docs) {
         if (err) {
-            res.status(500).send('Internal server error');
             console.log(err);
             return;
         }
         docs.forEach(function (doc) {
             index(type, doc);
         });
+        console.log("Reindex " + type);
     });
 }
 
@@ -42,21 +46,25 @@ exports.dropAllIndices = function dropAllIndices() {
         index: '_all'
     }).then(function () {
         console.log("Dropped elastic search indices")
-    }, errorCallback);
+    }, callback);
 };
 
 exports.reindexSongs = function () {
     return reindex('song');
 };
 
-exports.indexSong = function indexSong(song) {
+exports.indexSong = function createSong(song) {
     return index('song', song);
 };
 
 exports.escape = function escape(str) {
     // http://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Escaping Special Characters
     // + - && || ! ( ) { } [ ] ^ " ~ * ? : \
-    return (str + '').replace(/([-\\&\|!\(\){}\[\]\^"~\*\?:\+])/g, "\\$1");
+    return ('' + str).replace(/([-\\&\|!\(\){}\[\]\^"~\*\?:\+])/g, "\\$1");
+};
+
+exports.parseQuery = function parseQuery(query) {
+    return '*' + ('' + query).replace(/\s+/g, '* *') + '*';
 };
 
 exports.getClient = function () {

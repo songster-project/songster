@@ -5,9 +5,9 @@ var instancemap;
 var cookieParser=require('cookie-parser');
 var session=require('express-session');
 var passport=require('passport');
-var settings=require('../config/settings.js');
+var settings=require('../../config/settings.js');
 var MongoStore=require('connect-mongo')(session);
-var app=require('../app');
+var app=require('../../app');
 
 /**
  * initializes the WebsocketServer

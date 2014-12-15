@@ -1,0 +1,9 @@
+<div>
+    <div ng-if="isAuthorized">
+        <div ng-transclude></div>
+    </div>
+    <div ng-if="!isAuthorized && showMessage">
+        You need to login to use this features.
+        <a class="btn btn-default" href="/logout"> Login </a>
+    </div>
+</div>

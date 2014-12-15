@@ -1,4 +1,4 @@
-describe('Test', function () {
+/*describe('Test', function () {
     it('selenium test, login and check if you get redirected to the Home side', function (done) {
         browser.driver.get('http://localhost:3000/login');
         browser.driver.wait(function () {
@@ -17,4 +17,4 @@ describe('Test', function () {
         element(by.xpath('//a[@ui-sref="upload"]')).click();
         expect(browser.getTitle()).toEqual('Upload files | ngBoilerplate');
     });
-});
+}); */

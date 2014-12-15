@@ -1,0 +1,19 @@
+<div>
+    <h2>
+        Played Songs
+    </h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Play-Time</th>
+        </tr>
+        <tr ng:repeat="song in songs">
+            <td>{{ song.message.currentSong.title }}</td>
+            <td>{{ song.message.currentSong.artist }}</td>
+            <td>{{ song.message.currentSong.album }}</td>
+            <td>{{ song.logDate | date : 'shortTime' }}</td>
+        </tr>
+    </table>
+</div>

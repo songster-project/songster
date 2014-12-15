@@ -9,27 +9,34 @@ function SoPlayerDirective() {
             menuId: "="
         },
         replace: true,
-        controller: ['$scope', '$http', '$player', '$timeout', 'eventService', function SoPlayerController($scope, $http, $player, $timeout, eventService) {
+        controller: ['$scope', '$http', '$player', '$timeout', '$event','EVENT_SONG_CONFIG', function SoPlayerController($scope, $http, $player, $timeout, $event,EVENT_SONG_CONFIG) {
             var vm = this;
 
             $scope.player = $player;
             $scope.queue = $player.getQueue();
 
             $timeout(function () {
-                $scope.mediaPlayer.on('loadstart', function () {
-                    if (eventService.isEventActive()) {
-                        var currtrackidx = $scope.mediaPlayer.currentTrack - 1;
-                        var msg = {
-                            message: {nextSongs: [], currentSong: $scope.player.getQueue()[currtrackidx]},
-                            type: 'songplayed'
-                        };
-                        for (var i = 1; i <= 7; i++) {
-                            var idx = currtrackidx + i;
-                            if ((idx) >= 0 && (idx) < $scope.player.getQueue().length) {
-                                msg.message.nextSongs.push($scope.player.getQueue()[idx]);
-                            }
+                var lastsongid;
+                //add listener to player 'playing' event
+                $scope.mediaPlayer.on('playing', function () {
+                    var currevent = $event.getBroadcastEvent();
+                    // check if broadcast event is running
+                    if (currevent !== undefined) {
+                        var currtrackidx = $scope.mediaPlayer.currentTrack;
+                        var currentSong = $scope.queue[currtrackidx-1];
+                        //see if song has changed
+                        if (lastsongid != currentSong.id) {
+                            //create message for server
+                            var msg = {
+                                message: {nextSongs: [], currentSong: currentSong},
+                                type: 'songplayed'
+                            };
+                            lastsongid=currentSong.id;
+                            //copy next five songs starting from current plus 1
+                            msg.message.nextSongs=$scope.queue.slice(currtrackidx,currtrackidx+EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS);
+                            //send massege for current event to server;
+                            $http.post('/eventlog/' + currevent._id, msg);
                         }
-                        $http.post('/eventlog/' + eventService.getEventData()._id, msg);
                     }
                 });
             });
@@ -43,11 +50,11 @@ function SoPlayerDirective() {
                 }
             };
 
-            $scope.dragStart = function(e, ui) {
+            $scope.dragStart = function (e, ui) {
                 ui.item.data('start', ui.item.index());
             };
 
-            $scope.dragEnd = function(e, ui) {
+            $scope.dragEnd = function (e, ui) {
                 var start = ui.item.data('start'),
                     end = ui.item.index();
 

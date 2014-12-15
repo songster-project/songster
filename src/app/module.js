@@ -5,13 +5,15 @@ angular.module('ngBoilerplate', [
     'ngBoilerplate.about',
     'ngBoilerplate.upload',
     'songster.domain',
+    'songster.authentication',
     'songster.menu',
     'songster.main-menu',
     'songster.player',
     'songster.event',
     'songster.library',
     'songster.voting',
-    'songster.notificationClient',
+    'songster.websocket-client',
     'songster.event-songs',
+    'songster.eventHistory',
     'ui.router'
 ]);

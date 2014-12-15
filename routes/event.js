@@ -5,7 +5,14 @@ var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 var Event = db.Event;
-var songwebsocket = require('../websockets/event_songs');
+var songwebsocket = require('../backend/websockets/event_songs');
+
+//PS: avoids 304 in this module
+//Problem occurs when i want to request the /past, and it doesn't change
+router.get('/*', function(req, res, next){
+    res.setHeader('Last-Modified', (new Date()).toUTCString());
+    next();
+});
 
 router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({owner_id: req.user._id}, function (err, playlists) {
@@ -44,8 +51,22 @@ router.get('/current', passport.ensureAuthenticated, passport.ensureNotAnonymous
     });
 });
 
+router.get('/past', passport.ensureAuthenticated,function(req,res){
+    db.Event.find({owner_id: req.user._id, end: {'$ne' : null}},null,{sort: {start: -1}}, function (err, events) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        if (events) {
+            res.send(events);
+            return;
+        }
+        res.send([]);
+    });
+});
 
-router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+router.get('/:id', passport.ensureAuthenticated, function (req, res) {
     req.checkParams('id', 'ID is not an ID').isMongoID();
     var errors = req.validationErrors();
     if (errors) {
@@ -59,6 +80,9 @@ router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
             return;
         }
         if (event) {
+            if(req.cookies.anonymous === 'true') {
+                res.cookie('refererevent', event._id, {httpOnly: true});
+            }
             res.status(200).send(event);
             return;
         }
@@ -66,6 +90,8 @@ router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
         res.status(404).send();
     });
 });
+
+
 
 
 //For when you want to end the current event
