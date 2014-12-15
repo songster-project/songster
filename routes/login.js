@@ -7,7 +7,7 @@ router.get('/', function (req, res) {
         return res.redirect('/app');
     }
 
-    res.render('login', { user: req.user});
+    res.render('login', { user: req.user, title: 'Songster - Login'});
 });
 
 

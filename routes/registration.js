@@ -10,7 +10,7 @@ router.get('/', function (req, res) {
     if (req.isAuthenticated()) {
         return res.redirect('/app');
     }
-    res.render('registration');
+    res.render('registration', { title: 'Songster - Registration' });
 });
 
 router.post('/', function (req, res, next) {
