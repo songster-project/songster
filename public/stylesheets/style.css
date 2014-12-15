@@ -1,16 +1,8 @@
-body {
-  margin:5em;
-}
-
-
-a {
-    color: #00B7FF;
-}
-
 .btn-custom {
     color: #ffffff;
     background-color: #3278b3;
     border-color: #2a6496;
+    margin-top: 10px;
 }
 
 .btn-custom:hover {
@@ -30,4 +22,52 @@ a {
 
 .progress {
     margin-top: 0.5em;
+}
+
+/**
+ * Progress bars with centered text
+ */
+
+.progress {
+    position: relative;
+    height: 1em;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+    font-size: 1.25em;
+    margin-top: 3px;
+}
+
+/* TODO add nice background
+body {
+    background: url('../background.jpg')
+}
+*/
+
+.panel {
+   background-color:rgba(48,48,48,0.8);
+}
+
+.navbar {
+    margin-bottom: 5em;
+}
+
+.navbar h1 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.navbar span {
+    display: inline;
+    text-align: center;
+    font-size: 1.5em;
+    margin-top: 0.25em;
+}
+
+.navbar-header {
+    margin-top: 1em;
 }
