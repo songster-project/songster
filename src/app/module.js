@@ -14,5 +14,6 @@ angular.module('ngBoilerplate', [
     'songster.voting',
     'songster.websocket-client',
     'songster.event-songs',
+    'songster.youtube-upload',
     'ui.router'
 ]);

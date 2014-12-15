@@ -1,0 +1,27 @@
+<div class="row" ng-controller="YoutubeUploadCtrl">
+    <div class="page-header">
+        <h1><i class="fa fa-cloud-upload"></i> Upload Youtube Song</h1>
+    </div>
+    <div class="input-group">
+        <input type="text" class="form-control" ng-model="youtubeurl" placeholder="Youtube link ...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" ng-click="sendUrl()">Add Song!</button>
+                    </span>
+    </div>
+    <h2>Upload Queue</h2>
+    <!-- Upload Finished -->
+    <div class="js-upload-finished">
+        <div class="list-group" ng:repeat="song in uploadedSongs">
+            <a ng-if="song.finished" href="javascript:void(0)"
+               class="list-group-item list-group-item-success">
+                <span class="badge alert-success pull-right">Upload complete</span>{{ song.name }}
+            </a>
+            <a ng-if="!song.finished" href="javascript:void(0)"
+               class="list-group-item list-group-item-info">
+                <span class="badge alert-info pull-right">Upload in progress</span>{{ song.name }}
+            </a>
+        </div>
+    </div>
+    <div ng-if="!uploadedSongs || uploadedSongs.length == 0">No files.</div>
+</div>
+</div>
