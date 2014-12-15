@@ -15,14 +15,11 @@ angular.module('ngBoilerplate.upload')
                 .success(function (data) {
                     // file is uploaded successfully
                     for (var i = 0; i < $scope.uploadedSongs.length; i++) {
-                        if ($scope.uploadedSongs[i].name === $scope.youtubeurl) {
-                            $scope.uploadedSongs.splice(i, 1);
+                        if ($scope.uploadedFiles[i].name === config.file.name) {
+                            $scope.uploadedFiles[i].finished = true;
+
                         }
                     }
-                    $scope.uploadedSongs.push({
-                        name: $scope.youtubeurl,
-                        finished: true
-                    });
                 });
         };
     });
