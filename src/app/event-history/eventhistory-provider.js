@@ -14,6 +14,10 @@ function EventHistory($http) {
     };
 
     this.getSongsFor = function(event) {
+        $http.get('/eventlog/songs/'+event._id)
+            .success(function (data) {
+               console.log(data);//  assign(data);
+            });
         //ToDo: Request here the stuff i need
         //.../eventlog/songs/:id
         return [{name: event.name},{ name: "2"}];
