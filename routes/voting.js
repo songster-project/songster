@@ -14,36 +14,36 @@ var ObjectID = require('mongodb').ObjectID;
 
 /*router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
 
-    // get current event with eventid
-    db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
-        if (err ) {
-            console.log(err);
-            res.status(500).send('Internal server error');
-            return;
-        }
+ // get current event with eventid
+ db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
+ if (err ) {
+ console.log(err);
+ res.status(500).send('Internal server error');
+ return;
+ }
 
-        if(event == null) {
-            res.send({});
-            return;
-        }
+ if(event == null) {
+ res.send({});
+ return;
+ }
 
-        // find 10 random songs for voting
-        db.Song.findRandom().select('title artist album year').limit(10).exec(function (err, songs){
-            if (err) {
-                console.log(err);
-                res.status(500).send('Internal server error');
-                return;
-            }
+ // find 10 random songs for voting
+ db.Song.findRandom().select('title artist album year').limit(10).exec(function (err, songs){
+ if (err) {
+ console.log(err);
+ res.status(500).send('Internal server error');
+ return;
+ }
 
-            if(songs) {
-                res.send(songs);
-                return;
-            }
+ if(songs) {
+ res.send(songs);
+ return;
+ }
 
-            res.send({});
-        });
-    });
-}); */
+ res.send({});
+ });
+ });
+ }); */
 
 
 router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, res){
@@ -52,7 +52,7 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
-        if (err ) {
+        if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
@@ -86,7 +86,11 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
                     .find()
                     .populate({path: '_id', model: 'Song', select: '_id title artist album year'})
                     .exec( function(err, votes){
-                        console.log(votes);
+                        if(err) {
+                            console.log(err);
+                            res.status(500).send('Internal server error');
+                            return;
+                        }
                         res.status(200).send(votes);
                     });
 
@@ -101,7 +105,7 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
-        if (err ) {
+        if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
@@ -118,8 +122,13 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
             .populate({path: 'song_id', model: 'Song', select: '_id title artist album year'})
             .select( 'song_id -_id')
             .exec( function(err, votes) {
-                console.log(votes);
-               res.status(200).send(votes);
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+                    return;
+                }
+                res.status(200).send(votes);
+                return;
             });
 
     });
@@ -129,7 +138,6 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
 router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
     console.log('in voting post');
-   // for anonym user it must equal the session for only one vote per song
     req.assert('type', 'Type does not match vote types').isInArray(('vote suggestion').split(' '));
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
     req.checkBody('song_id', 'Song ID must not be empty').notEmpty();
@@ -151,7 +159,6 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
 
         // check that song is in db
-
         //db.Song.findOne({"_id": mongo.ObjectID(req.param('song_id'))}, function(err, song){
         db.Song.findOne({_id: req.param('song_id'), active:true}, function(err, song){
             if(err) {
@@ -167,21 +174,36 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
             }
 
             // TODO: implementing vote on song from one user is only once allowed - verify on session id or something like this
-            var vote = db.Vote();
-            vote.owner_id = req.user.id;
-            vote.type = req.body.type;
-            vote.state = req.body.state;
-            vote.song_id = req.body.song_id;
-            vote.event_id = req.param('event_id');
-
-            vote.save( function(err, vote){
-                if(err)  {
+            // search for votes on song and event from current user
+            db.Vote.find({event_id: event._id, owner_id: req.user.id, song_id: song._id, state: 'new', type: 'vote'}, function(err, votes) {
+                if(err) {
                     console.log(err);
                     res.status(500).send('Internal server error');
                     return;
                 }
-                res.status(201).send(vote);
 
+                if(votes[0] != null) {
+                    console.log('vote for song already exists');
+                    res.status(400).send('Bad Request');
+                    return;
+                }
+
+                var vote = db.Vote();
+                vote.owner_id = req.user.id;
+                vote.type = req.body.type;
+                vote.state = req.body.state;
+                vote.song_id = req.body.song_id;
+                vote.event_id = req.param('event_id');
+
+                vote.save( function(err, vote){
+                    if(err)  {
+                        console.log(err);
+                        res.status(500).send('Internal server error');
+                        return;
+                    }
+                    res.status(201).send(vote);
+
+                });
             });
         });
     });
