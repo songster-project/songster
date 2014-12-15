@@ -13,9 +13,8 @@
                     <td>
                         <div class="pull-right" ng-controller="VoteController">
                             <span class="badge badge-info">{{ getVotesForSong(song) || "0"}}</span>
-
                             <div class="btn-group" role="group">
-                                <button title="Vote up" ng-click="voteUp(song)" class="btn btn-xs btn-primary"><i
+                                <button data-ng-disabled="disableVoteButton(song)" title="Vote up" ng-click="voteUp(song)" class="btn btn-xs btn-primary"><i
                                         class="fa fa-thumbs-o-up"></i> Vote
                                 </button>
                             </div>

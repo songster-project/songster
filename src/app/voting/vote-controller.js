@@ -48,9 +48,9 @@ angular.module('songster.voting')
                 });
         }
 
-
-
-        $scope.disableVoteButton =
+        $scope.disableVoteButton = function(song) {
+            return votingService.hasClientVotedForSong(song);
+        }
 
         $scope.getVotesForSong = function (song) {
             return votingService.getVotesForSong(song);
