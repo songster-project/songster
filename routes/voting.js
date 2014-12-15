@@ -95,6 +95,35 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
     });
 });
 
+router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, res){
+
+    console.log('in get uservotes');
+
+    // get current event with eventid
+    db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
+        if (err ) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if(event == null) {
+            console.log('event not found');
+            res.status(400).send('Bad Request');
+            return;
+        }
+
+        console.log('user id ' + req.user.id);
+        db.Vote.find({event_id: event._id, owner_id: req.user.id, state: 'new', type: 'vote'})
+            .populate({path: 'song_id', model: 'Song', select: '_id title artist album year'})
+            .select( 'song_id -_id')
+            .exec( function(err, votes) {
+                console.log(votes);
+               res.status(200).send(votes);
+            });
+
+    });
+});
 
 
 router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {

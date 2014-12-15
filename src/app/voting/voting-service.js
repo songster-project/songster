@@ -10,6 +10,7 @@ function VotingService($http, $rootScope, $q) {
     var self = this;
     var _votes = [];
     var _votesMap = {}; // song id to votes count
+    var _clientVotes = {}; // votes of current client
 
     this.loadVotes = function (event_id) {
         var url = '/voting/votedsongs';
@@ -17,14 +18,15 @@ function VotingService($http, $rootScope, $q) {
             url += '/' + event_id;
         }
         $http.get(url).success(function(data, status, headers, config){
-           var votes = _.map(data, function(vote) {
+            var votes = _.map(data, function(vote) {
                 return new window.ReceivedVote(vote);
             });
             self.setVotes(votes);
+            setClientVotes(event_id);
         }).
-        error(function( data, status, headers, config){
-            // TODO
-        });
+            error(function( data, status, headers, config){
+                // TODO
+            });
     };
 
     this.postVote = function (event_id, song_id) {
@@ -39,10 +41,10 @@ function VotingService($http, $rootScope, $q) {
                 deferred.reject(err);
             });
 
-          } else {
-             console.log('postVote() got passed invalid data for vote');
+        } else {
+            console.log('postVote() got passed invalid data for vote');
             return false;
-             }
+        }
 
         return deferred.promise;
     };
@@ -67,7 +69,7 @@ function VotingService($http, $rootScope, $q) {
         $http.get(url).success(function(data) {
             deferred.resolve(data);
         }).error(function(err){
-           deferred.reject(err);
+            deferred.reject(err);
         });
 
         return deferred.promise;
@@ -77,8 +79,20 @@ function VotingService($http, $rootScope, $q) {
         _clientVotes.push(vote);
     }
 
-    this.setVoteEnable = function () {
+    function setClientVotes(event_id) {
+        $http.get('/voting/uservotes/' + event_id).success(function(data, status, headers, config) {
+            _clientVotes = {};
+            _.each(data, function(song) {
+                var song = new window.Song(song.song_id);
+                _clientVotes[song._id] = true;
+            });
+        }).error(function() {
+            console.log('getting uservotes error');
+        });
+    }
 
+    this.hasClientVotedForSong = function(song) {
+        return _clientVotes[song._id] !== undefined ? true : false;
     }
 
     function updateVotesMap() {

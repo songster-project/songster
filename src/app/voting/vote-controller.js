@@ -27,8 +27,7 @@ angular.module('songster.voting')
                 'icon': 'fa fa-thumbs-o-up',
                 'fn':   function voteUp(vote) {
                     votingService.postVote($scope.event._id, vote.song._id).
-                        then(function (postingVote) {
-                            votingService.set(postingVote);
+                        then(function () {
                             votingService.loadVotes($scope.event._id);
                         }, function (err) {
                             $scope.message = err;
@@ -36,6 +35,10 @@ angular.module('songster.voting')
                 },
                 'class': 'btn btn-xs btn-primary'
             }];
+        }
+
+        $scope.disableVoteButton = function(song) {
+            return votingService.hasClientVotedForSong(song);
         }
 
         $scope.getVotesForSong = function (song) {
