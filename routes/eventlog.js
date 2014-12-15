@@ -52,4 +52,36 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
     });
 });
 
+//Returns the songs of the given event
+router.get('/songs/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+    req.checkParams('id', 'ID is not an ID').isMongoID();
+    req.checkParams('id', '_id of event not specified').notEmpty();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    db.EventLog.find(
+        {
+            type: "songplayed",
+            event_id: req.param('id')
+        },
+        {
+            _id: 0,
+            logDate: 1,
+            'message.currentSong.title': 1,
+            'message.currentSong.artist': 1,
+            'message.currentSong.album': 1
+        },
+        //1 because when you imagine a playlist, the past songs are higher up
+        {sort: {logDate: 1}},
+            function (err, songs) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+            }
+            res.send(songs);
+            return;
+        });
+});
 module.exports = router;
