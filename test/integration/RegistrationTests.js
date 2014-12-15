@@ -19,8 +19,9 @@ describe('Registration', function () {
 
             process.nextTick(function () {
                 cb(err);
+                done();
             });
-            done();
+
         });
     });
 
@@ -35,8 +36,9 @@ describe('Registration', function () {
 
             process.nextTick(function () {
                 cb(err);
+                done();
             });
-            done();
+
         });
     });
 

@@ -26,8 +26,9 @@ describe('EventApi', function () {
 
                 process.nextTick(function () {
                     cb(err);
+                    done();
                 });
-                done();
+
             })
 
 
