@@ -6,10 +6,23 @@ block head
     script(type='text/javascript' src='js/zxcvbn-async.js')
 
 block content
+    .navbar.navbar-default
+        .container
+            .navbar-header
+                span.glyphicon.glyphicon-headphones
+                span  Songster
+                h1(style='display: none') Songster
+            .navbar-collapse.collapse.navbar-responsive-collapse
+                ul.nav.navbar-nav.navbar-right
+                    li
+                        a(href='login')
+                            span.glyphicon.glyphicon-user
+                            span  Login
     .col-xs-12.col-sm-8.col-md-6.col-sm-offset-2.col-md-offset-3
+        .blur
         .panel.panel-default
             .panel-heading
-                h1.panel-title Please register
+                h1.panel-title Registration
             .panel-body
                 form(id="form-register" method="post")
                     .form-group
@@ -30,8 +43,10 @@ block content
                         .col-xs-12.col-sm-6.col-md-6
                             .form-group
                                 input.form-control(type="password" name="confirm_password" id="confirm_password", placeholder='Confirm Password')
+                    span Password Strength:
                     .progress
                         .progress-bar.bar-custom(id='progressbar' role='progressbar' aria-valuenow='40' aria-valuemax='100' aria-valuemin='0' style='width: 0%' )
+                            span
                     .form-group
                         button.form-control(type="submit" class='btn btn-custom' id='register') Register
                 .alert.alert-danger(role='alert')
@@ -45,16 +60,25 @@ block content
                         };
 
                         $('#password').keyup(function() {
-                           var text = ['Weak Password', 'Weak', 'Medium', 'Strong', 'Very Strong'];
-                           var color = ['red', 'red', 'yellow', 'yellow','green'];
-                           var textcolor = ['red', 'white', 'black', 'black', 'white'];
+                           var text = ['Horrible', 'Weak', 'Medium', 'Strong', 'Awesome'];
+                           var color = ['#e74c3c', '#e74c3c', '#f39c12', '#f39c12','#00bc8c'];
+                           var textcolor = ['black', 'black', 'white', 'white', 'white'];
                            var textValue = $(this).val();
                            var result = zxcvbn(textValue);
                            var bar = $('#progressbar');
-                           bar.css('width', 25*result.score + '%');
                            bar.css('background-color', color[result.score]);
                            bar.css('color', textcolor[result.score]);
-                           bar.text(text[result.score]);
+                           bar.css('text-align', 'center');
+                           bar.find("span").text(text[result.score]);
+                           bar.find("span").css('color', textcolor[result.score]);
+
+                           // reset the bar if there is no password
+                           if ($("#password").val() === "") {
+                            bar.css('width', '0%');
+                            bar.find("span").text('');
+                           } else {
+                            bar.css('width', 20+20*result.score + '%');
+                           }
                         });
 
                         $(document).ready(function(){
