@@ -93,12 +93,10 @@ function EventService($http, $q, $rootScope) {
 
     this.getEvents = function () {
         var deferred = $q.defer();
-        // TODO load from backend
-        if (!!_broadcastEvent) {
-            deferred.resolve([_broadcastEvent]);
-        } else {
-            deferred.resolve([]);
-        }
+        $http.get('/event/past')
+            .success(function (data) {
+               deferred.resolve(data);
+            });
         return deferred.promise;
     };
 }
