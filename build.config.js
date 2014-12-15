@@ -74,8 +74,7 @@ module.exports = {
       'vendor/angular-lodash/angular-lodash.js',
       'src/common/angular-sortable-view/angular-sortable-view.js',
       'vendor/angular-xeditable/dist/js/xeditable.min.js',
-      'vendor/angular-cookies/angular-cookies.min.js',
-      'vendor/angular-cookies/angular-cookies.min.js.map'
+      'vendor/angular-cookies/angular-cookies.min.js'
     ],
     css: [
     ],
