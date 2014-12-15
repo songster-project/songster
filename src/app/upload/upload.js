@@ -24,14 +24,10 @@ angular.module('ngBoilerplate.upload')
                     }).success(function (data, status, headers, config) {
                         // file is uploaded successfully
                         for (var i = 0; i < $scope.uploadedFiles.length; i++) {
-                            if ($scope.uploadedFiles[i].name === file.name) {
-                                $scope.uploadedFiles.splice(i, 1);
+                            if ($scope.uploadedFiles[i].name === config.file.name) {
+                                $scope.uploadedFiles[i].finished = true;
                             }
                         }
-                        $scope.uploadedFiles.push({
-                            name: file.name,
-                            finished: true
-                        });
                     });
                 }
             }
