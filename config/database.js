@@ -32,7 +32,8 @@ var userSchema = new Schema({
         email: String,
         first_name: String,
         last_name: String,
-        salt: String
+        salt: String,
+        anonymous: {type: Boolean, default: false}
     },
     {collection: 'user'}
 );
