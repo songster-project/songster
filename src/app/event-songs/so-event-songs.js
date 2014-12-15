@@ -8,7 +8,8 @@ function SoEventSongsDirective() {
         scope: {
             eventId: "="
         },
-        controller: function EventCtrl($scope, $websocket) {
+        controller: function EventCtrl($scope, $websocket, $event) {
+            $scope.previewEnabled=$event.getEvent().previewEnabled;
             var data = {
                 eventid: $scope.eventId
             };

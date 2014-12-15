@@ -1,21 +1,23 @@
 <div class="row">
-    <h2>
-        Upcoming Songs
-    </h2>
-    <table class="table table-striped">
-        <tr>
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Album</th>
-            <th>Year</th>
-        </tr>
-        <tr ng:repeat="song in nextSongs track by $index">
-            <td>{{ song.title }}</td>
-            <td>{{ song.artist }}</td>
-            <td>{{ song.album }}</td>
-            <td>{{ song.year }}</td>
-        </tr>
-    </table>
+    <div ng-show="previewEnabled">
+        <h2>
+            Upcoming Songs
+        </h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Year</th>
+            </tr>
+            <tr ng:repeat="song in nextSongs track by $index">
+                <td>{{ song.title }}</td>
+                <td>{{ song.artist }}</td>
+                <td>{{ song.album }}</td>
+                <td>{{ song.year }}</td>
+            </tr>
+        </table>
+    </div>
     <h2>
         Current Song
     </h2>
