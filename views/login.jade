@@ -2,6 +2,18 @@ extends layout
 
 extends layout
 block content
+    .navbar.navbar-default
+        .container
+            .navbar-header
+                span.glyphicon.glyphicon-headphones
+                span  Songster
+                h1(style='display: none') Songster
+            .navbar-collapse.collapse.navbar-responsive-collapse
+                ul.nav.navbar-nav.navbar-right
+                    li
+                        a(href='registration')
+                            span.glyphicon.glyphicon-user
+                            span  Register
     .col-xs-12.col-sm-8.col-md-6.col-sm-offset-2.col-md-offset-3
         .panel.panel-default
             .panel-heading
