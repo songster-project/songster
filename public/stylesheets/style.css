@@ -30,7 +30,7 @@
 
 .progress {
     position: relative;
-    height: 1em;
+    height: 2em;
 }
 
 .progress span {
@@ -68,3 +68,4 @@ body {
 .navbar-header {
     margin-top: 1em;
 }
+
