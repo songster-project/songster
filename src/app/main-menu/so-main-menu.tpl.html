@@ -11,15 +11,14 @@
         <div class="navbar-brand">
             Songster
         </div>
-        <so-account username="'hallo allerwelts peter'"/>
+        <so-account ng-if="!toggleState" />
     </div>
-    <!--
 
-    -->
     <div class="collapse navbar-collapse" collapse="menuCollapsed">
         <so-menu menu-id="'main'"></so-menu>
     </div>
 
-    <a href class="toggleButton" ng-click="toggleState = !toggleState"><i class="fa"
-                                                                          ng-class="toggleState ? 'fa-angle-double-right' : 'fa-angle-double-left'"></i></a>
+    <a href class="toggleButton" ng-click="toggleState = !toggleState">
+        <i class="fa"  ng-class="toggleState ? 'fa-angle-double-right' : 'fa-angle-double-left'"></i>
+    </a>
 </div>
