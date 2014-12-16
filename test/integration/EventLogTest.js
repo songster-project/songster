@@ -52,9 +52,9 @@ describe('EventLog', function () {
             expect(res.body).to.have.length(2);
             console.log(res.body[0]);
             expect(res.body[0].message).to.exist;
-            expect(res.body[0].logDate).to.equal('2014-12-15T14:33:16.510Z');
+            expect(res.body[0].logDate).to.equal('2014-12-15T14:39:00.054Z');
             console.log(res.body[0].message);
-            expect(res.body[0].message.currentSong.title).to.equal('Smoke On The Water');
+            expect(res.body[0].message.currentSong.title).to.equal('Money (That\'s What I Want)');
 
 
             done();

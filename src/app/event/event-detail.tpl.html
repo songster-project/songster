@@ -7,7 +7,7 @@
 
     <so-authorize should-be="isDj()">
         <div class="well">
-            <p>Welcome DJ. This is you event and you are live ON AIR!</p>
+            <p>Welcome DJ. This is your event and you are live ON AIR!</p>
             <button ng-click="endEvent()" class="btn btn-primary">Stop Broadcast</button>
         </div>
     </so-authorize>
@@ -39,7 +39,7 @@
         </tab>
         <tab ng-if="!!event.end">
             <tab-heading>
-                Event-History
+                Played Songs
             </tab-heading>
         <so-event-history event-id="event._id"></so-event-history>
         </tab>
