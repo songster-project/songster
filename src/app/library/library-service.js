@@ -10,10 +10,9 @@ function Library($http, $q) {
 
         var url = '/search/';
         if (eventId !== undefined) {
-            url += 'eventsongs/' + eventId + '/';
-            if (!!query) {
-                url += query;
-            } else {
+            url += 'eventsongs/' + eventId;
+            url += '?q=' + query;
+            if (!query) {
                 // we do not query if there is no query for event songs
                 deferred.reject();
                 return deferred.promise;
@@ -21,10 +20,10 @@ function Library($http, $q) {
         } else {
             url += 'song';
             if (!!query) {
-                url += '/' + query;
+                url += '?q=' + query;
             }
         }
-        $http.get(url).success(function(res) {
+        $http.get(url).success(function (res) {
             var searchResult = new window.SearchResult();
             searchResult.fillWithResponse(res, window.Song);
             deferred.resolve(searchResult);

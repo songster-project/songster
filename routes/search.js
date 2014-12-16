@@ -12,10 +12,11 @@ var searchableFields = [
 ];
 
 router.get('/song', passport.ensureAuthenticated, function (req, res) {
-    elasticSearchService.getClient().search({
-        index: 'songster',
-        type: 'song',
-        body: {
+    var query = req.query.q;
+    var body = undefined;
+    if (query === undefined) {
+        // all query
+        body = {
             "query": {
                 "filtered": {
                     "filter": {
@@ -25,27 +26,18 @@ router.get('/song', passport.ensureAuthenticated, function (req, res) {
                     }
                 }
             }
-        }
-    }, function (error, response) {
-        if (!error) {
-            res.send(response);
-        }
-    });
-});
-
-router.get('/song/:query', passport.ensureAuthenticated, function (req, res) {
-    var escapedQuery = elasticSearchService.escape(req.params.query);
-    var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
-    elasticSearchService.getClient().search({
-        index: 'songster',
-        type: 'song',
-        body: {
+        };
+    } else {
+        // specific song search
+        var escapedQuery = elasticSearchService.escape(query);
+        var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
+        body = {
             "query": {
                 "filtered": {
                     "query": {
                         "multi_match": {
                             "query": parsedQuery,
-                            "type":  'cross_fields',
+                            "type": 'cross_fields',
                             "operator": 'and',
                             "fields": searchableFields
                         }
@@ -57,18 +49,26 @@ router.get('/song/:query', passport.ensureAuthenticated, function (req, res) {
                     }
                 }
             }
-        }
+        };
+    }
+
+    elasticSearchService.getClient().search({
+        index: 'songster',
+        type: 'song',
+        body: body
     }, function (error, response) {
         if (!error) {
             res.send(response);
+        } else {
+            console.log("Elastic Search Error");
+            console.log(error);
+            res.status(500).send('Internal Server Error');
         }
     });
-
 });
 
-router.get('/eventsongs/:eventid/:query', passport.ensureAuthenticated, function (req, res) {
-
-    console.log('in search eventsongs');
+router.get('/eventsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
+    var query = req.query.q;
     // get active event with eventid from req.param
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
         if (err) {
@@ -83,7 +83,7 @@ router.get('/eventsongs/:eventid/:query', passport.ensureAuthenticated, function
             return;
         }
 
-        var escapedQuery = elasticSearchService.escape(req.params.query);
+        var escapedQuery = elasticSearchService.escape(query);
         var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
         elasticSearchService.getClient().search({
             index: 'songster',
@@ -108,6 +108,10 @@ router.get('/eventsongs/:eventid/:query', passport.ensureAuthenticated, function
         }, function (error, response) {
             if (!error) {
                 res.send(response);
+            } else {
+                console.log("Elastic Search Error");
+                console.log(error);
+                res.status(500).send('Internal Server Error');
             }
         });
     });
