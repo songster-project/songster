@@ -137,7 +137,7 @@ exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     res.status(403).send('Forbidden for anonymous user');
 };
 
-function saveAnonymousUserAndRedirect(req, res, redirectUrl, event_id) {
+function createAndSaveAnonymousUserAndRedirect(req, res, redirectUrl, event_id) {
     var l_anonymous = new db.User();
     l_anonymous.username = guid();
     l_anonymous.anonymous = true;
@@ -194,14 +194,20 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
 
         // set cookie that contains event_id for redirecting after anonymous registers or logs in
         var redirectUrl = '/app/#/event/' + event._id;
-        //If we are authenticated and NOT the anonymous user
-        if (req.isAuthenticated() && req.user.anonymous !== true) {
-            res.cookie('anonymous', 'false', {httpOnly: false});
+        //If we are authenticated
+        console.log('redirect voting');
+        console.log(req.user);
+        if (req.isAuthenticated()) {
+            if(req.user.anonymous === true) {   // in user doc anonymous true is guaranteed to be set, but false not
+                res.cookie('anonymous', 'true', {httpOnly: false});
+            } else {
+                res.cookie('anonymous', 'false', {httpOnly: false});
+            }
             return res.redirect(redirectUrl);
         }
-        // if we are an anonymous user
+        // If we are not authenticated an anonymous user is created and logged in
         else {
-            return saveAnonymousUserAndRedirect(req, res, redirectUrl, event._id);
+            return createAndSaveAnonymousUserAndRedirect(req, res, redirectUrl, event._id);
 
         }
     });
