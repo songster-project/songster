@@ -11,8 +11,8 @@ var searchableFields = [
     "year"
 ];
 
-router.post('/song', passport.ensureAuthenticated, function (req, res) {
-    var query = req.body.query;
+router.get('/song', passport.ensureAuthenticated, function (req, res) {
+    var query = req.query.q;
     var body = undefined;
     if (query === undefined) {
         // all query
@@ -67,8 +67,8 @@ router.post('/song', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.post('/eventsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
-    var query = req.body.query;
+router.get('/eventsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
+    var query = req.query.q;
     // get active event with eventid from req.param
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
         if (err) {
