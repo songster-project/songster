@@ -179,7 +179,7 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
     var id = req.params.id;
     console.log('in redirect voting');
 
-    db.Event.findOne({_id: id, end:null }, function (err, event) {
+    db.Event.findOne({_id: id}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
@@ -187,7 +187,7 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
         }
 
         if (event == null) {
-            console.log('event is not active');
+            console.log('event not found');
             res.status(400).send('Bad Request');
             return;
         }
@@ -196,7 +196,6 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
         var redirectUrl = '/app/#/event/' + event._id;
         //If we are authenticated
         console.log('redirect voting');
-        console.log(req.user);
         if (req.isAuthenticated()) {
             if(req.user.anonymous === true) {   // in user doc anonymous true is guaranteed to be set, but false not
                 res.cookie('anonymous', 'true', {httpOnly: false});
