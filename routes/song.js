@@ -109,7 +109,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
 });
 
 router.put('/:id/updateCover', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
-    if (req && req.body && req.body._id && req.body._id === req.user._id) {
+    if (req && req.body && req.body._id) {
         database.Song.findOne({"_id": mongo.ObjectID(req.body._id), "owner_id": req.user._id}, function (err, song) {
             albumArt(song.artist, song.album, 'large', function (err, url) {
                 console.log('metadata url: ' + url);
