@@ -79,7 +79,7 @@ router.get('/songs/:id', passport.ensureAuthenticated, function (req, res) {
             'message.currentSong.artist': 1,
             'message.currentSong.album': 1
         },
-        //1 because when you imagine a playlist, the past songs are higher up
+        //1 because when you imagine a playlist, the newest songs are higher up
         {sort: {logDate: -1}},
             function (err, songs) {
                 if (err) {
