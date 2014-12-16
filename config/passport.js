@@ -18,7 +18,10 @@ function findById(id, fn) {
 function findByUsername(username, fn) {
 
     db.User.findOne({username: username}, function (err, doc) {
-        if (err) return fn(null, null);
+        if (err) {
+            console.log(err);
+            return fn(null, null);
+        }
         return fn(null, doc);
     })
 }
@@ -26,7 +29,10 @@ function findByUsername(username, fn) {
 function findByUsernameOnlyRegistered(username, fn) {
 
     db.User.findOne({username: username, anonymous:{ $ne: true }}, function (err, doc) {
-        if (err) return fn(null, null);
+        if (err) {
+            console.log(err);
+            return fn(null, null);
+        }
         return fn(null, doc);
     })
 }
