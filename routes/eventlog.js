@@ -47,8 +47,11 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
             }
             if (eventlog.type === 'songplayed') {
                 songwebsocket.newSong(eventlog.event_id);
-                //TODO Lisa: this is the method where we have to update our votes that they have been played
-                //Just go over the whole collection checking for eventid matches and that the song matches
+                db.Vote.update( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id}, {state: 'played'},  function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                });
             }
             res.status(201).send(eventlog);
         });
