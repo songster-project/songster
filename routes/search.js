@@ -37,8 +37,6 @@ router.get('/song', passport.ensureAuthenticated, function (req, res) {
                     "query": {
                         "multi_match": {
                             "query": parsedQuery,
-                            "type": 'cross_fields',
-                            "operator": 'and',
                             "fields": searchableFields
                         }
                     },
