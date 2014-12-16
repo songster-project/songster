@@ -173,7 +173,6 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                 return;
             }
 
-            // TODO: implementing vote on song from one user is only once allowed - verify on session id or something like this
             // search for votes on song and event from current user
             db.Vote.find({event_id: event._id, owner_id: req.user.id, song_id: song._id, state: 'new', type: 'vote'}, function(err, votes) {
                 if(err) {
