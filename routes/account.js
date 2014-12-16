@@ -13,6 +13,12 @@ router.get('/', passport.ensureAuthenticated, function (req, res) {
     res.render('account', { id: req.session.passport.user });
 });
 
+router.get('/info',passport.ensureAuthenticated, function (req, res){
+    var user = req.user;
+    user.salt = undefined;
+    user.password = undefined;
+    res.send(user);
+});
 
 router.get('/id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     res.status(200).send({id: req.session.passport.user});
