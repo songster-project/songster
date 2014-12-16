@@ -3,7 +3,6 @@ var LocalStrategy = require('passport-local').Strategy;
 var db = require('../config/database.js');
 var crypto = require('crypto');
 //var anonymoususer = {"username": "anon", "password": "123anon"};
-var anonUsernameCounter = 0;
 var promise = require("promise");
 
 function findById(id, fn) {
@@ -19,7 +18,21 @@ function findById(id, fn) {
 function findByUsername(username, fn) {
 
     db.User.findOne({username: username}, function (err, doc) {
-        if (err) return fn(null, null);
+        if (err) {
+            console.log(err);
+            return fn(null, null);
+        }
+        return fn(null, doc);
+    })
+}
+
+function findByUsernameOnlyRegistered(username, fn) {
+
+    db.User.findOne({username: username, anonymous:{ $ne: true }}, function (err, doc) {
+        if (err) {
+            console.log(err);
+            return fn(null, null);
+        }
         return fn(null, doc);
     })
 }
@@ -76,6 +89,37 @@ passport.use(new LocalStrategy(
     }
 ));
 
+passport.use('local-only-registered', new LocalStrategy(
+    function (username, password, done) {
+        // asynchronous verification, for effect...
+        process.nextTick(function () {
+
+            // Find the user by username.  If there is no user with the given
+            // username, or the password is not correct, set the user to `false` to
+            // indicate failure and set a flash message.  Otherwise, return the
+            // authenticated `user`.
+            console.log('in local only registered');
+            findByUsernameOnlyRegistered(username, function (err, user) {
+                if (err) {
+                    return done(err);
+                }
+                if (!user) {
+                    return done(null, false, {message: 'Invalid username or password'});
+                }
+
+                // hash password
+                crypto.pbkdf2(password, user.salt, 10000, 512, function (err, hashedKey) {
+                    var hash_password = hashedKey.toString('base64');
+                    if (user.password != hash_password) {
+                        return done(null, false, {message: 'Invalid username or password'});
+                    }
+                    return done(null, user);
+                });
+            });
+        });
+    }
+));
+
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
@@ -99,24 +143,19 @@ exports.ensureNotAnonymous = function ensureNotAnonymous(req, res, next) {
     res.status(403).send('Forbidden for anonymous user');
 };
 
-function saveAnonymousUserAndRedirect(req, res, redirectUrl, event_id) {
+function createAndSaveAnonymousUserAndRedirect(req, res, redirectUrl, event_id) {
     var l_anonymous = new db.User();
-    l_anonymous.username = new Date() + anonUsernameCounter;
-    anonUsernameCounter = anonUsernameCounter + 1;
+    l_anonymous.username = guid();
     l_anonymous.anonymous = true;
 
     var salt = crypto.randomBytes(128).toString('base64');
     crypto.pbkdf2('anonpassword' + l_anonymous.username, salt, 10000, 512, function (err, hashedKey) {
         l_anonymous.password = hashedKey.toString('base64');
         l_anonymous.salt = salt;
-        console.log(l_anonymous);
 
         // save anonymous user in db
         l_anonymous.save(function (err, user) {
             if (err) throw err;
-
-            console.log('saved anonym');
-            console.log(user.username);
 
             var authAnonUser = {
                 username: user.username,
@@ -134,12 +173,19 @@ function saveAnonymousUserAndRedirect(req, res, redirectUrl, event_id) {
     })
 };
 
+function guid() {
+    function _p8(s) {
+        var p = (Math.random().toString(16)+"000000000").substr(2,8);
+        return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+    }
+    return _p8() + _p8(true) + _p8(true) + _p8();
+}
+
 exports.redirectVoting = function redirectVoting(req, res, next) {
     var id = req.params.id;
     console.log('in redirect voting');
-    console.log(id);
 
-    db.Event.findOne({_id: id, end:null }, function (err, event) {
+    db.Event.findOne({_id: id}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
@@ -147,23 +193,26 @@ exports.redirectVoting = function redirectVoting(req, res, next) {
         }
 
         if (event == null) {
-            console.log('event is not active');
+            console.log('event not found');
             res.status(400).send('Bad Request');
             return;
         }
 
         // set cookie that contains event_id for redirecting after anonymous registers or logs in
         var redirectUrl = '/app/#/event/' + event._id;
-        //If we are authenticated and NOT the anonymous user
-
-        console.log(req.user);
-        // TODO: get user and check if not anomymous flag is set
-        if (req.isAuthenticated() && req.user.anonymous !== true) {
-            res.cookie('anonymous', 'false', {httpOnly: false});
+        //If we are authenticated
+        console.log('redirect voting');
+        if (req.isAuthenticated()) {
+            if(req.user.anonymous === true) {   // in user doc anonymous true is guaranteed to be set, but false not
+                res.cookie('anonymous', 'true', {httpOnly: false});
+            } else {
+                res.cookie('anonymous', 'false', {httpOnly: false});
+            }
             return res.redirect(redirectUrl);
         }
+        // If we are not authenticated an anonymous user is created and logged in
         else {
-            return saveAnonymousUserAndRedirect(req, res, redirectUrl, event._id);
+            return createAndSaveAnonymousUserAndRedirect(req, res, redirectUrl, event._id);
 
         }
     });
