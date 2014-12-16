@@ -7,7 +7,7 @@ module.exports = {
    * development and the `compile_dir` folder is where our app resides once it's
    * completely built.
    */
-  build_dir: 'app',
+  build_dir: 'build',
   compile_dir: 'app',
 
   /**
