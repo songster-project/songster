@@ -1,23 +1,35 @@
 angular
     .module('songster.account.services')
-    .provider('$account', AccountProvider);
+    .provider('$account',AccountProvider);
 
 
-function Account() {
+function Account($http, $q) {
 
-    var _isAnonymous = false;
+    var _user = null;
 
-    this.isAnonymous = function() {
-        return _isAnonymous;
-    };
+    this.loadUser = function() {
+        var deferred = $q.defer();
+        $http.get('/account/info')
+            .success(function (data) {
+                _user= new window.User(data);
+                deferred.resolve();
+            })
+            .error(function(err) {
+                deferred.reject(err);
+            });
+        return deferred.promise;
+    }
 
-    this.setAnonymous = function (isAnonymous) {
-        _isAnonymous = isAnonymous;
-    };
+
+
+    this.getUser = function() {
+            return _user;
+    }
+
 }
 
 function AccountProvider() {
-    this.$get = function () {
-        return new Account();
+    this.$get = function ($http, $q) {
+        return new Account($http, $q);
     };
 }

@@ -5,16 +5,16 @@ angular
 function SoAccountDirective() {
     return {
         restrict: 'AE',
-        scope: {
-            username : "="
-        },
         replace: true,
-        /*
-        controller: ['$scope', function SoMenuController($scope) {
-            var vm = this;
-            vm.menu = $menu.getMenu($scope.menuId);
+        controller: ['$scope', '$account', '$q', function ($scope, $account, $q) {
+
+            $scope.username = "";
+
+            $account.loadUser().then(function () {
+                $scope.username = $account.getUser().username;
+            });
+
         }],
-        controllerAs: 'vm' */
         templateUrl: 'account/so-account.tpl.html'
     };
 }
