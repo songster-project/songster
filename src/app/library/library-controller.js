@@ -9,12 +9,6 @@ angular.module('songster.library')
                 'fn': function(song) {
                     $player.add(song);
                 }
-            },{
-                'title': 'Play raw',
-                'icon': 'fa-play',
-                'fn': function(song) {
-                    $window.location.href = song.getRawSrc()
-                }
             }
         ];
 
