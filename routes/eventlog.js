@@ -47,7 +47,7 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
             }
             if (eventlog.type === 'songplayed') {
                 songwebsocket.newSong(eventlog.event_id);
-                db.Vote.update( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id}, {state: 'played'},  function(err) {
+                db.Vote.update( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id}, {state: 'played'}, {multi: true},  function(err) {
                     if(err) {
                         console.log(err);
                     }
