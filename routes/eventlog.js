@@ -59,7 +59,7 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
 });
 
 //Returns the songs of the given event
-router.get('/songs/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+router.get('/songs/:id', passport.ensureAuthenticated, function (req, res) {
     req.checkParams('id', 'ID is not an ID').isMongoID();
     req.checkParams('id', '_id of event not specified').notEmpty();
     var errors = req.validationErrors();
