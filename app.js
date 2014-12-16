@@ -1,3 +1,5 @@
+var im = require('istanbul-middleware');
+im.hookLoader(__dirname);
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -93,6 +95,7 @@ app.use('/search', search);
 app.use('/eventlog', eventlog);
 app.use('/voting', voting);
 app.use('/youtube', youtube);
+app.use('/coverage', im.createHandler());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
