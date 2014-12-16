@@ -1,0 +1,6 @@
+
+    <p class="navbar-text">
+        Hi {{username.length > 10 ? (username |limitTo: 9) + '...' : username }}
+        <a href="/logout"><i class="fa" ng-class="'fa-sign-out'"> </i></a>
+    </p>
+
