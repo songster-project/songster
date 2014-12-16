@@ -3,7 +3,7 @@ angular
     .provider('$account',AccountProvider);
 
 
-function Account($http, $q) {
+function AccountService($http, $q) {
 
     var _user = null;
 
@@ -30,6 +30,6 @@ function Account($http, $q) {
 
 function AccountProvider() {
     this.$get = function ($http, $q) {
-        return new Account($http, $q);
+        return new AccountService($http, $q);
     };
 }
