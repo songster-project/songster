@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('songster.domain.searchRequest')
-    .config(function(CONFIG) {
+    .factory('SearchRequestFactory', function(CONFIG) {
         window.SearchRequest = function SearchRequest(data) {
             this.url = data ? data.url : undefined;
             this.q = data ? data.q : undefined;
@@ -31,5 +31,11 @@ angular.module('songster.domain.searchRequest')
 
         window.SearchRequest.prototype.setPage = function setPage(page) {
             this.from = CONFIG.resultsPerPage * (page - 1);
+        };
+
+        return {
+            create: function(data) {
+                return new window.SearchRequest(data);
+            }
         };
     });

@@ -3,7 +3,7 @@ angular
     .provider('$account',AccountProvider);
 
 
-function AccountService($http, $q) {
+function AccountService($http, $q, UserFactory) {
 
     var _user = null;
 
@@ -11,16 +11,14 @@ function AccountService($http, $q) {
         var deferred = $q.defer();
         $http.get('/account/info')
             .success(function (data) {
-                _user= new window.User(data);
+                _user = UserFactory.create(data);
                 deferred.resolve();
             })
             .error(function(err) {
                 deferred.reject(err);
             });
         return deferred.promise;
-    }
-
-
+    };
 
     this.getUser = function() {
             return _user;
@@ -29,7 +27,7 @@ function AccountService($http, $q) {
 }
 
 function AccountProvider() {
-    this.$get = function ($http, $q) {
-        return new AccountService($http, $q);
+    this.$get = function ($http, $q, UserFactory) {
+        return new AccountService($http, $q, UserFactory);
     };
 }

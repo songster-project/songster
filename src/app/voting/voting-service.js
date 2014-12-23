@@ -1,12 +1,12 @@
 angular
     .module('songster.voting.services.votingService')
     .provider('votingService', function () {
-        this.$get = function ($http, $rootScope, $q) {
-            return new VotingService($http, $rootScope, $q);
+        this.$get = function ($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory) {
+            return new VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory);
         };
     });
 
-function VotingService($http, $rootScope, $q) {
+function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory) {
     var self = this;
     var _votes = [];
     var _votesMap = {}; // song id to votes count
@@ -19,7 +19,7 @@ function VotingService($http, $rootScope, $q) {
         }
         $http.get(url).success(function(data, status, headers, config){
             var votes = _.map(data, function(vote) {
-                return new window.ReceivedVote(vote);
+                return ReceivedVoteFactory.create(vote);
             });
             self.setVotes(votes);
             setClientVotes(event_id);
@@ -33,7 +33,7 @@ function VotingService($http, $rootScope, $q) {
         var deferred = $q.defer();
         if (!!event_id || !!song_id) {
 
-            var vote = new window.PostingVote(event_id, song_id);
+            var vote = PostingVoteFactory.create({event_id: event_id, song_id: song_id});
 
             $http.post('/voting/' + event_id, vote).success(function() {
                 deferred.resolve();
@@ -73,17 +73,17 @@ function VotingService($http, $rootScope, $q) {
         });
 
         return deferred.promise;
-    }
+    };
 
     this.addClientVote = function (vote) {
         _clientVotes.push(vote);
-    }
+    };
 
     function setClientVotes(event_id) {
         $http.get('/voting/uservotes/' + event_id).success(function(data, status, headers, config) {
             _clientVotes = {};
             _.each(data, function(song) {
-                var song = new window.Song(song.song_id);
+                var song = new SongFactory.create(song.song_id);
                 _clientVotes[song._id] = true;
             });
         }).error(function() {
@@ -93,7 +93,7 @@ function VotingService($http, $rootScope, $q) {
 
     this.hasClientVotedForSong = function(song) {
         return _clientVotes[song._id] !== undefined ? true : false;
-    }
+    };
 
     function updateVotesMap() {
         _votesMap = {};

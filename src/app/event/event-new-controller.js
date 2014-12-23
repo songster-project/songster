@@ -1,8 +1,8 @@
 angular.module('songster.event')
 
-    .controller('EventNewController', function EventCtrl($scope, $location, $event, $state) {
+    .controller('EventNewController', function EventCtrl($scope, $location, $event, $state, EventFactory) {
         $scope.event = $event.getEvent();
-        $scope.editEvent = new window.Event({
+        $scope.editEvent = EventFactory.create({
             votingEnabled: true,
             previewEnabled: true,
             suggestionEnabled: true

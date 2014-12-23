@@ -3,7 +3,7 @@ angular
     .provider('$event', EventServiceProvider);
 
 
-function EventService($http, $q, $rootScope) {
+function EventService($http, $q, $rootScope, EventFactory) {
 
     var _broadcastEvent = undefined;
     var _event = undefined;
@@ -14,7 +14,7 @@ function EventService($http, $q, $rootScope) {
     this.loadEvent = function (eventId) {
         var deferred = $q.defer();
         $http.get('/event/' + eventId).success(function (data) {
-            var event = new window.Event(data);
+            var event = EventFactory.create(data);
             _event = event;
             deferred.resolve(event);
         }).error(function (err) {
@@ -33,7 +33,7 @@ function EventService($http, $q, $rootScope) {
             }
 
             if (!!data) {
-                _broadcastEvent = new window.Event(data);
+                _broadcastEvent = EventFactory.create(data);
                 $rootScope.$broadcast(EVENT_BROADCAST_STARTED, _broadcastEvent)
             } else {
                 $rootScope.$broadcast(EVENT_BROADCAST_STOPPED)
@@ -53,7 +53,7 @@ function EventService($http, $q, $rootScope) {
             event.owner_id = data.id;
             $http.post('/event', event).
                 success(function (data, status, headers, config) {
-                    var broadcastEvent = new window.Event(data);
+                    var broadcastEvent = EventFactory.create(data);
                     $rootScope.$broadcast(EVENT_BROADCAST_STARTED, broadcastEvent);
                     _broadcastEvent = broadcastEvent;
                     deferred.resolve(broadcastEvent);
@@ -114,7 +114,7 @@ function EventService($http, $q, $rootScope) {
 }
 
 function EventServiceProvider() {
-    this.$get = function ($http, $q, $rootScope) {
-        return new EventService($http, $q, $rootScope);
+    this.$get = function ($http, $q, $rootScope, EventFactory) {
+        return new EventService($http, $q, $rootScope, EventFactory);
     };
 }

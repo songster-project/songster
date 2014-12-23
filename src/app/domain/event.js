@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('songster.domain.event')
-    .config(function () {
+    .factory('EventFactory', function () {
         window.Event = function Event(data) {
             this._id = data ? data._id : undefined;
             this.name = data ? data.name : undefined;
@@ -12,5 +12,11 @@ angular.module('songster.domain.event')
             this.votingEnabled = data ? data.votingEnabled : undefined;
             this.previewEnabled = data ? data.previewEnabled : undefined;
             this.suggestionEnabled = data ? data.suggestionEnabled : undefined;
+        };
+
+        return {
+            create: function(data) {
+                return new window.Event(data);
+            }
         };
     });
