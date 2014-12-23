@@ -198,14 +198,17 @@ describe('EventApi', function () {
         });
     });
 
-    it('should be able to delete the first past event',function(done){
+    it('should be able to delete the second past event',function(done){
         api.get('/event/past').end(function (err, res) {
             console.log("HEEERE")
-            var eventid = res.body[0]._id
+            var eventid = res.body[1]._id
             console.log("eventid!!!: " + eventid);
             api.delete('/event/notactive/'+eventid).end(function(err,res) {
                 console.log(err);
                expect(res.status).to.equal(200);
+                api.get('/event/past').end(function (err,res){
+                    expect(res.body[0]._id).to.not.equal(eventid);
+                })
                 done();
             });
         });

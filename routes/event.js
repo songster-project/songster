@@ -100,14 +100,15 @@ router.delete('/notactive/:id', passport.ensureAuthenticated, passport.ensureNot
         return;
     }
     //I can only delete my events, and only not active ones (i.e. ended ones)
-    db.Event.findOneAndUpdate({owner_id: req.user._id, end: {'$ne' : null}}, {$set: {deleted: true}}, function (err, event) {
+    db.Event.findOneAndUpdate({owner_id: req.user._id, _id: req.param('id'), end: {'$ne' : null}}, {$set: {deleted: true}}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
         }
+
         if (event) {
-            res.status(200).send(event);
+            res.status(200).send();
             return;
         }
         //event has not existed => 204 no content
