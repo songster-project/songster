@@ -35,6 +35,9 @@
                     <th>
                         Date
                     </th>
+                    <th>
+                        Delete Event
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -42,6 +45,9 @@
                     <td>{{event.name}}</td>
                     <td>{{event.description}}</td>
                     <td>{{event.start | date: shortDate}}</td>
+                    <td>
+                        <button ng-click="deleteEvent(event)" class="btn btn-primary">Delete</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -14,6 +14,10 @@ angular.module('songster.event')
             });
         };
 
+        $scope.deleteEvent = function (event) {
+            console.log("Deleting event: "+event._id);
+        }
+
     });
 
 
