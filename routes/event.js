@@ -14,16 +14,6 @@ router.get('/*', function(req, res, next){
     next();
 });
 
-router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
-    db.Event.find({owner_id: req.user._id}, function (err, playlists) {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Internal server error');
-            return;
-        }
-        res.send(playlists);
-    });
-});
 
 router.get('/active', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({end: null}, function (err, events) {
@@ -73,7 +63,7 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
-    db.Event.findOne({_id: req.param('id')}, function (err, event) {
+    db.Event.findOne({_id: req.param('id'),  deleted: {'$ne' : true}}, function (err, event) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');

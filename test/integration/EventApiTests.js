@@ -44,16 +44,6 @@ describe('EventApi', function () {
     //Logged In
     //#########################################################################################
 
-    it('should return no events in the start of the tests', function (done) {
-
-        api.get('/event').end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
-            expect(res.body).to.be.empty;
-            done();
-        });
-    });
-
     it('should return no events when i have not closed an event',function(done){
         api.get('/event/past').end(function (err, res) {
             console.log(res.text);
@@ -198,14 +188,17 @@ describe('EventApi', function () {
         });
     });
 
-    it('should be able to delete the second past event',function(done){
+    it('should be able to delete the second past event and get should not show it',function(done){
         api.get('/event/past').end(function (err, res) {
             var eventid = res.body[1]._id
             api.delete('/event/notactive/'+eventid).end(function(err,res) {
                expect(res.status).to.equal(200);
                 api.get('/event/past').end(function (err,res){
                     expect(res.body[0]._id).to.not.equal(eventid);
-                })
+                    api.get('/event/'+eventid).end(function (err,res){
+                        expect(res.status).to.equal(404);
+                    })
+                });
                 done();
             });
         });
