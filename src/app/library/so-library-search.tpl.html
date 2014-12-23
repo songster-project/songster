@@ -3,7 +3,7 @@
         <form>
             <div class="col-lg-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" ng-model="searchRequest.query" placeholder="Search for songs...">
+                    <input type="text" class="form-control" ng-model="searchRequest.q" placeholder="Search for songs...">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="submit" ng-click="search(searchRequest)">Search</button>
                     </span>
@@ -14,9 +14,13 @@
 
     <div class="row">
         <div class="col-lg-6">
-            <p>Total: {{total}}</p>
+            <p>Total: {{searchResult.total}}</p>
         </div>
     </div>
 
+    <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+
     <div class="row" ng-include="resultView"></div>
+
+    <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
 </div>

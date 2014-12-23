@@ -12,5 +12,10 @@ angular.module('songster.domain.searchResult')
             this.results = _.map(res.hits.hits, function (hit) {
                 return new domainClass(hit._source);
             });
-        }
+        };
+
+        window.SearchResult.prototype.update = function update(searchResult) {
+            this.total = searchResult.total;
+            this.results = searchResult.results;
+        };
     });
