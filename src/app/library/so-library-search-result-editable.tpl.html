@@ -9,7 +9,7 @@
                 <th>Year</th>
                 <th ng-if="hasActions()">Actions</th>
             </tr>
-            <tr ng:repeat="song in songs">
+            <tr ng:repeat="song in searchResult.results">
                 <td>
                     <img class="img-rounded small-albumart"
                          ng-src="{{song.getCoverSrc()}}">

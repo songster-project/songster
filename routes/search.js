@@ -11,44 +11,41 @@ var searchableFields = [
     "year"
 ];
 
+function addPagination(body, params) {
+    if(params.from !== undefined) {
+        body.from = params.from;
+    }
+    if(params.size !== undefined) {
+        body.size = params.size;
+    }
+}
+
 router.get('/song', passport.ensureAuthenticated, function (req, res) {
     var query = req.query.q;
-    var body = undefined;
-    if (query === undefined) {
-        // all query
-        body = {
-            "query": {
-                "filtered": {
-                    "filter": {
-                        "term": {
-                            "owner_id": req.user._id
-                        }
-                    }
-                }
-            }
-        };
-    } else {
+
+    var body = {};
+    if (query !== undefined) {
         // specific song search
         var escapedQuery = elasticSearchService.escape(query);
         var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
-        body = {
-            "query": {
-                "filtered": {
-                    "query": {
-                        "multi_match": {
-                            "query": parsedQuery,
-                            "fields": searchableFields
-                        }
-                    },
-                    "filter": {
-                        "term": {
-                            "owner_id": req.user._id
-                        }
-                    }
-                }
+        body["query"] = {
+            "query_string": {
+                "query": parsedQuery,
+                "fields": searchableFields,
+                "default_operator": "or"
             }
         };
     }
+
+    // user filter
+    body["filter"] = {
+        "term": {
+            "owner_id": req.user._id
+        }
+    };
+
+    // pagination
+    addPagination(body, req.query);
 
     elasticSearchService.getClient().search({
         index: 'songster',
@@ -81,28 +78,32 @@ router.get('/eventsongs/:eventid', passport.ensureAuthenticated, function (req, 
             return;
         }
 
+        var body = {};
+
         var escapedQuery = elasticSearchService.escape(query);
         var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
+        body["query"] = {
+            "query_string": {
+                "query": parsedQuery,
+                "fields": searchableFields,
+                "default_operator": "or"
+            }
+        };
+
+        // user filter
+        body["filter"] = {
+            "term": {
+                "owner_id": event.owner_id
+            }
+        };
+
+        // pagination
+        addPagination(body, req.query);
+
         elasticSearchService.getClient().search({
             index: 'songster',
             type: 'song',
-            body: {
-                "query": {
-                    "filtered": {
-                        "query": {
-                            "multi_match": {
-                                "query": parsedQuery,
-                                "fields": searchableFields
-                            }
-                        },
-                        "filter": {
-                            "term": {
-                                "owner_id": event.owner_id
-                            }
-                        }
-                    }
-                }
-            }
+            body: body
         }, function (error, response) {
             if (!error) {
                 res.send(response);

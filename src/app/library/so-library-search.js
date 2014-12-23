@@ -27,10 +27,17 @@ function SoLibrarySearchDirective() {
         },
         transclude: true,
         replace: true,
-        controller: ['$scope', '$http', '$library', function SoLibrarySearchDirective($scope, $http, $library) {
-            $scope.total = 0;
-            $scope.searchRequest = {};
-            $scope.songs = [];
+        controller: ['$scope', '$library', function SoLibrarySearchDirective($scope, $library) {
+            $scope.searchRequest = new window.SearchRequest();
+            $scope.searchResult = new window.SearchResult();
+
+            var url = '/search/';
+            if ($scope.eventId !== undefined) {
+                url += 'eventsongs/' + $scope.eventId;
+            } else {
+                url += 'song';
+            }
+            $scope.searchRequest.url = url;
 
             if (!!$scope.customView) {
                 $scope.resultView = $scope.customView;
@@ -38,22 +45,25 @@ function SoLibrarySearchDirective() {
                 $scope.resultView = 'library/so-library-search-result.tpl.html';
             }
 
-            function search(query) {
-                $library.search(query, $scope.eventId).then(function (searchResult) {
-                    $scope.total = searchResult.total;
-                    $scope.songs = searchResult.results;
+            function search(searchRequest) {
+                // if the search query is empty, we load all songs
+                if(_.isEmpty(searchRequest.q)) {
+                    searchRequest.q = undefined;
+                }
+                $library.search(searchRequest, window.Song).then(function (searchResult) {
+                    $scope.searchResult.update(searchResult);
                 });
             }
 
             $scope.search = function (searchRequest) {
-                search(searchRequest.query);
+                search(searchRequest);
             };
 
             $scope.hasActions = function() {
                 return !_.isEmpty($scope.actions);
             };
 
-            search();
+            search($scope.searchRequest);
         }],
         templateUrl: 'library/so-library-search.tpl.html'
     };

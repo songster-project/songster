@@ -1,0 +1,13 @@
+<div class="pagination-centered">
+    <ul class="pagination" ng-if="pages.length > 1">
+        <li ng-class="{'disabled': searchResult.currentPage === 1}">
+            <a href="" ng-click="goToPage(searchResult.currentPage - 1)"><i class="fa fa-angle-left"></i></a>
+        </li>
+        <li ng-repeat="page in pages" ng-class="{'active' : page.nr === searchResult.currentPage}">
+            <a href="" ng-click="goToPage(page.nr)">{{page.nr}}</a>
+        </li>
+        <li ng-class="{'disabled': searchResult.currentPage === lastPage}">
+            <a href="" ng-click="goToPage(searchResult.currentPage + 1)"><i class="fa fa-angle-right"></i></a>
+        </li>
+    </ul>
+</div>

@@ -1,9 +1,12 @@
+angular.module('songster.config', []);
+
 angular.module('ngBoilerplate', [
     'templates-app',
     'templates-common',
     'ngBoilerplate.home',
     'ngBoilerplate.about',
     'ngBoilerplate.upload',
+    'songster.config',
     'songster.domain',
     'songster.authentication',
     'songster.menu',

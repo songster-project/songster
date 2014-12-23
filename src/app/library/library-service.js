@@ -5,27 +5,12 @@ angular
 
 function Library($http, $q) {
 
-    this.search = function search(query, eventId) {
+    this.search = function search(searchRequest, modelClass) {
         var deferred = $q.defer();
-
-        var url = '/search/';
-        if (eventId !== undefined) {
-            url += 'eventsongs/' + eventId;
-            url += '?q=' + query;
-            if (!query) {
-                // we do not query if there is no query for event songs
-                deferred.reject();
-                return deferred.promise;
-            }
-        } else {
-            url += 'song';
-            if (!!query) {
-                url += '?q=' + query;
-            }
-        }
-        $http.get(url).success(function (res) {
+        var request = searchRequest.generateRequest();
+        $http.get(request).success(function (res) {
             var searchResult = new window.SearchResult();
-            searchResult.fillWithResponse(res, window.Song);
+            searchResult.fillWithResponse(res, modelClass);
             deferred.resolve(searchResult);
         }).error(function(err) {
             deferred.reject(err);
