@@ -83,7 +83,8 @@ var eventSchema = new Schema({
     end: {type: Date, default: null},
     votingEnabled: Boolean,
     previewEnabled: Boolean,
-    suggestionEnabled: Boolean
+    suggestionEnabled: Boolean,
+    deleted: {type: Boolean, default: false}
 }, {collection: 'event'});
 
 var voteSchema = new Schema({
