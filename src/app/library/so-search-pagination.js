@@ -11,7 +11,7 @@ angular
                 $scope.searchResult.currentPage = 1;
                 $scope.pages = [];
                 $scope.$watch('searchResult.total', function(total) {
-                    $scope.lastPage = total / CONFIG.resultsPerPage;
+                    $scope.lastPage = Math.ceil(total / CONFIG.resultsPerPage);
                     var pages = [];
                     for(var i=1; i<=$scope.lastPage; i++) {
                         pages.push({

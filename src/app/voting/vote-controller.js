@@ -1,6 +1,6 @@
 angular.module('songster.voting')
 
-    .controller('VoteController', function VoteCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $player) {
+    .controller('VoteController', function VoteCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $player, SongFactory) {
         $scope.event = $event.getEvent();
         $scope.actions = [];
 
@@ -15,7 +15,7 @@ angular.module('songster.voting')
                 'fn': function(song) {
                     votingService.getSongObjectFromVoteSong(song).
                         then(function (data){
-                            var song = new window.Song(data);
+                            var song = SongFactory.create(data);
                             $player.add(song);
                             // TODO set voting state to in queue or similar
                         }, function (err) {

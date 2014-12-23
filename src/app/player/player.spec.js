@@ -1,8 +1,11 @@
-/*describe('player', function () {
+describe('player', function () {
     var $player;
     var $playerProvider;
+    var SongFactory;
 
     beforeEach(function () {
+        module('songster.domain');
+
         module('songster.player.services', function (_$playerProvider_) {
             $playerProvider = _$playerProvider_;
         });
@@ -14,50 +17,56 @@
         expect($playerProvider).toBeDefined();
     });
 
-    beforeEach(inject(function (_$player_) {
+    beforeEach(inject(function (_$player_, _SongFactory_) {
         $player = _$player_;
         expect($player).toBeDefined();
+        SongFactory = _SongFactory_;
+        expect(SongFactory).toBeDefined();
     }));
 
     describe('queue', function () {
 
-        var queueTestData = [
-            new window.Song({
-                "_id": "547f8c17c832ca870272c914",
-                "addedDate": "2014-12-03T22:17:53.494Z",
-                "album": "The Black Market",
-                "artist": "Rise Against",
-                "cover": "547f8c17fadc7287023a15b5",
-                "file_id": "547f8c11fadc7287023a1576",
-                "owner_id": "547f3e6bc2683a1707365155",
-                "title": "The Black Market",
-                "year": "2014"
-            }),
-            new window.Song({
-                "addedDate": "2014-12-03T22:17:53.486Z",
-                "title": "Tragedy + Time",
-                "album": "The Black Market",
-                "artist": "Rise Against",
-                "year": "2014",
-                "owner_id": "547f3e6bc2683a1707365155",
-                "cover": "547f8c17fadc7287023a15b6",
-                "file_id": "547f8c11fadc7287023a1575",
-                "_id": "547f8c17c832ca870272c915"
-            }),
-            new window.Song({
-                "_id": "547f8c1ac832ca870272c916",
-                "addedDate": "2014-12-03T22:17:51.903Z",
-                "album": "The Black Market",
-                "artist": "Rise Against",
-                "cover": "547f8c15fadc7287023a15b3",
-                "file_id": "547f8c0ffadc7287023a155a",
-                "owner_id": "547f3e6bc2683a1707365155",
-                "title": "The Great Die-Off",
-                "year": "2014"
-            })
-        ];
+        var queueTestData;
 
         beforeEach(function () {
+            queueTestData = [
+                SongFactory.create({
+                    "_id": "547f8c17c832ca870272c914",
+                    "addedDate": "2014-12-03T22:17:53.494Z",
+                    "album": "The Black Market",
+                    "artist": "Rise Against",
+                    "cover": "547f8c17fadc7287023a15b5",
+                    "file_id": "547f8c11fadc7287023a1576",
+                    "owner_id": "547f3e6bc2683a1707365155",
+                    "title": "The Black Market",
+                    "year": "2014"
+                }),
+                SongFactory.create({
+                    "addedDate": "2014-12-03T22:17:53.486Z",
+                    "title": "Tragedy + Time",
+                    "album": "The Black Market",
+                    "artist": "Rise Against",
+                    "year": "2014",
+                    "owner_id": "547f3e6bc2683a1707365155",
+                    "cover": "547f8c17fadc7287023a15b6",
+                    "file_id": "547f8c11fadc7287023a1575",
+                    "_id": "547f8c17c832ca870272c915"
+                }),
+                SongFactory.create({
+                    "_id": "547f8c1ac832ca870272c916",
+                    "addedDate": "2014-12-03T22:17:51.903Z",
+                    "album": "The Black Market",
+                    "artist": "Rise Against",
+                    "cover": "547f8c15fadc7287023a15b3",
+                    "file_id": "547f8c0ffadc7287023a155a",
+                    "owner_id": "547f3e6bc2683a1707365155",
+                    "title": "The Great Die-Off",
+                    "year": "2014"
+                })
+            ];
+        });
+
+        it('should be defined', function () {
             expect($player.getQueue()).toBeDefined();
         });
 
@@ -197,4 +206,4 @@
             });
         });
     });
-}); */
+});

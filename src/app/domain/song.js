@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('songster.domain.song')
-    .config(function() {
+    .factory('SongFactory', function() {
         window.Song = function Song(data) {
             // super call
             //window.PersistentEntity.call(this, data);
@@ -39,5 +39,11 @@ angular.module('songster.domain.song')
 
         window.Song.prototype.getRawSrc = function() {
             return '/song/' + this.file_id + '/raw';
+        };
+
+        return {
+            create: function(data) {
+                return new window.Song(data);
+            }
         };
     });

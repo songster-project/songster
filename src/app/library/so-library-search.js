@@ -27,9 +27,11 @@ function SoLibrarySearchDirective() {
         },
         transclude: true,
         replace: true,
-        controller: ['$scope', '$library', function SoLibrarySearchDirective($scope, $library) {
-            $scope.searchRequest = new window.SearchRequest();
-            $scope.searchResult = new window.SearchResult();
+        controller: function SoLibrarySearchDirective($scope, $library, SongFactory, SearchRequestFactory, SearchResultFactory) {
+            $scope.searchRequest = SearchRequestFactory.create();
+            $scope.searchResult = SearchResultFactory.create();
+
+            var lastSearchQuery = undefined;
 
             var url = '/search/';
             if ($scope.eventId !== undefined) {
@@ -50,10 +52,19 @@ function SoLibrarySearchDirective() {
                 if(_.isEmpty(searchRequest.q)) {
                     searchRequest.q = undefined;
                 }
-                $library.search(searchRequest, window.Song).then(function (searchResult) {
+                lastSearchQuery = searchRequest.q;
+                $library.search(searchRequest, SongFactory).then(function (searchResult) {
                     $scope.searchResult.update(searchResult);
                 });
             }
+
+            $scope.doSearch = function (searchRequest) {
+                if(searchRequest.q !== lastSearchQuery) {
+                    $scope.searchRequest.setPage(1);
+                    $scope.searchResult.currentPage = 1;
+                }
+                search(searchRequest);
+            };
 
             $scope.search = function (searchRequest) {
                 search(searchRequest);
@@ -64,7 +75,7 @@ function SoLibrarySearchDirective() {
             };
 
             search($scope.searchRequest);
-        }],
+        },
         templateUrl: 'library/so-library-search.tpl.html'
     };
 }

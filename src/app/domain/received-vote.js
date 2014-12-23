@@ -1,10 +1,15 @@
 'use strict';
 
 angular.module('songster.domain.receivedVote')
-    .config(function() {
+    .factory('ReceivedVoteFactory', function(SongFactory) {
         window.ReceivedVote = function ReceivedVote(data) {
-            this.song = data ? new window.Song(data._id) : new window.Song();
+            this.song = data ? SongFactory.create(data._id) : SongFactory.create();
             this.value = data ? data.value : undefined;
         };
 
+        return {
+            create: function(data) {
+                return new window.ReceivedVote(data);
+            }
+        };
     });
