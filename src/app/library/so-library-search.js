@@ -31,6 +31,8 @@ function SoLibrarySearchDirective() {
             $scope.searchRequest = new window.SearchRequest();
             $scope.searchResult = new window.SearchResult();
 
+            var lastSearchQuery = undefined;
+
             var url = '/search/';
             if ($scope.eventId !== undefined) {
                 url += 'eventsongs/' + $scope.eventId;
@@ -51,9 +53,18 @@ function SoLibrarySearchDirective() {
                     searchRequest.q = undefined;
                 }
                 $library.search(searchRequest, window.Song).then(function (searchResult) {
+                lastSearchQuery = searchRequest.q;
                     $scope.searchResult.update(searchResult);
                 });
             }
+
+            $scope.doSearch = function (searchRequest) {
+                if(searchRequest.q !== lastSearchQuery) {
+                    $scope.searchRequest.setPage(1);
+                    $scope.searchResult.currentPage = 1;
+                }
+                search(searchRequest);
+            };
 
             $scope.search = function (searchRequest) {
                 search(searchRequest);
