@@ -44,16 +44,6 @@ describe('EventApi', function () {
     //Logged In
     //#########################################################################################
 
-    it('should return no events in the start of the tests', function (done) {
-
-        api.get('/event').end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
-            expect(res.body).to.be.empty;
-            done();
-        });
-    });
-
     it('should return no events when i have not closed an event',function(done){
         api.get('/event/past').end(function (err, res) {
             console.log(res.text);
@@ -135,12 +125,14 @@ describe('EventApi', function () {
         });
     });
 
-    it('should not return the running event when quering a past event',function(done){
-        api.get('/event/past').end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
-            expect(res.body).to.have.length(0);
-            done();
+    it('should return 204 when i want to delete the current active event',function(done){
+        api.get('/event/current').end(function (err, res) {
+
+            var id = res.body._id;
+            api.delete('/event/notactive/'+id).end(function (err,res) {
+                expect(res.status).to.equal(204);
+                done();
+            });
         });
     });
 
@@ -152,6 +144,8 @@ describe('EventApi', function () {
         });
     });
 
+
+
     it('should return the closed event as a past event',function(done){
         api.get('/event/past').end(function (err, res) {
             console.log(res.text);
@@ -161,15 +155,6 @@ describe('EventApi', function () {
         });
     });
 
-    it('should return the closed event as a past event',function(done){
-        api.get('/event/past').end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
-            expect(res.body).to.have.length(1);
-            expect(res.body[0]).to.contain.key('start');
-            done();
-        });
-    });
 
 
     it('should return two events after start and end a next one',function(done){
@@ -196,10 +181,33 @@ describe('EventApi', function () {
 
     it('should return the events descending to their start date',function(done){
         api.get('/event/past').end(function (err, res) {
-            console.log(res.text);
             expect(err).to.not.exist;
             expect(res.body).to.have.length(2);
             expect(res.body[0].start).to.be.greaterThan(res.body[1].start);
+            done();
+        });
+    });
+
+    it('should be able to delete the second past event and get should not show it',function(done){
+        api.get('/event/past').end(function (err, res) {
+            var eventid = res.body[1]._id
+            api.delete('/event/notactive/'+eventid).end(function(err,res) {
+               expect(res.status).to.equal(200);
+                api.get('/event/past').end(function (err,res){
+                    expect(res.body[0]._id).to.not.equal(eventid);
+                    api.get('/event/'+eventid).end(function (err,res){
+                        expect(res.status).to.equal(404);
+                    })
+                });
+                done();
+            });
+        });
+    });
+
+    it('should now return only one past event',function(done){
+        api.get('/event/past').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(1);
             done();
         });
     });

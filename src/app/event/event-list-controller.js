@@ -13,7 +13,6 @@ angular.module('songster.event')
                 id: event._id
             });
         };
-
     });
 
 

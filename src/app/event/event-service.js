@@ -65,6 +65,18 @@ function EventService($http, $q, $rootScope) {
         return deferred.promise;
     };
 
+    this.deleteEvent = function (event) {
+        var deferred = $q.defer();
+        $http.delete('/event/notactive/' + event._id).success(function (data, status, headers, config) {
+            deferred.resolve(data);
+        })
+            .error(function (data, status, headers, config) {
+                deferred.reject(data);
+            });
+
+        return deferred.promise;
+    };
+
     this.stopBroadcast = function () {
         var deferred = $q.defer();
         $http.put('/event/current/end', {}).
