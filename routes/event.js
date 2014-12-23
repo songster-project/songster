@@ -52,7 +52,7 @@ router.get('/current', passport.ensureAuthenticated, passport.ensureNotAnonymous
 });
 
 router.get('/past', passport.ensureAuthenticated,function(req,res){
-    db.Event.find({owner_id: req.user._id, end: {'$ne' : null}},null,{sort: {start: -1}}, function (err, events) {
+    db.Event.find({owner_id: req.user._id, end: {'$ne' : null}, deleted: {'$ne' : true}},null,{sort: {start: -1}}, function (err, events) {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
@@ -91,8 +91,29 @@ router.get('/:id', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-
-
+//i added the notactive to make it clear to the api that you can only delete notactive events
+router.delete('/notactive/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+    req.checkParams('id', 'ID is not an ID').isMongoID();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    //I can only delete my events, and only not active ones (i.e. ended ones)
+    db.Event.findOneAndUpdate({owner_id: req.user._id, end: {'$ne' : null}}, {$set: {deleted: true}}, function (err, event) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        if (event) {
+            res.status(200).send(event);
+            return;
+        }
+        //event has not existed => 204 no content
+        res.status(204).send();
+    });
+});
 
 //For when you want to end the current event
 router.put('/current/end', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {

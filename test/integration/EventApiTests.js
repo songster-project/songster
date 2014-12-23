@@ -135,12 +135,14 @@ describe('EventApi', function () {
         });
     });
 
-    it('should not return the running event when quering a past event',function(done){
-        api.get('/event/past').end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
-            expect(res.body).to.have.length(0);
-            done();
+    it('should return 204 when i want to delete the current active event',function(done){
+        api.get('/event/current').end(function (err, res) {
+
+            var id = res.body._id;
+            api.delete('/event/notactive/'+id).end(function (err,res) {
+                expect(res.status).to.equal(204);
+                done();
+            });
         });
     });
 
@@ -152,6 +154,8 @@ describe('EventApi', function () {
         });
     });
 
+
+
     it('should return the closed event as a past event',function(done){
         api.get('/event/past').end(function (err, res) {
             console.log(res.text);
@@ -161,15 +165,6 @@ describe('EventApi', function () {
         });
     });
 
-    it('should return the closed event as a past event',function(done){
-        api.get('/event/past').end(function (err, res) {
-            console.log(res.text);
-            expect(err).to.not.exist;
-            expect(res.body).to.have.length(1);
-            expect(res.body[0]).to.contain.key('start');
-            done();
-        });
-    });
 
 
     it('should return two events after start and end a next one',function(done){
@@ -196,10 +191,30 @@ describe('EventApi', function () {
 
     it('should return the events descending to their start date',function(done){
         api.get('/event/past').end(function (err, res) {
-            console.log(res.text);
             expect(err).to.not.exist;
             expect(res.body).to.have.length(2);
             expect(res.body[0].start).to.be.greaterThan(res.body[1].start);
+            done();
+        });
+    });
+
+    it('should be able to delete the first past event',function(done){
+        api.get('/event/past').end(function (err, res) {
+            console.log("HEEERE")
+            var eventid = res.body[0]._id
+            console.log("eventid!!!: " + eventid);
+            api.delete('/event/notactive/'+eventid).end(function(err,res) {
+                console.log(err);
+               expect(res.status).to.equal(200);
+                done();
+            });
+        });
+    });
+
+    it('should now return only one past event',function(done){
+        api.get('/event/past').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.have.length(1);
             done();
         });
     });
