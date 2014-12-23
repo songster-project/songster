@@ -15,6 +15,15 @@ angular.module('songster.event')
             return 'http://' + url + '/voting/' + eventId;
         };
 
+        $scope.deleteEvent = function (event) {
+            console.log("Ctrl: Deleting event: "+event._id);
+            $event.deleteEvent(event).then(function () {
+                $state.go('event');
+            });
+
+        };
+
+
     });
 
 
