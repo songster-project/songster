@@ -5,11 +5,15 @@ angular.module('songster.domain.searchRequest')
         window.SearchRequest = function SearchRequest(data) {
             this.url = data ? data.url : undefined;
             this.q = data ? data.q : undefined;
-            this.from = data ? data.from : 0;
-            this.size = data ? data.size : CONFIG.resultsPerPage;
+            this.from = data && data.from ? data.from : 0;
+            this.size = data && data.size ? data.size : CONFIG.resultsPerPage;
         };
 
         window.SearchRequest.prototype.generateRequest = function generateRequest() {
+            if (this.url === undefined) {
+                throw 'url must be defined';
+            }
+
             var params = [];
             if(this.q !== undefined) {
                 params.push('q=' + this.q);
@@ -30,7 +34,16 @@ angular.module('songster.domain.searchRequest')
         };
 
         window.SearchRequest.prototype.setPage = function setPage(page) {
-            this.from = CONFIG.resultsPerPage * (page - 1);
+            if (page === undefined) {
+                throw 'page must be defined';
+            }
+            if (page < 1) {
+                throw 'page must greater or equal to 1';
+            }
+            if (this.size === undefined) {
+                throw 'size must be defined';
+            }
+            this.from = this.size * (page - 1);
         };
 
         return {
