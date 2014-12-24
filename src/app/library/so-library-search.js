@@ -52,19 +52,17 @@ function SoLibrarySearchDirective() {
                 if(_.isEmpty(searchRequest.q)) {
                     searchRequest.q = undefined;
                 }
-                lastSearchQuery = searchRequest.q;
+                if(searchRequest.q !== lastSearchQuery) {
+                    $scope.searchRequest.setPage(1);
+                }
                 $library.search(searchRequest, SongFactory).then(function (searchResult) {
+                    if(searchRequest.q !== lastSearchQuery) {
+                        $scope.searchResult.currentPage = 1;
+                    }
+                    lastSearchQuery = searchRequest.q;
                     $scope.searchResult.update(searchResult);
                 });
             }
-
-            $scope.doSearch = function (searchRequest) {
-                if(searchRequest.q !== lastSearchQuery) {
-                    $scope.searchRequest.setPage(1);
-                    $scope.searchResult.currentPage = 1;
-                }
-                search(searchRequest);
-            };
 
             $scope.search = function (searchRequest) {
                 search(searchRequest);
