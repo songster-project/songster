@@ -58,8 +58,6 @@ router.delete('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous,
 
 router.put('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     req.checkBody('_id', '_id of playlist not specified').notEmpty();
-    req.checkBody('owner_id', 'id of owner not set').notEmpty();
-    req.checkBody('owner_id', 'id of owner is not of the logged in one').equals(req.user._id);
     req.checkBody('name', 'Name is empty').notEmpty();
     var errors = req.validationErrors();
     if (errors) {
@@ -93,8 +91,6 @@ router.put('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, funct
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     //Maybe this does not need to be (because it is done by passport, and passport should authenticate
     req.checkBody('name', 'Name is empty').notEmpty();
-    req.checkBody('owner_id', 'id of owner not set').notEmpty();
-    req.checkBody('owner_id', 'id of owner is not of the logged in one').equals(req.user._id);
     var errors = req.validationErrors();
     if (errors) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
@@ -103,7 +99,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
 
     var playlist = db.Playlist();
     playlist.name = req.body.name;
-    playlist.song = req.body.song;
+    playlist.songs = req.body.songs;
     playlist.owner_id = req.user._id;
 
     playlist.save(function (err, playlist) {
