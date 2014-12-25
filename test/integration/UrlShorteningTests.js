@@ -49,7 +49,7 @@ describe('UrlShortening', function () {
             expect(res.status).to.equal(400);
             //Check exception message
             expect(res.text.indexOf('param: \'q\'')).to.be.greaterThan(-1);
-            expect(res.text.indexOf('no url to shorten defined in the q get parameter'));
+            expect(res.text.indexOf('no url to shorten defined in the q get parameter')).to.be.greaterThan(-1);;
             done();
         });
     });
@@ -59,7 +59,8 @@ describe('UrlShortening', function () {
         api.get('/event/shorten?q=notAnUri').end(function (err, res) {
             console.log(res.text);
             expect(res.status).to.equal(400);
-            expect(res.text).to.equal('Error: INVALID_URI');
+            expect(res.text.indexOf('param: \'q\'')).to.be.greaterThan(-1);
+            expect(res.text.indexOf('Parameter is not a valid url')).to.be.greaterThan(-1);;
             done();
         });
     });

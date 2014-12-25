@@ -24,6 +24,7 @@ router.get('/*', function(req, res, next){
 //But not really crucial
 router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,function(req,res){
     req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
+    req.checkQuery('q',  'Parameter is not a valid url').isValidUrl();
     var errors = req.validationErrors();
     if (errors) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
