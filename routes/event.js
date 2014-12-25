@@ -18,6 +18,10 @@ router.get('/*', function(req, res, next){
 });
 
 //i put it here because we have no "general" stuff for utlitiy on the server
+//also - the client controls how the event-link looks like (currently does ....)
+//so therefor we need this shortener as a seperate route
+//Note: in additional steps we could store this one here in the event and update it
+//But not really crucial
 router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,function(req,res){
     req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
     var errors = req.validationErrors();
@@ -31,7 +35,6 @@ router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,
             res.status(500).send('Internal server error');
             return;
         }
-        console.log(resp);
         if(resp.status_code == 500) {
             res.status(400).send("Error: "+resp.status_txt);
             return;
