@@ -37,13 +37,13 @@
         <tr>
             <td>Short Link:</td>
             <td>
-                {{shortLink}}
+                <a href="{{shortLink}}">{{shortLink}}</a>
             </td>
         </tr>
         <tr>
             <td>QR-Code:</td>
             <td>
-                <img src="http://localhost:3000/event/qr?q=http://test.com" />
+                <img src={{qrLink}}/>
             </td>
         </tr>
     </table>
