@@ -6,6 +6,9 @@ var router = express.Router();
 var util = require('util');
 var Event = db.Event;
 var songwebsocket = require('../backend/websockets/event_songs');
+var urlshortener = require('../config/urlshortener');
+var shortener = urlshortener.shortener;
+
 
 //PS: avoids 304 in this module
 //Problem occurs when i want to request the /past, and it doesn't change
@@ -14,6 +17,32 @@ router.get('/*', function(req, res, next){
     next();
 });
 
+//i put it here because we have no "general" stuff for utlitiy on the server
+//also - the client controls how the event-link looks like (currently does ....)
+//so therefor we need this shortener as a seperate route
+//Note: in additional steps we could store this one here in the event and update it
+//But not really crucial
+router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,function(req,res){
+    req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
+    req.checkQuery('q',  'Parameter is not a valid url').isValidUrl();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    shortener.shorten(req.query.q,function(err,resp){
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+        if(resp.status_code == 500) {
+            res.status(400).send("Error: "+resp.status_txt);
+            return;
+        }
+        res.send({'url': resp.data.url});
+    });
+});
 
 router.get('/active', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
     db.Event.find({end: null}, function (err, events) {

@@ -17,3 +17,6 @@ if (process.env.MONGODB_USERNAME != null && process.env.MONGODB_PASSWORD != null
 }
 
 exports.cookie_secret = 'changeme';
+
+exports.bitly_user = 'psaeuerl';
+exports.bitly_apikey = 'R_04c3f9a1e4c24fb28e876889c6fc31bc';
