@@ -31,7 +31,8 @@
     "album-art": "~1.0.2",
     "request": "~2.48.0",
     "elasticsearch": "~2.4.3",
-    "bitly": "~1.2.5"
+    "bitly": "~1.2.5",
+    "valid-url": "~1.0.9"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

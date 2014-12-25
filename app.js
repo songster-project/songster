@@ -9,7 +9,7 @@ var passportinit = require('./config/passport');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var expressValidator = require('express-validator');
-
+var validUrl = require('valid-url');
 var app = express();
 
 module.exports = app;
@@ -53,6 +53,9 @@ app.use(expressValidator(
             },
             isInArray: function (value, array) {
                 return array.indexOf(value) >= 0;
+            },
+            isValidUrl: function (value) {
+                return validUrl.isUri(value);
             }
         }
     }
