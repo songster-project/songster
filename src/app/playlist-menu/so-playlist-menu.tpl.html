@@ -1,0 +1,43 @@
+<hr/>
+
+<div class="playlist-header">
+  <span>Playlists</span>
+  <a ng-click="showAddDialog()">
+    <i id="playlist-add-button" class="fa fa-plus-circle pull-right"></i>
+  </a>
+</div>
+
+<form ng-submit="addPlaylist(playlistName)">
+  <div ng-if="addClicked" style="text-align: center !important" class="editable-controls form-group">
+    <input type="text"
+           class="editable-has-buttons editable-input form-control ng-pristine"
+           ng-model="playlistName"
+           style="margin-left: 20px !important"
+           placeholder="Name of the playlist">
+
+    <div style="margin-top: 5px">
+  <span class="editable-buttons">
+  <button type="submit" class="btn btn-primary" ng-click="addPlaylist(playlistName)">
+    <i class="fa fa-check"></i>
+  </button>
+  <button type="button" class="btn btn-default" ng-click="cancelAddPlaylist()">
+    <i class="fa fa-times"></i>
+  </button>
+  </span>
+    </div>
+  </div>
+</form>
+
+
+<ul class="list-unstyled">
+  <li ng-repeat="playlist in playlists | orderBy:'name'" class="playlist-item">
+    <div drop="onDrop($data, '{{ playlist._id }}')" drop-effect="copy" drop-accept="'json/song'" drag-over-class="drag-over-accept" drag-over="onDragOver($event, '{{ playlist._id }}')">
+      <a ui-sref="playlist({playlistID: '{{playlist._id}}'})">
+        {{ playlist.name }}
+      </a>
+      <a class="playlist-delete-anchor" ng-click="deletePlaylist(playlist._id)">
+        <i class="fa fa-trash-o pull-right playlist-delete-icon"></i>
+      </a>
+    </div>
+  </li>
+</ul>
