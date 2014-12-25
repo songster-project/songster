@@ -8,6 +8,8 @@ var Event = db.Event;
 var songwebsocket = require('../backend/websockets/event_songs');
 var urlshortener = require('../config/urlshortener');
 var shortener = urlshortener.shortener;
+var qr = require('qr-image');
+
 
 
 //PS: avoids 304 in this module
@@ -42,6 +44,22 @@ router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,
         }
         res.send({'url': resp.data.url});
     });
+});
+
+router.get('/image',function(req,res){
+    console.log("image :D");
+    /*req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
+    req.checkQuery('q',  'Parameter is not a valid url').isValidUrl();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }*/
+    //Note: copied from example at: https://github.com/alexeyten/qr-image/blob/master/examples/qr-server.js
+    var img = qr.image('I love QR!', { type: 'svg' });
+    //qr_svg.pipe(require('fs').createWriteStream('i_love_qr.svg'));
+    res.writeHead(200, {'Content-Type': 'image/png'});
+    img.pipe(res);
 });
 
 router.get('/active', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
