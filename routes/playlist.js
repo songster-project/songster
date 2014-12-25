@@ -114,4 +114,36 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
 
 });
 
+// this returns all songs of the playlist - i.e. not only the IDs
+router.get('/:id/songs', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+    req.checkParams('id', 'ID is not an ID').isMongoID();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    db.Playlist.find({_id: req.param('id'), owner_id: req.user._id}, function (err, playlist) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if (playlist && playlist.length > 0) {
+            var songIDs = playlist[0].songs;
+            db.Song.find({'_id': { $in: songIDs }, owner_id: req.user._id }, function (err, songs) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+                    return;
+                } else {
+                    res.send(songs);
+                }
+            });
+        } else {
+            res.send({});
+        }
+    });
+});
+
 module.exports = router;
