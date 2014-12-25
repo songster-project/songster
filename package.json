@@ -30,7 +30,8 @@
     "formidable": "~1.0",
     "album-art": "~1.0.2",
     "request": "~2.48.0",
-    "elasticsearch": "~2.4.3"
+    "elasticsearch": "~2.4.3",
+    "bitly": "~1.2.5"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
