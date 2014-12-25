@@ -24,13 +24,17 @@ angular.module('songster.event')
 
         $scope.generateShortLink = function (event) {
             var link = $scope.generatePublicLink(event);
-            $http.get('/event/shorten?q='+link)
-                .success(function (data) {
-                    return data;
-                });
+            //Note: Bit.Ly does not support generation of Links for localhost only
+            //Therefor (for our local-development) i remove localhost with localhost.test
+            console.log($location.host());
+            if($location.host() === 'localhost')
+            {
+                link = link.replace('localhost','localhost.test');
+            }
+           return link;
         };
 
-        $http.get('/event/shorten?q='+$scope.generatePublicLink($scope.event))
+        $http.get('/event/shorten?q='+$scope.generateShortLink($scope.event))
             .success(function (data) {
                 return $scope.shortLink = data.url;
             });
