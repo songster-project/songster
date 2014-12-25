@@ -2,6 +2,7 @@
     <div class="col-lg-12">
         <table class="table table-striped">
             <tr>
+                <th> </th><!-- the dragable element -->
                 <th>Cover</th>
                 <th>Title</th>
                 <th>Artist</th>
@@ -10,6 +11,14 @@
                 <th ng-if="hasActions()">Actions</th>
             </tr>
             <tr ng:repeat="song in searchResult.results">
+                <td>
+                  <div draggable="true" effect-allowed="copy" draggable-type="song" draggable-data="{{ song }}">
+                    <span sv-handle="" class="draggable-icon">
+                      <i class="fa fa-ellipsis-v"></i>
+                      <i class="fa fa-ellipsis-v"></i>
+                    </span>
+                  </div>
+                </td>
                 <td>
                     <img class="img-rounded small-albumart"
                          ng-src="{{song.getCoverSrc()}}">
