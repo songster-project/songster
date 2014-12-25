@@ -58,7 +58,7 @@ router.get('/image',function(req,res){
     //Note: copied from example at: https://github.com/alexeyten/qr-image/blob/master/examples/qr-server.js
     var img = qr.image('I love QR!', { type: 'svg' });
     //qr_svg.pipe(require('fs').createWriteStream('i_love_qr.svg'));
-    res.writeHead(200, {'Content-Type': 'image/png'});
+    res.writeHead(200, {'Content-Type': 'image/svg'});
     img.pipe(res);
 });
 
