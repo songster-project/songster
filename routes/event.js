@@ -18,7 +18,7 @@ router.get('/*', function(req, res, next){
 });
 
 //i put it here because we have no "general" stuff for utlitiy on the server
-router.get('/shorten',function(req,res){
+router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,function(req,res){
     req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
     var errors = req.validationErrors();
     if (errors) {
