@@ -8,5 +8,6 @@ angular.module('songster.library', [
         'songster.menu',
         'songster.player.services',
         'angular-sortable-view',
-        'xeditable'
+        'xeditable',
+        'draganddrop'
     ]);
