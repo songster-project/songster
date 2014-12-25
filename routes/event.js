@@ -29,9 +29,11 @@ router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,
     req.checkQuery('q',  'Parameter is not a valid url').isValidUrl();
     var errors = req.validationErrors();
     if (errors) {
+        console.log( util.inspect(errors));
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
+    console.log("shortening for:"+req.query.q);
     shortener.shorten(req.query.q,function(err,resp){
         if (err) {
             console.log(err);
@@ -39,6 +41,7 @@ router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,
             return;
         }
         if(resp.status_code == 500) {
+            console.log(resp);
             res.status(400).send("Error: "+resp.status_txt);
             return;
         }
@@ -46,18 +49,16 @@ router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,
     });
 });
 
-router.get('/image',function(req,res){
-    console.log("image :D");
-    /*req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
+router.get('/qr',function(req,res){
+    req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
     req.checkQuery('q',  'Parameter is not a valid url').isValidUrl();
     var errors = req.validationErrors();
     if (errors) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
-    }*/
+    }
     //Note: copied from example at: https://github.com/alexeyten/qr-image/blob/master/examples/qr-server.js
-    var img = qr.image('I love QR!', { type: 'svg' });
-    //qr_svg.pipe(require('fs').createWriteStream('i_love_qr.svg'));
+    var img = qr.image(req.query.q, { type: 'svg' });
     res.writeHead(200, {'Content-Type': 'image/svg+xml'});
     img.pipe(res);
 });

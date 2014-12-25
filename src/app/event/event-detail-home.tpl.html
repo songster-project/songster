@@ -8,10 +8,6 @@
             <td>Description</td>
             <td>{{event.description}}</td>
         </tr>
-        <tr>
-            <td>Public link</td>
-            <td><a href="{{generatePublicLink(event)}}">{{generatePublicLink(event)}}</a></td>
-        </tr>
         <!--<tr>-->
             <!--<td>Voting</td>-->
             <!--<td>{{event.votingEnabled ? 'enabled' : 'disabled'}}</td>-->
@@ -35,10 +31,20 @@
             </td>
         </tr>
         <tr>
+            <td>Public link</td>
+            <td><a href="{{generatePublicLink(event)}}">{{generatePublicLink(event)}}</a></td>
+        </tr>
+        <tr>
+            <td>Short Link:</td>
+            <td>
+                {{shortLink}}
+            </td>
+        </tr>
+        <tr>
             <td>QR-Code:</td>
             <td>
-                <img src="http://localhost:3000/event/image" />
+                <img src="http://localhost:3000/event/qr?q=http://test.com" />
             </td>
-        </tr>       
+        </tr>
     </table>
 </div>
