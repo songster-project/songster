@@ -8,7 +8,7 @@ function SoEventSongsDirective() {
         scope: {
             eventId: "="
         },
-        controller: function EventCtrl($scope, $websocket, $event) {
+        controller: function EventCtrl($scope, $websocket, $event, $rootScope) {
             $scope.previewEnabled=$event.getEvent().previewEnabled;
             var data = {
                 eventid: $scope.eventId
@@ -18,6 +18,8 @@ function SoEventSongsDirective() {
                 $scope.currentSong = msg.currentSong;
                 $scope.nextSongs = msg.nextSongs;
                 $scope.$apply();
+
+                $rootScope.notifyActivityStream(msg);
             }, data);
         },
         templateUrl: 'event-songs/so-event-songs.tpl.html'
