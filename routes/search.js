@@ -100,17 +100,26 @@ router.get('/eventsongs/:eventid', passport.ensureAuthenticated, function (req, 
 
         // filter
         body["filter"] = {
-            "and": [
-                {
-                    "term": {
-                        "owner_id": event.owner_id
-                    }
-                },{
+            "bool": {
+                "must": [{
                     "term": {
                         "active": true
                     }
-                }
-            ]
+                }],
+                "should": [
+                    {
+                        "term": {
+                            "owner_id": event.owner_id
+                        }
+                    },
+                    {
+                        "term": {
+                            "owner_id": req.user._id
+                        }
+                    }
+                ],
+                "must_not": []
+            }
         };
 
         // pagination

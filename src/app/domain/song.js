@@ -12,6 +12,7 @@ angular.module('songster.domain.song')
             this.artist = data ? data.artist : undefined;
             this.album = data ? data.album : undefined;
             this.year = data ? data.year : undefined;
+            this.owner_id = data ? data.owner_id : undefined;
             this.cover = data ? data.cover : undefined;
             this.file_id = data ? data.file_id : undefined;
             this.addedDate = data ? data.addedDate : undefined;
