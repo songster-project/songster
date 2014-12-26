@@ -5,6 +5,7 @@ var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 var Event = db.Event;
+var lsUrls = db.LongShortUrls;
 var songwebsocket = require('../backend/websockets/event_songs');
 var urlshortener = require('../config/urlshortener');
 var shortener = urlshortener.shortener;
@@ -33,20 +34,40 @@ router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
-    console.log("shortening for:"+req.query.q);
-    shortener.shorten(req.query.q,function(err,resp){
+    db.LongShortUrls.findOne({long : req.query.q},function(err,longShortUrl)
+    {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
+        };
+        if(longShortUrl)
+        {
+            return res.send({url: longShortUrl.short});
         }
-        if(resp.status_code == 500) {
-            console.log(resp);
-            res.status(400).send("Error: "+resp.status_txt);
-            return;
-        }
-        res.send({'url': resp.data.url});
-    });
+        console.log("shortening for:"+req.query.q);
+        shortener.shorten(req.query.q,function(err,resp){
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal server error');
+                return;
+            }
+            if(resp.status_code == 500) {
+                console.log(resp);
+                res.status(400).send("Error: "+resp.status_txt);
+                return;
+            }
+            res.send({'url': resp.data.url});
+            db.LongShortUrls.create({long: req.query.q, short: resp.data.url},function(err,lsUrls)
+            {
+                if(err)
+                    console.log(err);
+                if(lsUrls)
+                    console.log("Urls: "+lsUrls);
+            });
+        });
+    })
+
 });
 
 router.get('/qr',function(req,res){
