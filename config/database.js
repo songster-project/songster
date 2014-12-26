@@ -19,7 +19,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var songTypes = 'file youtube'.split(' ');
 var voteTypes = 'vote suggestion'.split(' ');
 var voteStates = 'new played'.split(' ');
-var logTypes = 'songplayed eventstart eventend'.split(' ');
+var logTypes = 'songplayed eventstart eventend songvoted'.split(' ');
 
 //Indices:
 //Every schema has default a primary key _id of type ObjectID.
