@@ -103,6 +103,13 @@ var eventLogSchema = new Schema({
     type: {type: String, enum: logTypes}
 }, {collection: 'eventLog'});
 
+//Due to bad performance i built a little cache for the shortend links
+var longShortUrlSchema = new Schema({
+    long :{type: String, index:true},
+    short :{type: String}
+}, {collection: 'longShortUrls'});
+
+
 //For storing the state of the queue
 //Not sure if we gonna need this
 //var queueStateSchema = new Schema({
@@ -117,3 +124,4 @@ exports.PlaylistSchema = playlistSchema;
 exports.EventSchema = eventSchema;
 exports.VoteSchema = voteSchema;
 exports.EventlogSchema = eventLogSchema;
+exports.LongShortUrlSchema = longShortUrlSchema;

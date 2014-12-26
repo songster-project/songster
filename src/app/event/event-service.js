@@ -111,6 +111,10 @@ function EventService($http, $q, $rootScope, EventFactory) {
             });
         return deferred.promise;
     };
+
+    this.shortLink = function (link) {
+
+    };
 }
 
 function EventServiceProvider() {

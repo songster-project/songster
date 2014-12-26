@@ -5,9 +5,12 @@ var expressValidator = require('express-validator');
 var router = express.Router();
 var util = require('util');
 var Event = db.Event;
+var lsUrls = db.LongShortUrls;
 var songwebsocket = require('../backend/websockets/event_songs');
 var urlshortener = require('../config/urlshortener');
 var shortener = urlshortener.shortener;
+var qr = require('qr-image');
+
 
 
 //PS: avoids 304 in this module
@@ -27,21 +30,58 @@ router.get('/shorten',passport.ensureAuthenticated, passport.ensureNotAnonymous,
     req.checkQuery('q',  'Parameter is not a valid url').isValidUrl();
     var errors = req.validationErrors();
     if (errors) {
+        console.log( util.inspect(errors));
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
-    shortener.shorten(req.query.q,function(err,resp){
+    db.LongShortUrls.findOne({long : req.query.q},function(err,longShortUrl)
+    {
         if (err) {
             console.log(err);
             res.status(500).send('Internal server error');
             return;
+        };
+        if(longShortUrl)
+        {
+            return res.send({url: longShortUrl.short});
         }
-        if(resp.status_code == 500) {
-            res.status(400).send("Error: "+resp.status_txt);
-            return;
-        }
-        res.send({'url': resp.data.url});
-    });
+        console.log("shortening for:"+req.query.q);
+        shortener.shorten(req.query.q,function(err,resp){
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal server error');
+                return;
+            }
+            if(resp.status_code == 500) {
+                console.log(resp);
+                res.status(400).send("Error: "+resp.status_txt);
+                return;
+            }
+            res.send({'url': resp.data.url});
+            db.LongShortUrls.create({long: req.query.q, short: resp.data.url},function(err,lsUrls)
+            {
+                if(err)
+                    console.log(err);
+                if(lsUrls)
+                    console.log("Urls: "+lsUrls);
+            });
+        });
+    })
+
+});
+
+router.get('/qr',function(req,res){
+    req.checkQuery('q', 'no url to shorten defined in the q get parameter').notEmpty();
+    req.checkQuery('q',  'Parameter is not a valid url').isValidUrl();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    //Note: copied from example at: https://github.com/alexeyten/qr-image/blob/master/examples/qr-server.js
+    var img = qr.image(req.query.q, { type: 'svg' });
+    res.writeHead(200, {'Content-Type': 'image/svg+xml'});
+    img.pipe(res);
 });
 
 router.get('/active', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {

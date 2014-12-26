@@ -8,10 +8,6 @@
             <td>Description</td>
             <td>{{event.description}}</td>
         </tr>
-        <tr>
-            <td>Public link</td>
-            <td><a href="{{generatePublicLink(event)}}">{{generatePublicLink(event)}}</a></td>
-        </tr>
         <!--<tr>-->
             <!--<td>Voting</td>-->
             <!--<td>{{event.votingEnabled ? 'enabled' : 'disabled'}}</td>-->
@@ -32,6 +28,22 @@
             <td>Delete Event</td>
             <td>
                 <button ng-click="deleteEvent(event)" class="btn btn-xs">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>Public link</td>
+            <td><a href="{{generatePublicLink(event)}}">{{generatePublicLink(event)}}</a></td>
+        </tr>
+        <tr>
+            <td>Short Link:</td>
+            <td>
+                <a href="{{shortLink}}">{{shortLink}}</a>
+            </td>
+        </tr>
+        <tr>
+            <td>QR-Code:</td>
+            <td>
+                <img src={{qrLink}} alt="QR-Code" class="img-responsive img-qr"></img>
             </td>
         </tr>
     </table>

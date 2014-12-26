@@ -33,6 +33,7 @@ mongodb.MongoClient.connect(settings.mongo_url, function (err, db) {
             database.Playlist = database.conn.model('Playlist', database.PlaylistSchema);
             database.EventLog = database.conn.model('EventLog', database.EventlogSchema);
             database.Song = database.conn.model('Song', database.SongSchema);
+            database.LongShortUrls = database.conn.model('LongShortUrls',database.LongShortUrlSchema);
             console.log('Schema created');
 
             // TODO remove this later on
