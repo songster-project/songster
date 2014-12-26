@@ -202,6 +202,30 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                     }
                     res.status(201).send(vote);
 
+                    db.Song.find({_id: vote.song_id}, function (err, song) {
+                        // save the vote to the event log
+                        if (song && song.length > 0) {
+
+                            var evLog = new db.EventLog();
+
+                            evLog.event_id = event._id;
+                            evLog.message = {
+                                date: new Date(),
+                                vote: vote,
+                                song: song[0]
+                            };
+                            evLog.type = 'songvoted';
+
+                            evLog.save(function (err, eventlog) {
+                                if (err) {
+                                    console.log('error saving event log for the new vote');
+                                    console.log(err);
+                                } else {
+                                    console.log('Successfully saved event log for vote');
+                                }
+                            });
+                        }
+                    });
                 });
             });
         });
