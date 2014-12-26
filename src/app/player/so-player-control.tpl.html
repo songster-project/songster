@@ -22,12 +22,33 @@
     <div class="player-buttons">
         <div class="pull-right btn-group" role="group">
             <button type="button" class="btn btn-default btn-xs"
-                    ng-click='console.log("I should now save the playlist")'>
+                    ng-click='showAddDialog()'
+                    ng-if="queue.length > 0">
                 <i class="fa fa-floppy-o"></i> Save
             </button>
-            <button type="button" class="btn btn-default btn-xs" ng-click="player.clear()">
+            <button type="button" class="btn btn-default btn-xs" ng-click="player.clear(); cancelAddPlaylist()">
                 <i class="fa fa-times"></i> Clear
             </button>
         </div>
     </div>
+    <form ng-submit="addPlaylist(playlistName)">
+      <div ng-if="addClicked" style="text-align: center !important" class="editable-controls form-group">
+        <input type="text"
+               class="editable-has-buttons editable-input form-control ng-pristine"
+               ng-model="playlistName"
+               style="margin-left: 55px !important"
+               placeholder="Name of the playlist">
+
+        <div style="margin-top: 5px">
+    <span class="editable-buttons">
+    <button type="submit" class="btn btn-primary" ng-click="addPlaylist(playlistName)">
+      <i class="fa fa-check"></i>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="cancelAddPlaylist()">
+      <i class="fa fa-times"></i>
+    </button>
+    </span>
+        </div>
+      </div>
+    </form>
 </div>

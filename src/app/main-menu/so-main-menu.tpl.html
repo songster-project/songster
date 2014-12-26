@@ -17,6 +17,7 @@
     <div class="collapse navbar-collapse" collapse="menuCollapsed">
         <so-menu menu-id="'main'"></so-menu>
     </div>
+    <div playlist-menu ng-if="!toggleState"></div>
 
     <a href class="toggleButton" ng-click="toggleState = !toggleState">
         <i class="fa"  ng-class="toggleState ? 'fa-angle-double-right' : 'fa-angle-double-left'"></i>

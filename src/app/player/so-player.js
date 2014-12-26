@@ -9,7 +9,7 @@ function SoPlayerDirective() {
             menuId: "="
         },
         replace: true,
-        controller: ['$scope', '$http', '$player', '$timeout', '$event', 'EVENT_SONG_CONFIG', function SoPlayerController($scope, $http, $player, $timeout, $event, EVENT_SONG_CONFIG) {
+        controller: ['$scope', '$http', '$player', '$timeout', '$event', 'EVENT_SONG_CONFIG', '$rootScope', function SoPlayerController($scope, $http, $player, $timeout, $event, EVENT_SONG_CONFIG, $rootScope) {
             var vm = this;
 
             $scope.player = $player;
@@ -67,6 +67,31 @@ function SoPlayerDirective() {
                     $scope.sortableArray.splice(start, 1)[0]);
 
                 $scope.$apply();
+            };
+
+            $scope.showAddDialog = function () {
+                $scope.addClicked = true;
+            };
+
+            $scope.addPlaylist = function (playlistName) {
+                $scope.addClicked = false;
+                if (playlistName !== '') {
+
+                    var songIDs = [];
+                    $scope.queue.forEach(function (song) {
+                        songIDs.push(song._id);
+                    });
+
+                    $http.post('/playlist', { name: playlistName, songs: songIDs }).
+                        success(function () {
+                            $rootScope.updatePlaylists();
+                        });
+                }
+            };
+
+            $scope.cancelAddPlaylist = function () {
+                $scope.addClicked = false;
+                $scope.playlistName = '';
             };
         }],
         controllerAs: 'vm',

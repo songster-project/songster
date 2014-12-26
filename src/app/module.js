@@ -18,5 +18,7 @@ angular.module('ngBoilerplate', [
     'songster.websocket-client',
     'songster.event-songs',
     'songster.eventHistory',
+    'songster.playlist-menu',
+    'songster.playlist-editor',
     'ui.router'
 ]);

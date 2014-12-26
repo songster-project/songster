@@ -5,5 +5,6 @@ angular.module('songster.player', [
     'songster.player.services',
     'angular-sortable-view',
     'songster.event.services',
-    'xeditable'
+    'xeditable',
+    'draganddrop'
 ]);
