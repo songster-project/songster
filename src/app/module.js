@@ -20,5 +20,6 @@ angular.module('ngBoilerplate', [
     'songster.eventHistory',
     'songster.playlist-menu',
     'songster.playlist-editor',
+    'songster.event-activity-stream',
     'ui.router'
 ]);
