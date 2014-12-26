@@ -5,7 +5,7 @@
         <h4><i class="fa fa-music"></i> {{ event.content.artist }} - {{ event.content.title }}  <small>{{ event.date | date:'hh.mm @ dd.MM.yyyy ' }}</small></h4>
       </div>
       <div ng-if="event.type === 'song_voted'">
-        <h4><i class="fa fa-thumbs-up"></i> {{ event.content.artist }} - {{ event.content.title }} was liked by {{ event.count }} person <small>{{ event.date | date:'hh.mm dd.MM.yyyy' }}</small></h4>
+        <h4><i class="fa fa-thumbs-up"></i> {{ event.content.artist }} - {{ event.content.title }} was liked by {{ event.count }} person <small>{{ event.date | date:'hh.mm @ dd.MM.yyyy' }}</small></h4>
       </div>
     </li>
   </ul>
