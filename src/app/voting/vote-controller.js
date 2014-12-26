@@ -1,7 +1,8 @@
 angular.module('songster.voting')
 
-    .controller('VoteController', function VoteCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $player, SongFactory) {
+    .controller('VoteController', function VoteCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $player, SongFactory, $account) {
         $scope.event = $event.getEvent();
+        $scope.user = $account.getUser();
         $scope.actions = [];
 
         if($rootScope.isDj()) {
@@ -46,11 +47,11 @@ angular.module('songster.voting')
                 }, function (err) {
                     $scope.message = err;
                 });
-        }
+        };
 
         $scope.disableVoteButton = function(song) {
             return votingService.hasClientVotedForSong(song);
-        }
+        };
 
         $scope.getVotesForSong = function (song) {
             return votingService.getVotesForSong(song);
