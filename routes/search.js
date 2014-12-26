@@ -37,11 +37,19 @@ router.get('/song', passport.ensureAuthenticated, function (req, res) {
         };
     }
 
-    // user filter
+    // filter
     body["filter"] = {
-        "term": {
-            "owner_id": req.user._id
-        }
+        "and": [
+            {
+                "term": {
+                    "owner_id": req.user._id
+                }
+            },{
+                "term": {
+                    "active": true
+                }
+            }
+        ]
     };
 
     // pagination
@@ -90,11 +98,19 @@ router.get('/eventsongs/:eventid', passport.ensureAuthenticated, function (req, 
             }
         };
 
-        // user filter
+        // filter
         body["filter"] = {
-            "term": {
-                "owner_id": event.owner_id
-            }
+            "and": [
+                {
+                    "term": {
+                        "owner_id": event.owner_id
+                    }
+                },{
+                    "term": {
+                        "active": true
+                    }
+                }
+            ]
         };
 
         // pagination

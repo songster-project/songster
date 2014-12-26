@@ -7,11 +7,11 @@ angular
                 searchRequest: "=",
                 searchResult: "="
             },
-            controller: function($scope, CONFIG) {
+            controller: function($scope) {
                 $scope.searchResult.currentPage = 1;
                 $scope.pages = [];
                 $scope.$watch('searchResult.total', function(total) {
-                    $scope.lastPage = Math.ceil(total / CONFIG.resultsPerPage);
+                    $scope.lastPage = Math.ceil(total / $scope.searchRequest.size);
                     var pages = [];
                     for(var i=1; i<=$scope.lastPage; i++) {
                         pages.push({
