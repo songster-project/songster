@@ -38,17 +38,23 @@ angular.module('songster.voting')
                 },
                 'class': 'btn btn-xs btn-primary'
             }];
+
+            // load user votes for disabling vote button at loading page
+            votingService.loadClientVotesFromServer($scope.event._id);
+
         }
 
         $scope.voteUp = function (song) {
             votingService.postVote($scope.event._id, song._id).
                 then(function () {
-                    votingService.loadVotes($scope.event._id);
+                    votingService.addClientVote(song._id);
                 }, function (err) {
                     $scope.message = err;
                 });
         };
 
+
+        // required for voting-library-search-result.tpl.html
         $scope.disableVoteButton = function(song) {
             return votingService.hasClientVotedForSong(song);
         };
