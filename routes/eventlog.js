@@ -4,6 +4,7 @@ var db = require('../config/database');
 var router = express.Router();
 var util = require('util');
 var songwebsocket = require('../backend/websockets/event_songs');
+var voteWs = require('../backend/websockets/votes_suggests');
 
 //Posts an eventlog entry to event defined by :id
 //the event must be active and only i, the owner of the event, can post this
@@ -47,10 +48,13 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
             }
             if (eventlog.type === 'songplayed') {
                 songwebsocket.newSong(eventlog.event_id);
-                db.Vote.update( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id}, {state: 'played'}, {multi: true},  function(err) {
-                    if(err) {
+                db.Vote.update( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id, state: {$ne: 'played'}}, {state: 'played'}, {multi: true},  function(err, numAffected) {
+                    if(err)
                         console.log(err);
-                    }
+
+                    console.log('update votes ' + numAffected);
+                    if(numAffected > 0)
+                       voteWs.votesChanged(eventlog.event_id);
                 });
             }
             res.status(201).send(eventlog);
