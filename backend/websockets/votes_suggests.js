@@ -25,7 +25,7 @@ nserver.register_to_UserRegistrations('votes_changed', function (ws, req, data) 
         }
         //send the songs to the new client
         if (eventmap[data.eventid]) {
-            sendSongs(data.eventid, [ws]);
+            sendVotes(data.eventid, [ws]);
         }
     } else {//add entry for event if event exists
         db.Event.findOne({'_id': data.eventid}, function (err, events) {
@@ -44,7 +44,7 @@ nserver.register_to_UserRegistrations('votes_changed', function (ws, req, data) 
             }
             //send the songs to the new client
             if (eventmap[data.eventid]) {
-                sendSongs(data.eventid, [ws]);
+                sendVotes(data.eventid, [ws]);
             }
         });
     }
@@ -93,6 +93,7 @@ function sendVotes(eventId, clients) {
                             return;
                         }
 
+                        console.log('ws votes_changed send_notification');
                         nserver.send_Notifications('votes_changed', votes, clients);
                     });
 
