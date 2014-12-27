@@ -22,7 +22,6 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
                 return ReceivedVoteFactory.create(vote);
             });
             self.setVotes(votes);
-            setClientVotes(event_id);
         }).
             error(function( data, status, headers, config){
                 // TODO
@@ -57,6 +56,14 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         return _votes;
     };
 
+    this.setUnwrappedVotes = function (data) {
+        var votes = _.map(data, function(vote) {
+            return ReceivedVoteFactory.create(vote);
+        });
+        self.setVotes(votes);
+    //   setClientVotes(event_id);
+    }
+
     this.setVotes = function (votes) {
         _votes = votes;
         updateVotesMap();
@@ -75,11 +82,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         return deferred.promise;
     };
 
-    this.addClientVote = function (vote) {
-        _clientVotes.push(vote);
-    };
-
-    function setClientVotes(event_id) {
+    this.loadClientVotesFromServer = function (event_id) {
         $http.get('/voting/uservotes/' + event_id).success(function(data, status, headers, config) {
             _clientVotes = {};
             _.each(data, function(song) {
@@ -89,6 +92,10 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         }).error(function() {
             console.log('getting uservotes error');
         });
+    }
+
+    this.addClientVote = function(songId) {
+        _clientVotes[songId] = true;
     }
 
     this.hasClientVotedForSong = function(song) {

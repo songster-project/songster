@@ -9,14 +9,22 @@ angular.module('songster.voting')
             $scope.votes = votingService.getVotes();
         });
 
-        $scope.refresh = function () {
-            votingService.loadVotes($scope.event._id);
+        var data = {
+            eventid: $scope.event._id
         };
-
         $websocket.register_to_event('votes_changed', function (votes) {
-            votingService.setVotes(votes);
-        });
+            console.log('in votes changed');
+            votingService.setUnwrappedVotes(votes);
+            $scope.$apply(function (){
+                $scope.votes = votingService.getVotes();
+            });
+        }, data);
 
-        $scope.refresh();
+        function initLoadVotes() {
+            votingService.loadVotes($scope.event._id);
+        }
+
+        initLoadVotes();
+
     });
 
