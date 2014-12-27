@@ -1,6 +1,6 @@
 angular.module('songster.voting')
 
-    .controller('VotingCtrl', function VotingCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event) {
+    .controller('VotingCtrl', function VotingCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $websocket) {
         $scope.event = $event.getEvent();
 
         $scope.votes = [];
@@ -12,6 +12,10 @@ angular.module('songster.voting')
         $scope.refresh = function () {
             votingService.loadVotes($scope.event._id);
         };
+
+        $websocket.register_to_event('votes_changed', function (votes) {
+            votingService.setVotes(votes);
+        });
 
         $scope.refresh();
     });
