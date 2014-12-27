@@ -61,7 +61,6 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
             return ReceivedVoteFactory.create(vote);
         });
         self.setVotes(votes);
-    //   setClientVotes(event_id);
     }
 
     this.setVotes = function (votes) {
@@ -98,6 +97,10 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         _clientVotes[songId] = true;
     }
 
+    function removeUserVotesForSong(songId){
+        delete _clientVotes[songId];
+    };
+
     this.hasClientVotedForSong = function(song) {
         return _clientVotes[song._id] !== undefined ? true : false;
     };
@@ -109,4 +112,9 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         });
     }
 
+    this.votedSongPlayed = function(song) {
+        if(song && !$rootScope.isDj()) {
+            removeUserVotesForSong(song._id);
+        }
+    }
 }
