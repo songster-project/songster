@@ -50,7 +50,33 @@ exports.dropAllIndices = function dropAllIndices() {
 };
 
 exports.reindexSongs = function () {
-    return reindex('song');
+    reindex('song');
+
+    // create index
+    return elasticSearchClient.indices.create({
+        index: settings.elasticSearch_index
+    }).then(function () {
+        // add mapping
+        elasticSearchClient.indices.putMapping({
+            index: settings.elasticSearch_index,
+            type: 'song',
+            body: {
+                "song": {
+                    "properties": {
+                        "artist": {
+                            "type": "string",
+                            "fields": {
+                                "raw": {
+                                    "type": "string",
+                                    "index": "not_analyzed"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }, callback);
+    });
 };
 
 exports.indexSong = function createSong(song) {

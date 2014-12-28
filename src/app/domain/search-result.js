@@ -5,24 +5,24 @@ angular.module('songster.domain.searchResult')
         window.SearchResult = function SearchResult(data) {
             this.total = data ? data.total : undefined;
             this.results = data ? data.results : [];
-            this.aggregations = data ? data.aggregations : [];
+            this.aggregations = data ? data.aggregations : {};
         };
 
         window.SearchResult.prototype.fillWithResponse = function fillWithResponse(res, factory) {
+            var self = this;
             this.total = res.hits.total;
             this.results = _.map(res.hits.hits, function (hit) {
                 return factory.create(hit._source);
             });
-            if (res.aggregations) {
-                this.aggregations = _.map(res.aggregations.group_by_state.buckets, function (agg) {
+            this.aggregations = {};
+            _.forEach(_.keys(res.aggregations), function (agg) {
+                self.aggregations[agg] = _.map(res.aggregations[agg].buckets, function (bucket) {
                     return SearchAggregationFactory.create({
-                        key: agg.key,
-                        count: agg.doc_count
+                        key: bucket.key,
+                        count: bucket.doc_count
                     });
                 });
-            } else {
-                this.aggregations = [];
-            }
+            });
         };
 
         window.SearchResult.prototype.update = function update(searchResult) {
