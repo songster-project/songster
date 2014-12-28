@@ -19,8 +19,6 @@ before_script:
 - wget http://ffmpeg.gusari.org/static/64bit/ffmpeg.static.64bit.latest.tar.gz
 - tar zxf ffmpeg.static.64bit.latest.tar.gz
 - sudo cp ffmpeg ffprobe /usr/bin
-- export ALT_FFMPEG_PATH=$(pwd)/ffmpeg
-- export ALT_FFPROBE_PATH=$(pwd)/ffprobe
 after_success:
 - chmod +x misc/deploy.sh
 - misc/deploy.sh
