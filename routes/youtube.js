@@ -7,8 +7,49 @@ var ytdl = require('ytdl-core');
 var Ffmpeg = require('fluent-ffmpeg');
 var util = require('util');
 var domain = require('domain');
+var google = require('googleapis');
+var youtubeapi = google.youtube('v3');
 //song will be cut after this time (with format [[hh:]mm:]ss[.xxx])
 var MAX_SONG_DURATION = '10:00';
+
+router.get('/search', passport.ensureAuthenticated, function (req, res) {
+    var query = req.query.q;
+    if (query === undefined) {
+        console.log('missing querry parameters in youtube search');
+        res.status(400).send('There have been validation errors');
+        return;
+    }
+    // parameters for youtube search
+    var params = {
+        part: 'snippet',
+        maxResults: req.query.numResults || 5,
+        chart: 'mostPopular',
+        q: query,
+        type: 'video',
+        auth: 'AIzaSyCNIVDVFJEZG9bMy5KFzT9WqXEZ1RD7l2o'
+    };
+    youtubeapi.search.list(params, function (err, result) {
+        if(err){
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        var response = {
+            result: []
+        };
+        //generate items for response
+        result.items.forEach(function (entry) {
+            var videoentry = {
+                title: entry.snippet.title,
+                channelTitle: entry.snippet.channelTitle,
+                videoId: entry.id.videoId,
+                thumbnailurl: entry.snippet.thumbnails.default
+            };
+            response.result.push(videoentry);
+        });
+        res.status(200).send(response);
+    });
+});
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
 

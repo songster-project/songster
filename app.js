@@ -31,6 +31,7 @@ var search = require('./routes/search');
 var eventlog = require('./routes/eventlog');
 var settings = require('./config/settings.js');
 var voting = require('./routes/voting');
+var youtube = require('./routes/youtube');
 
 
 // view engine setup
@@ -89,6 +90,7 @@ app.use('/event', event);
 app.use('/search', search);
 app.use('/eventlog', eventlog);
 app.use('/voting', voting);
+app.use('/youtube', youtube);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
