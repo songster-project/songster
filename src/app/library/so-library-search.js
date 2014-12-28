@@ -33,12 +33,11 @@ function SoLibrarySearchDirective() {
 
             var lastSearchQuery = undefined;
 
-            var url = '/search/';
+            var url = '/search';
             if ($scope.eventId !== undefined) {
-                url += 'eventsongs/' + $scope.eventId;
-            } else {
-                url += 'song';
+                url += '/event/' + $scope.eventId;
             }
+            url += '/song';
             $scope.searchRequest.url = url;
 
             if (!!$scope.customView) {
