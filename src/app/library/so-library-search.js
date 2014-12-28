@@ -30,15 +30,18 @@ function SoLibrarySearchDirective() {
         controller: function SoLibrarySearchDirective($scope, $library, SongFactory, SearchRequestFactory, SearchResultFactory) {
             $scope.searchRequest = SearchRequestFactory.create();
             $scope.searchResult = SearchResultFactory.create();
+            $scope.tabs = [
+                {active: true},
+                {active: false}
+            ];
 
             var lastSearchQuery = undefined;
 
-            var url = '/search/';
+            var url = '/search';
             if ($scope.eventId !== undefined) {
-                url += 'eventsongs/' + $scope.eventId;
-            } else {
-                url += 'song';
+                url += '/event/' + $scope.eventId;
             }
+            url += '/song';
             $scope.searchRequest.url = url;
 
             if (!!$scope.customView) {
@@ -70,6 +73,11 @@ function SoLibrarySearchDirective() {
 
             $scope.hasActions = function() {
                 return !_.isEmpty($scope.actions);
+            };
+
+            $scope.jumpToResultTab = function () {
+                $scope.tabs[0].active = true;
+                $scope.tabs[1].active = false;
             };
 
             search($scope.searchRequest);

@@ -394,6 +394,21 @@ tab-heading {
   cursor: pointer;
 }
 
+.tile {
+  background-color: #EEE;
+  height: 50px;
+  margin: 3px;
+  cursor: pointer;
+  text-align: center;
+  span {
+    line-height: 50px;
+    vertical-align: middle;
+  }
+  &:hover {
+    background-color: @colorMainLight;
+  }
+}
+
 /**
  * Now that all app-wide styles have been applied, we can load the styles for
  * all the submodules and components we are using. 
