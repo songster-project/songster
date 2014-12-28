@@ -52,7 +52,7 @@ angular
     })
 
     .config(['$menuProvider', function ($menuProvider) {
-        $menuProvider.addMenuEntry('main', 'Events', 'fa-bullhorn', 'event', 499);
+        $menuProvider.addMenuEntry('main', 'Events', 'fa-bullhorn', 'event', 300);
     }])
 
     .run(['$event', function ($event) {
