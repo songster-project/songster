@@ -100,7 +100,8 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                     var metadata = {
                         addedDate: new Date(),
                         title: title || '',
-                        owner_id: req.user._id
+                        owner_id: req.user._id,
+                        active: true
                     };
 
                     // the parser sometimes outputs utf-8 junk :-/
