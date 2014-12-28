@@ -10,7 +10,7 @@ var domain = require('domain');
 var google = require('googleapis');
 var youtubeapi = google.youtube('v3');
 //song will be cut after this time (with format [[hh:]mm:]ss[.xxx])
-var MAX_SONG_DURATION = '10:00';
+var MAX_SONG_DURATION = '20:00';
 
 router.get('/search', passport.ensureAuthenticated, function (req, res) {
     var query = req.query.q;
