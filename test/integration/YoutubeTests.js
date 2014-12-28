@@ -162,4 +162,54 @@ describe('YoutubeApi', function () {
             done();
         });
     });
+
+    //tests for search
+    it('search should send 400 if search data is missing', function (done) {
+        api.get('/youtube/search').expect(400).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('search should send 200 with search result on correct search', function (done) {
+        api.get('/youtube/search?q=Highway+to+hell').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.contain.key('result');
+            expect(res.body.result).to.have.length(5);
+            expect(res.body.result[0]).to.contain.key('title');
+            expect(res.body.result[0]).to.contain.key('channelTitle');
+            expect(res.body.result[0]).to.contain.key('videoId');
+            done();
+        });
+    });
+
+    it('search should send 200 with empty request if no results are found', function (done) {
+        api.get('/youtube/search?q=rfedcxesdxcrefadycx').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.contain.key('result');
+            expect(res.body.result).to.have.length(0);
+            done();
+        });
+    });
+
+    it('search should work with empty querry', function (done) {
+        api.get('/youtube/search?q=').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.contain.key('result');
+            expect(res.body.result).to.have.length(5);
+            expect(res.body.result[0]).to.contain.key('title');
+            expect(res.body.result[0]).to.contain.key('channelTitle');
+            expect(res.body.result[0]).to.contain.key('videoId');
+            done();
+        });
+    });
+
+    it('search should work with num Results and querry parameter', function (done) {
+        api.get('/youtube/search?q=test&numResults=10').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.contain.key('result');
+            expect(res.body.result).to.have.length(10);
+            done();
+        });
+    });
 });
