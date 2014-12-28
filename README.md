@@ -13,7 +13,7 @@ TODO a description of all folders and files
 
 ## Deploying
 
-TODO a descripton for deployment will be added here once available
+TODO a descripton for deployment will be added here once available (it uses dokku)
 
 ##  Developers
  * Lisa Fichtinger
