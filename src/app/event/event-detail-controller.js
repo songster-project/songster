@@ -1,6 +1,6 @@
 angular.module('songster.event')
 
-    .controller('EventDetailController', function EventCtrl($scope,$http, $location, $event, $state) {
+    .controller('EventDetailController', function EventCtrl($scope,$http, $location, $event, $state, $rootScope) {
         $scope.event = $event.getEvent();
 
         $scope.endEvent = function () {
@@ -41,6 +41,25 @@ angular.module('songster.event')
                 $scope.qrLink = "http://"+url+"/event/qr?q="+data.url;
                 console.log($scope.qrLink);
             });
+
+        $scope.isDJ = $rootScope.isDj();
+
+        $scope.tabs = [
+            {active: true},
+            {active: false},
+            {active: false},
+            {active: false},
+            {active: false},
+            {active: false}
+        ];
+
+        $scope.goToHomeTab = function goToHomeTab() {
+            $scope.tabs[0].active = true;
+            for (var i = 1; i < $scope.tabs.length; i++) {
+                $scope.tabs[i].active = false;
+
+            }
+        }
     });
 
 

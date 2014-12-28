@@ -1,6 +1,6 @@
 <div>
-    <div class="page-header">
-        <h1>
+    <div class="page-header event-name-header">
+        <h1 ng-click="goToHomeTab()">
             <i class="fa fa-bullhorn"></i> {{event.name}}
         </h1>
     </div>
@@ -13,41 +13,41 @@
     </so-authorize>
 
     <tabset>
-        <tab>
+        <tab active="tabs[0].active">
             <tab-heading>
-                Home
+                <i class="fa fa-home"></i>
             </tab-heading>
             <div ng-include="'event/event-detail-home.tpl.html'"></div>
         </tab>
-        <tab ng-if="!event.end">
+        <tab ng-if="!event.end" active="tabs[1].active">
             <tab-heading>
                 Playlist
             </tab-heading>
             <so-event-songs event-id="event._id"></so-event-songs>
         </tab>
-        <tab ng-if="!event.end">
+        <tab active="tabs[2].active">
             <tab-heading>
-                Votings
+                Activity Stream
+            </tab-heading>
+            <so-event-activity-stream event-id="event._id"></so-event-activity-stream>
+        </tab>
+        <tab ng-if="!event.end" active="tabs[3].active">
+            <tab-heading>
+                Vote
             </tab-heading>
             <div ng-include="'event/event-detail-votings.tpl.html'"></div>
         </tab>
-        <tab ng-if="!isDj() && !event.end">
+        <tab ng-if="!isDj() && !event.end" active="tabs[4].active">
             <tab-heading>
-                Suggestion
+                Suggest
             </tab-heading>
             <div ng-include="'event/event-detail-suggestions.tpl.html'"></div>
         </tab>
-        <tab ng-if="!!event.end">
+        <tab ng-if="!!event.end" active="tabs[5].active">
             <tab-heading>
                 Played Songs
             </tab-heading>
         <so-event-history event-id="event._id"></so-event-history>
-        </tab>
-        <tab>
-            <tab-heading>
-              Activity Stream
-            </tab-heading>
-            <so-event-activity-stream event-id="event._id"></so-event-activity-stream>
         </tab>
     </tabset>
 </div>
