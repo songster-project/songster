@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require('../config/passport');
 var elasticSearchService = require('../backend/services/elasticSearchService');
 var db = require('../config/database');
+var util = require('util');
 
 var searchableFields = [
     "title",
@@ -118,6 +119,15 @@ router.get('/artist', passport.ensureAuthenticated, function (req, res) {
 });
 
 router.get('/event/:eventid/song', passport.ensureAuthenticated, function (req, res) {
+
+    // Validation
+    req.checkParams('eventid', 'ID is not a valid ID').isMongoID();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+
     var query = req.query.q;
     // get active event with eventid from req.param
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -190,6 +200,15 @@ router.get('/event/:eventid/song', passport.ensureAuthenticated, function (req, 
 });
 
 router.get('/event/:eventid/artist', passport.ensureAuthenticated, function (req, res) {
+
+    // Validation
+    req.checkParams('eventid', 'ID is not a valid ID').isMongoID();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+
     // get active event with eventid from req.param
     db.Event.findOne({_id: req.param('eventid'), end: null}, function (err, event) {
         if (err) {
