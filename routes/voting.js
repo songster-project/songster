@@ -9,7 +9,7 @@ var Song = db.Song;
 var mongoose = require('mongoose');
 var mongo = require('mongodb');
 var ObjectID = require('mongodb').ObjectID;
-
+var votesWs = require('../backend/websockets/votes_suggests');
 
 
 /*router.get('/randomsongs/:eventid', passport.ensureAuthenticated, function (req, res) {
@@ -201,6 +201,9 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                         return;
                     }
                     res.status(201).send(vote);
+
+                    // notify web socket vote_changed event
+                    votesWs.votesChanged(event._id);
 
                     db.Song.find({_id: vote.song_id}, function (err, song) {
                         // save the vote to the event log
