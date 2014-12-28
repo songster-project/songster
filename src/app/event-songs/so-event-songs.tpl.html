@@ -1,27 +1,25 @@
-<div class="row">
-    <div ng-show="previewEnabled">
-        <h2>
-            Upcoming Songs
-        </h2>
-        <table class="table table-striped">
-            <tr>
-                <th>Title</th>
-                <th>Artist</th>
-                <th>Album</th>
-                <th>Year</th>
-                <th></th>
-            </tr>
-            <tr ng:repeat="song in nextSongs track by $index">
-                <td>{{ song.title }}</td>
-                <td>{{ song.artist }}</td>
-                <td>{{ song.album }}</td>
-                <td>{{ song.year }}</td>
-                <td> <div class="pull-right" ng-controller="VoteController" >
-                    <span class="badge badge-info">{{ getVotesForSong(song) || "0"}}</span>
-                </div></td>
-            </tr>
-        </table>
-    </div>
+<div ng-show="previewEnabled && nextSongs && nextSongs.length > 0">
+    <h2>
+        Upcoming Songs
+    </h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th></th>
+        </tr>
+        <tr ng:repeat="song in nextSongs track by $index">
+            <td>{{ song.title }}</td>
+            <td>{{ song.artist }}</td>
+            <td>{{ song.album }}</td>
+            <td> <div class="pull-right" ng-controller="VoteController" >
+              <span class="badge badge-info">{{ getVotesForSong(song) || "0"}}</span>
+            </div></td>
+        </tr>
+    </table>
+</div>
+<div ng-if="currentSong">
     <h2>
         Current Song
     </h2>
@@ -30,15 +28,20 @@
             <th>Title</th>
             <th>Artist</th>
             <th>Album</th>
-            <th>Year</th>
         </tr>
         <tr>
             <td>{{ currentSong.title }}</td>
             <td>{{ currentSong.artist }}</td>
             <td>{{ currentSong.album }}</td>
-            <td>{{ currentSong.year }}</td>
         </tr>
     </table>
+</div>
+<div ng-if="!currentSong">
+    <h2>
+        No song is playing right now!
+    </h2>
+</div>
+<div ng-if="lastSongs && lastSongs.length > 0">
     <h2>
         Previous Songs
     </h2>
@@ -47,13 +50,11 @@
             <th>Title</th>
             <th>Artist</th>
             <th>Album</th>
-            <th>Year</th>
         </tr>
         <tr ng:repeat="song in lastSongs track by $index">
             <td>{{ song.title }}</td>
             <td>{{ song.artist }}</td>
             <td>{{ song.album }}</td>
-            <td>{{ song.year }}</td>
         </tr>
     </table>
 </div>

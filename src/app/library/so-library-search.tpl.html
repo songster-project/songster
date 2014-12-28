@@ -25,11 +25,17 @@
                 </div>
             </div>
 
-            <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+            <div ng-if="searchResult && searchResult.total > 0">
+                <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
 
-            <div class="row" ng-include="resultView"></div>
+                <div class="row" ng-include="resultView"></div>
 
-            <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+                <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+            </div>
+
+            <div ng-if="searchResult && searchResult.total == 0">
+                <h4>No search results!</h4>
+            </div>
         </tab>
         <tab active="tabs[1].active">
             <tab-heading>

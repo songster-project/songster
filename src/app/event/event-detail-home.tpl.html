@@ -4,7 +4,7 @@
             <td>Name</td>
             <td>{{event.name}}</td>
         </tr>
-        <tr>
+        <tr ng-if="event.description">
             <td>Description</td>
             <td>{{event.description}}</td>
         </tr>
@@ -16,13 +16,16 @@
             <!--<td>Suggestions:</td>-->
             <!--<td>{{event.suggestionEnabled ? 'enabled' : 'disabled'}}</td>-->
         <!--</tr>-->
-        <tr>
+        <tr ng-if="isDJ">
             <td>Users can see next songs</td>
-            <td>{{event.previewEnabled ? 'enabled' : 'disabled'}}</td>
+            <td>
+                <i class="fa fa-check" ng-if="event.previewEnabled"></i>
+                <i class="fa fa-ban" ng-if="!event.previewEnabled"></i>
+            </td>
         </tr>
         <tr>
             <td>Started</td>
-            <td>{{event.start | date: 'd.M H:m'}}</td>
+            <td>{{event.start | date: 'd.M.y H:m'}}</td>
         </tr>
         <tr ng-if="!!event.end">
             <td>Delete Event</td>
@@ -31,17 +34,13 @@
             </td>
         </tr>
         <tr>
-            <td>Public link</td>
-            <td><a href="{{generatePublicLink(event)}}">{{generatePublicLink(event)}}</a></td>
-        </tr>
-        <tr>
-            <td>Short Link:</td>
+            <td>Short Link</td>
             <td>
                 <a href="{{shortLink}}">{{shortLink}}</a>
             </td>
         </tr>
         <tr>
-            <td>QR-Code:</td>
+            <td>QR-Code</td>
             <td>
                 <img src={{qrLink}} alt="QR-Code" class="img-responsive img-qr"></img>
             </td>
