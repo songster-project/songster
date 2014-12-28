@@ -14,12 +14,14 @@ var authkey = require('../config/settings').authkey;
 var MAX_SONG_DURATION = '20:00';
 
 router.get('/search', passport.ensureAuthenticated, function (req, res) {
-    var query = req.query.q;
-    if (query === undefined) {
-        console.log('missing querry parameters in youtube search');
-        res.status(400).send('There have been validation errors');
+    req.checkQuery('q', 'no search querry defined in the q get parameter').notEmpty();
+    var errors = req.validationErrors();
+    if (errors) {
+        console.log( util.inspect(errors));
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
+    var query = req.query.q;
     // parameters for youtube search
     var params = {
         part: 'snippet',
@@ -54,6 +56,14 @@ router.get('/search', passport.ensureAuthenticated, function (req, res) {
 
 router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
 
+    req.checkBody('youtubeurl', 'URL is empty').notEmpty();
+    req.checkBody('youtubeurl', 'Parameter is no valid URL').isValidUrl();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+
     try {
         var d = domain.create();
         d.on('error', function (err) {
@@ -61,13 +71,6 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
             res.status(500).send('Internal Server Error');
         });
         d.run(function () {
-            req.checkBody('youtubeurl', 'URL is empty').notEmpty();
-            var errors = req.validationErrors();
-            if (errors) {
-                res.status(400).send('There have been validation errors: ' + util.inspect(errors));
-                return;
-            }
-
             ytdl.getInfo(req.body.youtubeurl, function (err, info) {
                 //if error occurs or youtube link is not valid send status 400
                 if (err || info.title === undefined) {

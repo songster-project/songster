@@ -27,8 +27,8 @@ describe('YoutubeApi', function () {
 
                 process.nextTick(function () {
                     cb(err);
+                    done();
                 });
-                done();
             });
     });
 
@@ -188,18 +188,6 @@ describe('YoutubeApi', function () {
             expect(err).to.not.exist;
             expect(res.body).to.contain.key('result');
             expect(res.body.result).to.have.length(0);
-            done();
-        });
-    });
-
-    it('search should work with empty querry', function (done) {
-        api.get('/youtube/search?q=').expect(200).end(function (err, res) {
-            expect(err).to.not.exist;
-            expect(res.body).to.contain.key('result');
-            expect(res.body.result).to.have.length(5);
-            expect(res.body.result[0]).to.contain.key('title');
-            expect(res.body.result[0]).to.contain.key('channelTitle');
-            expect(res.body.result[0]).to.contain.key('videoId');
             done();
         });
     });
