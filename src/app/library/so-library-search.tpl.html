@@ -1,26 +1,41 @@
 <div>
-    <div class="row">
-        <form>
-            <div class="col-lg-6">
-                <div class="input-group">
-                    <input type="text" class="form-control" ng-model="searchRequest.q" placeholder="Search for songs...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit" ng-click="search(searchRequest)">Search</button>
-                    </span>
+    <tabset>
+        <tab active="tabs[0].active">
+            <tab-heading>
+                Songs
+            </tab-heading>
+
+            <div class="row">
+                <form>
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-model="searchRequest.q"
+                                   placeholder="Search for songs...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit" ng-click="search(searchRequest)">Search</button>
+                </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <p>Total: {{searchResult.total}}</p>
                 </div>
             </div>
-        </form>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-6">
-            <p>Total: {{searchResult.total}}</p>
-        </div>
-    </div>
+            <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
 
-    <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+            <div class="row" ng-include="resultView"></div>
 
-    <div class="row" ng-include="resultView"></div>
-
-    <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+            <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+        </tab>
+        <tab active="tabs[1].active">
+            <tab-heading>
+                Artists
+            </tab-heading>
+            <so-library-artists></so-library-artists>
+        </tab>
+    </tabset>
 </div>
