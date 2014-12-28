@@ -36,7 +36,7 @@ nserver.register_to_UserRegistrations('votes_changed', function (ws, req, data) 
             if (events === null) {
                 return;
             }
-            if (events.end !== null) {
+            if (events.end === null) {
                 eventmap[data.eventid] = {
                     clients: []
                 };
