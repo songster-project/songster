@@ -9,6 +9,7 @@ var util = require('util');
 var domain = require('domain');
 var google = require('googleapis');
 var youtubeapi = google.youtube('v3');
+var authkey = require('../config/settings').authkey;
 //song will be cut after this time (with format [[hh:]mm:]ss[.xxx])
 var MAX_SONG_DURATION = '20:00';
 
@@ -26,7 +27,7 @@ router.get('/search', passport.ensureAuthenticated, function (req, res) {
         chart: 'mostPopular',
         q: query,
         type: 'video',
-        auth: 'AIzaSyCNIVDVFJEZG9bMy5KFzT9WqXEZ1RD7l2o'
+        auth: authkey
     };
     youtubeapi.search.list(params, function (err, result) {
         if(err){
