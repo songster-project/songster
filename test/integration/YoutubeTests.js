@@ -212,4 +212,32 @@ describe('YoutubeApi', function () {
             done();
         });
     });
+
+    it('search should work with direct video link', function (done) {
+        api.get('/youtube/search?q=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D2QZ47h4fVTU').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.contain.key('result');
+            expect(res.body.result[0]).to.contain.key('title');
+            expect(res.body.result[0].title).to.equal('AIRBOURNE - No Way But The Hard Way (Official Music Video)');
+            expect(res.body.result[0]).to.contain.key('channelTitle');
+            expect(res.body.result[0].channelTitle).to.equal('roadrunnergermany');
+            expect(res.body.result[0]).to.contain.key('videoId');
+            expect(res.body.result[0].videoId).to.equal('2QZ47h4fVTU');
+            done();
+        });
+    });
+
+    it('search should work with direct videoid', function (done) {
+        api.get('/youtube/search?q=2QZ47h4fVTU').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.contain.key('result');
+            expect(res.body.result[0]).to.contain.key('title');
+            expect(res.body.result[0].title).to.equal('AIRBOURNE - No Way But The Hard Way (Official Music Video)');
+            expect(res.body.result[0]).to.contain.key('channelTitle');
+            expect(res.body.result[0].channelTitle).to.equal('roadrunnergermany');
+            expect(res.body.result[0]).to.contain.key('videoId');
+            expect(res.body.result[0].videoId).to.equal('2QZ47h4fVTU');
+            done();
+        });
+    });
 });
