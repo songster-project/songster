@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
     # set proper name and ram
     config.vm.provider "virtualbox" do |v|
         v.name = "Songster Development Vagrantbox"
-        v.customize ["modifyvm", :id, "--memory", "1024"]
+        v.customize ["modifyvm", :id, "--memory", "2048"]
     end
 
     # run our provision script to install elasticsearch
