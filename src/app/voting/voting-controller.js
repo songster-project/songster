@@ -14,6 +14,7 @@ angular.module('songster.voting')
         };
         $websocket.register_to_event('votes_changed', function (vote) {
             var vote = ReceivedVoteFactory.create(vote);
+            $rootScope.notifyActivityStream(vote);
             if(vote.state == 'new') {
                 votingService.addVote(vote);
                 if(vote.type === 'suggestion') {

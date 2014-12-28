@@ -203,14 +203,21 @@ function SoEventActivityStreamDirective() {
             };
 
             $rootScope.notifyActivityStream = function notifyActivityStream(msg) {
-                if (msg.currentSong) {
-                    $scope.log.unshift({
-                        type: 'song_played',
-                        content: msg.currentSong,
-                        date: new Date()
-                    });
-                } else if (msg.vote) {
-                    // TODO add handling for votes
+                if (msg) {
+                    if (msg.currentSong) {
+                        $scope.log.unshift({
+                            type: 'song_played',
+                            content: msg.currentSong,
+                            date: new Date()
+                        });
+                    } else if (msg.type && msg.type === 'vote') {
+                        $scope.log.push({
+                            type: 'song_voted',
+                            content: msg.song,
+                            date: new Date(msg.date),
+                            count: 1
+                        });
+                    }
                 }
 
                 $scope.cleanUpLog();
