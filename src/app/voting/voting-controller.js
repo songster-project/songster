@@ -13,18 +13,14 @@ angular.module('songster.voting')
             eventid: $scope.event._id
         };
         $websocket.register_to_event('votes_changed', function (votes) {
-            console.log('in votes changed');
             votingService.setUnwrappedVotes(votes);
             $scope.$apply(function (){
                 $scope.votes = votingService.getVotes();
             });
         }, data);
 
-        function initLoadVotes() {
-            votingService.loadVotes($scope.event._id);
-        }
-
-        initLoadVotes();
+        // init load of votes at loading page or pressing refreshing by F5
+        votingService.loadVotes($scope.event._id);
 
     });
 
