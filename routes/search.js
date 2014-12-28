@@ -92,9 +92,9 @@ router.get('/artist', passport.ensureAuthenticated, function (req, res) {
     // http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_executing_aggregations.html
     // aggregations
     body["aggs"] = {
-        "group_by_state": {
+        "artists": {
             "terms": {
-                "field": "artist",
+                "field": "artist.raw",
                 "order": {"_term": "asc"}
             }
         }
@@ -252,9 +252,9 @@ router.get('/event/:eventid/artist', passport.ensureAuthenticated, function (req
         // http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_executing_aggregations.html
         // aggregations
         body["aggs"] = {
-            "group_by_state": {
+            "artists": {
                 "terms": {
-                    "field": "artist",
+                    "field": "artist.raw",
                     "order": {"_term": "asc"}
                 }
             }
