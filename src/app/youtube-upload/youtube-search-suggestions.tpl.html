@@ -1,0 +1,37 @@
+<div>
+    <div ng-controller="YoutubeUploadCtrl">
+        <div class="col-lg-12">
+            <div class="row">
+                <form>
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-model="youtubeurl"
+                                   placeholder="search Youtube video ...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" ng-click="searchVideos()">search Videos!</button>
+                    </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <h2>Search Result</h2>
+            <table class="table table-striped">
+                <tr>
+                    <th>Title</th>
+                    <th>Channel</th>
+                    <th></th>
+                </tr>
+                <tr ng:repeat="video in videos">
+                    <td>{{video.title || "-"}}</td>
+                    <td>{{video.channelTitle || "-"}}</td>
+                    <td>
+                        <a title="open video" ng-href="https://www.youtube.com/watch?v={{video.videoId}}" target="_blank">open</a>
+                        <a title="add to library" ng-click="sendUrl(video.videoId)">
+                            add
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

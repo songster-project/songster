@@ -45,4 +45,10 @@ apt-get install -y nodejs git
 echo "Installing firefox and Xvfb"
 apt-get install Xvfb firefox.
 
+echo "Installing ffmpeg..."
+apt-get install -y libav-tools
+wget http://ffmpeg.gusari.org/static/64bit/ffmpeg.static.64bit.latest.tar.gz
+tar zxf ffmpeg.static.64bit.latest.tar.gz
+cp ffmpeg ffprobe /usr/bin
+
 echo "Finished provisioning. Elasticsearch: http://localhost:9200/_plugin/head/; NodeJS: http://localhost:3000"

@@ -1,0 +1,63 @@
+<div class="row" ng-controller="YoutubeUploadCtrl">
+    <div class="page-header">
+        <button ui-sref="upload" class="btn btn-primary pull-right"><i class="fa fa-cloud-upload"></i> Upload</button>
+        <h1><i class="fa fa-youtube-play"></i> Upload Youtube Song</h1>
+    </div>
+    <div class="row">
+        <form>
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="youtubeurl"
+                           placeholder="search Youtube video ...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" ng-click="searchVideos()">search Videos!</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <h2>Search Result</h2>
+    <div class="col-lg-12" ng-hide="!videos || videos.length == 0">
+        <table class="table table-striped">
+            <tr>
+                <th>Thumbnail</th>
+                <th>Title</th>
+                <th>Channel</th>
+                <th>Actions</th>
+            </tr>
+            <tr ng:repeat="video in videos">
+                <td>
+                    <img class="youtube-thumbnail"
+                         ng-src={{video.thumbnailurl.url}} />
+                </td>
+                <td>{{video.title || "-"}}</td>
+                <td>{{video.channelTitle || "-"}}</td>
+                <td>
+                    <a title="open video" ng-href="https://www.youtube.com/watch?v={{video.videoId}}" target="_blank">open</a>
+                    <a title="add to library" ng-click="sendUrl(video.videoId)">
+                        add
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div ng-if="!videos || videos.length == 0">No search results.</div>
+
+    <h2>Upload Queue</h2>
+    <!-- Upload Finished -->
+    <div class="js-upload-finished">
+        <div class="list-group" ng:repeat="song in uploadedSongs">
+            <a ng-if="song.finished" href="javascript:void(0)"
+               class="list-group-item list-group-item-success">
+                <span class="badge alert-success pull-right">Upload complete</span>{{ song.url }}
+            </a>
+            <a ng-if="!song.finished" href="javascript:void(0)"
+               class="list-group-item list-group-item-info">
+                <span class="badge alert-info pull-right">Upload in progress</span>{{ song.url }}
+            </a>
+        </div>
+    </div>
+    <div ng-if="!uploadedSongs || uploadedSongs.length == 0">No files.</div>
+</div>
+</div>

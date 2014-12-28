@@ -37,5 +37,11 @@
             </tab-heading>
             <so-library-artists></so-library-artists>
         </tab>
+        <tab active="tabs[2].active" ng-if="eventId && !$root.isAnonymous()">
+            <tab-heading>
+                Youtube
+            </tab-heading>
+            <div class="row" ng-include="'youtube-upload/youtube-search-suggestions.tpl.html'"></div>
+        </tab>
     </tabset>
 </div>

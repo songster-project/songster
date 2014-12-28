@@ -20,3 +20,5 @@ exports.cookie_secret = 'changeme';
 
 exports.bitly_user = 'psaeuerl';
 exports.bitly_apikey = 'R_04c3f9a1e4c24fb28e876889c6fc31bc';
+
+exports.authkey = process.env.YOUTUBE_API_KEY || 'AIzaSyCNIVDVFJEZG9bMy5KFzT9WqXEZ1RD7l2o';
