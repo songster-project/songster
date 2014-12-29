@@ -65,7 +65,7 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
         }
 
         // find all voted songs from event and send them back
-        var o = {};
+       /* var o = {};
         o.map = function() {
             emit( this.song_id, 1);
         };
@@ -79,10 +79,10 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
             event_id: event._id,
             state: 'new',
             type: 'vote'
-        };
+        }; */
 
         db.Vote.find( {event_id: event._id, type: 'vote', state: {$ne: 'played'}})
-            .select( 'date state type song_id -id')
+            .select( 'date state type song_id')
             .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
             .exec( function(err, votes){
                 console.log(votes);
