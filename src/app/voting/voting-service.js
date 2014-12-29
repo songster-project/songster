@@ -63,6 +63,12 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         self.setVotes(votes);
     }
 
+    this.setUnwrappedVote = function (vote) {
+        var vote = ReceivedVoteFactory.create(vote);
+        self.addVote(vote);
+
+    }
+
     this.setVotes = function (votes) {
         _votes = votes;
         updateVotesMap();
@@ -108,7 +114,8 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     function updateVotesMap() {
         _votesMap = {};
         _.each(_votes, function (vote) {
-            _votesMap[vote.song._id] = vote.value;
+            var old = _votesMap[vote.song._id];
+            _votesMap[vote.song._id] = old ? old + 1 : 1;
         });
     }
 
@@ -116,5 +123,11 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         if(song && !$rootScope.isDj()) {
             removeUserVotesForSong(song._id);
         }
+    }
+
+    this.addVote = function(vote) {
+        _votes.push(vote);
+        updateVotesMap();
+        $rootScope.$broadcast('VOTES_UPDATED');
     }
 }
