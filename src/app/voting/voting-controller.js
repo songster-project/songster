@@ -12,9 +12,10 @@ angular.module('songster.voting')
         var data = {
             eventid: $scope.event._id
         };
-        $websocket.register_to_event('votes_changed', function (votes) {
-            votingService.setUnwrappedVotes(votes);
+        $websocket.register_to_event('votes_changed', function (vote) {
+            votingService.setUnwrappedVote(vote);
             $scope.$apply(function (){
+                console.log('set votes in websocket event votes_changed');
                 $scope.votes = votingService.getVotes();
             });
         }, data);
