@@ -81,7 +81,22 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
             type: 'vote'
         };
 
-        db.Vote.mapReduce(o, function (err, model) {
+        db.Vote.find( {event_id: event._id, type: 'vote', state: {$ne: 'played'}})
+            .select( 'date state type song_id -id')
+            .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
+            .exec( function(err, votes){
+                console.log(votes);
+                if(err) {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+                    return;
+                }
+                res.status(200).send(votes);
+            });
+
+
+
+       /* db.Vote.mapReduce(o, function (err, model) {
                 model
                     .find()
                     .populate({path: '_id', model: 'Song', select: '_id title artist album year'})
@@ -95,7 +110,7 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
                     });
 
             }
-        );
+        ); */
     });
 });
 
@@ -194,16 +209,32 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                 vote.song_id = req.body.song_id;
                 vote.event_id = req.param('event_id');
 
+                console.log('before save vote');
                 vote.save( function(err, vote){
                     if(err)  {
                         console.log(err);
                         res.status(500).send('Internal server error');
                         return;
                     }
+                    console
                     res.status(201).send(vote);
 
                     // notify web socket vote_changed event
-                    votesWs.votesChanged(event._id);
+
+                    console.log('saved vote ');
+                    console.log(vote);
+                    db.Vote.findOne( {_id: vote._id})
+                        .select( 'date state type song_id')
+                        .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
+                        .exec( function(err, vote_pop){
+                            console.log(vote_pop);
+                            if(err) {
+                                console.log(err);
+                            }
+                            console.log('notify vote');
+                            votesWs.votesChanged(event._id, vote_pop);
+                        });
+
 
                     db.Song.find({_id: vote.song_id}, function (err, song) {
                         // save the vote to the event log
