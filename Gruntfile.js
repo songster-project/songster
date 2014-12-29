@@ -229,7 +229,8 @@ module.exports = function ( grunt ) {
     uglify: {
       compile: {
         options: {
-          banner: '<%= meta.banner %>'
+          banner: '<%= meta.banner %>',
+          mangle: false
         },
         files: {
           '<%= concat.compile_js.dest %>': '<%= concat.compile_js.dest %>'
@@ -572,9 +573,7 @@ module.exports = function ( grunt ) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-      // TODO disable uglify, because this leads to a minification js error in the angularjs app
-      // this needs to be fixed
-    'less:compile', 'copy:compile_assets', 'ngmin', 'concat:compile_js',/* 'uglify',*/ 'index:compile'
+    'less:compile', 'copy:compile_assets', 'ngmin', 'concat:compile_js', 'uglify', 'index:compile'
   ]);
 
   grunt.registerTask( 'test', [
