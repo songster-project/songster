@@ -75,18 +75,21 @@ router.get('/artist', passport.ensureAuthenticated, function (req, res) {
     var body = {};
 
     // filter
-    body["filter"] = {
-        "and": [
-            {
-                "term": {
-                    "owner_id": req.user._id
-                }
-            }, {
-                "term": {
-                    "active": true
-                }
+    body["query"] = {
+        "filtered": {
+            "filter": {
+                "and": [{
+                        "term": {
+                            "owner_id": req.user._id
+                        }
+                    }, {
+                        "term": {
+                            "active": true
+                        }
+                    }
+                ]
             }
-        ]
+        }
     };
 
     // http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_executing_aggregations.html
@@ -226,26 +229,30 @@ router.get('/event/:eventid/artist', passport.ensureAuthenticated, function (req
         var body = {};
 
         // filter
-        body["filter"] = {
-            "bool": {
-                "must": [{
-                    "term": {
-                        "active": true
+        body["query"] = {
+            "filtered": {
+                "filter": {
+                    "bool": {
+                        "must": [{
+                            "term": {
+                                "active": true
+                            }
+                        }],
+                        "should": [
+                            {
+                                "term": {
+                                    "owner_id": event.owner_id
+                                }
+                            },
+                            {
+                                "term": {
+                                    "owner_id": req.user._id
+                                }
+                            }
+                        ],
+                        "must_not": []
                     }
-                }],
-                "should": [
-                    {
-                        "term": {
-                            "owner_id": event.owner_id
-                        }
-                    },
-                    {
-                        "term": {
-                            "owner_id": req.user._id
-                        }
-                    }
-                ],
-                "must_not": []
+                }
             }
         };
 

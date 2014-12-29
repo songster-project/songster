@@ -50,8 +50,6 @@ exports.dropAllIndices = function dropAllIndices() {
 };
 
 exports.reindexSongs = function () {
-    reindex('song');
-
     // create index
     return elasticSearchClient.indices.create({
         index: settings.elasticSearch_index
@@ -75,7 +73,9 @@ exports.reindexSongs = function () {
                     }
                 }
             }
-        }, callback);
+        }).then(function() {
+            reindex('song');
+        });
     });
 };
 
