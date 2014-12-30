@@ -8,7 +8,7 @@ var database = require('../lib/database');
 
 describe('VotingApiTests', function () {
     var eid;
-    this.timeout(1000000);
+    this.timeout(10000);
     //Callback - Magic provided by: https://github.com/visionmedia/superagent/issues/314
     //Basically solves that we can be logged in
 
