@@ -9,23 +9,28 @@ var database = require('../lib/database');
 describe('VotingApiTests', function () {
     var eid;
     this.timeout(10000);
-    //Callback - Magic provided by: https://github.com/visionmedia/superagent/issues/314
-    //Basically solves that we can be logged in
+
+    var postdata_dj = {
+        "username": "user1",
+        "password": "user1"
+    };
+
+    var postdata_user = {
+        "username": "user2",
+        "password": "user2"
+    };
 
     // before all tests create event as user1
     before(function (done) {
 
-        var postdata = {
-            "username": "user1",
-            "password": "user1"
-        };
         var cb = function (x) {
             return;
         };
         api.post('/login')
-            .send(postdata)
-            .end(function (err) {
+            .send(postdata_dj)
+            .end(function (err, res) {
                 expect(err).to.not.exist;
+                expect(res.status).to.equal(302);
 
                 // create event as user1
                 api.get('/event').end(function (err, res) {
@@ -47,6 +52,7 @@ describe('VotingApiTests', function () {
                         // logout user1
                         api.get('/logout').end(function (err, res) {
                             expect(err).to.not.exist;
+                            expect(res.status).to.equal(302);
 
                             process.nextTick(function () {
                                 cb(err);
@@ -60,17 +66,15 @@ describe('VotingApiTests', function () {
 
 
     beforeEach(function (done) {
-        var postdata = {
-            "username": "user2",
-            "password": "user2"
-        };
+
         var cb = function (x) {
             return;
         };
         api.post('/login')
-            .send(postdata)
-            .end(function (err) {
+            .send(postdata_user)
+            .end(function (err, res) {
                 expect(err).to.not.exist;
+                expect(res.status).to.equal(302);
 
                 process.nextTick(function () {
                     cb(err);
@@ -84,20 +88,38 @@ describe('VotingApiTests', function () {
     afterEach(function (done) {
         api.get('/logout').end(function (err, res) {
             expect(err).to.not.exist;
+            expect(res.status).to.equal(302);
             done();
         });
     });
 
     // close event and logout user
     after(function (done) {
-        api.put('/event/current/end').send({}).end(function (err, res) {
-            expect(err).to.not.exist;
-            expect(res.body.end).to.not.equal(null);
 
-            api.get('/logout').end(function (err, res) {
-                expect(err).to.not.exist;
-                done();
-            });
+        // logout current voting user
+        api.get('/logout').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(302);
+
+            // login dj again
+            api.post('/login')
+                .send(postdata_dj)
+                .end(function (err) {
+                    expect(err).to.not.exist;
+
+                    // end event of dj
+                    api.put('/event/current/end').send({}).end(function (err, res) {
+                        expect(err).to.not.exist;
+                        expect(res.status).to.equal(200);
+                        expect(res.body.end).to.not.equal(null);
+
+                        // logout dj
+                        api.get('/logout').end(function (err, res) {
+                            expect(err).to.not.exist;
+                            done();
+                        });
+                    });
+                });
 
         });
     });
