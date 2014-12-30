@@ -60,8 +60,8 @@ var votesWs = require('../backend/websockets/votes_suggests');
  */
 router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, res){
 
-    req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
-    req.checkParams('event_id', 'event_id is not an ID').isMongoID();
+    req.checkParams('eventid', 'Event ID must not be empty').notEmpty();
+    req.checkParams('eventid', 'event_id is not an ID').isMongoID();
 
     var errors = req.validationErrors();
     if (errors) {
@@ -115,8 +115,8 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
  */
 router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, res){
 
-    req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
-    req.checkParams('event_id', 'event_id is not an ID').isMongoID();
+    req.checkParams('eventid', 'Event ID must not be empty').notEmpty();
+    req.checkParams('eventid', 'event_id is not an ID').isMongoID();
 
     var errors = req.validationErrors();
     if (errors) {
@@ -160,8 +160,8 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
     req.assert('type', 'Type does not match vote types').isInArray(('vote suggestion').split(' '));
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
     req.checkBody('song_id', 'Song ID must not be empty').notEmpty();
-    req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
-    req.checkParams('song_id', 'Song_id is not an ID').isMongoID();
+    req.checkParams('event_id', 'Event ID must not be empty').notEmpty();
+    req.checkBody('song_id', 'Song_id is not an ID').isMongoID();
     req.checkParams('event_id', 'event_id is not an ID').isMongoID();
 
     var errors = req.validationErrors();
