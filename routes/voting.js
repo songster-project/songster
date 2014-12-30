@@ -46,6 +46,18 @@ var votesWs = require('../backend/websockets/votes_suggests');
  }); */
 
 
+/**
+ * returns and array of all votes from the event with given event_id that have not been played yet
+ * [{ song_id: { title: 'xxxx', album: 'xxxx', artist: 'xxx', year: '2000', _id: xx },
+ *   state: 'new'
+  *  type: 'vote',
+  *  _id: xxxx,
+  *  date: xxx },
+ *  { song_id: .... },
+ *  { song_id: ....} ]
+ *
+ *  is called for initial load of vote-view page
+ */
 router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, res){
 
     req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
@@ -85,6 +97,21 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
     });
 });
 
+
+/**
+ * returns an array of votes concerning only song information
+ * from the current user from the event with given event_id that have not been played yet
+ * [{ song_id: {
+ *      _id: ,
+ *      title: ,
+ *      artist: ,
+ *      album: ,
+ *      year:
+ * } },
+ *  { song_id: {} } ]
+ *
+ * used for disabling multiple votes from a user 
+ */
 router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, res){
 
     req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
