@@ -48,7 +48,14 @@ var votesWs = require('../backend/websockets/votes_suggests');
 
 router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, res){
 
-    console.log('in votedsongs');
+    req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
+    req.checkParams('event_id', 'event_id is not an ID').isMongoID();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -79,6 +86,15 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
 });
 
 router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, res){
+
+    req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
+    req.checkParams('event_id', 'event_id is not an ID').isMongoID();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -117,6 +133,14 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
     req.checkBody('song_id', 'Song ID must not be empty').notEmpty();
     req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
+    req.checkParams('song_id', 'Song_id is not an ID').isMongoID();
+    req.checkParams('event_id', 'event_id is not an ID').isMongoID();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
 
     // check that event id is active
     db.Event.findOne({_id: req.param('event_id'), end:null }, function (err, event){
