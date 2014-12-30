@@ -63,10 +63,13 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         self.setVotes(votes);
     }
 
-    this.setUnwrappedVote = function (vote) {
+    this.processWebsocketVote = function (vote) {
         var vote = ReceivedVoteFactory.create(vote);
-        self.addVote(vote);
-
+        if(vote.state == 'new') {
+            self.addVote(vote);
+        } else if(vote.state == 'played') {
+           self.votedSongPlayed(vote.song);
+        }
     }
 
     this.setVotes = function (votes) {
@@ -120,14 +123,18 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     }
 
     this.votedSongPlayed = function(song) {
-        if(song && !$rootScope.isDj()) {
-            removeUserVotesForSong(song._id);
+        if(song) {
+           var new_votes = _.filter(_votes, function (vote) {
+                return vote.song._id !== song._id;
+            });
+            self.setVotes(new_votes)
+
+            if(!$rootScope.isDj()) {
+                removeUserVotesForSong(song._id);
+
+            }
         }
     }
 
-    this.addVote = function(vote) {
-        _votes.push(vote);
-        updateVotesMap();
-        $rootScope.$broadcast('VOTES_UPDATED');
-    }
+
 }
