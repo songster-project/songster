@@ -25,7 +25,7 @@ nserver.register_to_UserRegistrations('votes_changed', function (ws, req, data) 
         }
         //send the songs to the new client
         if (eventmap[data.eventid]) {
-            sendVotes(data.eventid, [ws]);
+            sendVotes(undefined, [ws]);
         }
     } else {//add entry for event if event exists
         db.Event.findOne({'_id': data.eventid}, function (err, events) {
@@ -44,65 +44,17 @@ nserver.register_to_UserRegistrations('votes_changed', function (ws, req, data) 
             }
             //send the songs to the new client
             if (eventmap[data.eventid]) {
-                sendVotes(data.eventid, [ws]);
+                sendVotes(undefined, [ws]);
             }
         });
     }
 });
 
-function sendVotes(eventId, clients) {
+function sendVotes(vote, clients) {
 
-    db.Event.findOne({_id: eventId, end:null}, function (err, event) {
-        if (err) {
-            console.log(err);
-            //res.status(500).send('Internal server error');
-            return;
-        }
-
-        if(event == null) {
-            console.log('event not found');
-            //res.status(400).send('Bad Request');
-            return;
-        }
-
-        // find all voted songs from event and send them back
-        var o = {};
-        o.map = function() {
-            emit( this.song_id, 1);
-        };
-        o.reduce = function(key, values) {
-            return values.length;
-        };
-        o.out = {
-            replace: 'songsWithVotes'
-        };
-        o.query = {
-            event_id: event._id,
-            state: 'new',
-            type: 'vote'
-        };
-
-        db.Vote.mapReduce(o, function (err, model) {
-                model
-                    .find()
-                    .populate({path: '_id', model: 'Song', select: '_id title artist album year'})
-                    .exec( function(err, votes){
-                        if(err) {
-                            console.log(err);
-                            //res.status(500).send('Internal server error');
-                            return;
-                        }
-
-                        console.log('ws votes_changed send_notification');
-                        nserver.send_Notifications('votes_changed', votes, clients);
-                    });
-
-            }
-        );
-    });
-
-
-
+    if(vote) {
+        nserver.send_Notifications('votes_changed', vote, clients);
+    }
 }
 
 /**
@@ -132,13 +84,13 @@ module.exports.removeEvent = function (id) {
  *
  * @param id the Id of the event where the song update occured
  */
-module.exports.votesChanged = function (id) {
-    if (!eventmap[id]) {
-        eventmap[id] = {
+module.exports.votesChanged = function (event_id, vote) {
+    if (!eventmap[event_id]) {
+        eventmap[event_id] = {
             clients: []
         };
     }
-    if (eventmap[id]) {
-        sendVotes(id, eventmap[id].clients);
+    if (eventmap[event_id]) {
+        sendVotes(vote, eventmap[event_id].clients);
     }
 };
