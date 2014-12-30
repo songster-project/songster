@@ -64,28 +64,10 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
             return;
         }
 
-        // find all voted songs from event and send them back
-       /* var o = {};
-        o.map = function() {
-            emit( this.song_id, 1);
-        };
-        o.reduce = function(key, values) {
-            return values.length;
-        };
-        o.out = {
-            replace: 'songsWithVotes'
-        };
-        o.query = {
-            event_id: event._id,
-            state: 'new',
-            type: 'vote'
-        }; */
-
         db.Vote.find( {event_id: event._id, type: 'vote', state: {$ne: 'played'}})
             .select( 'date state type song_id')
             .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
             .exec( function(err, votes){
-                console.log(votes);
                 if(err) {
                     console.log(err);
                     res.status(500).send('Internal server error');
@@ -93,30 +75,10 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
                 }
                 res.status(200).send(votes);
             });
-
-
-
-       /* db.Vote.mapReduce(o, function (err, model) {
-                model
-                    .find()
-                    .populate({path: '_id', model: 'Song', select: '_id title artist album year'})
-                    .exec( function(err, votes){
-                        if(err) {
-                            console.log(err);
-                            res.status(500).send('Internal server error');
-                            return;
-                        }
-                        res.status(200).send(votes);
-                    });
-
-            }
-        ); */
     });
 });
 
 router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, res){
-
-    console.log('in get uservotes');
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -132,7 +94,6 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
             return;
         }
 
-        console.log('user id ' + req.user.id);
         db.Vote.find({event_id: event._id, owner_id: req.user.id, state: 'new', type: 'vote'})
             .populate({path: 'song_id', model: 'Song', select: '_id title artist album year'})
             .select( 'song_id -_id')
@@ -152,7 +113,6 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
 
 router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
-    console.log('in voting post');
     req.assert('type', 'Type does not match vote types').isInArray(('vote suggestion').split(' '));
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
     req.checkBody('song_id', 'Song ID must not be empty').notEmpty();
@@ -209,29 +169,23 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                 vote.song_id = req.body.song_id;
                 vote.event_id = req.param('event_id');
 
-                console.log('before save vote');
                 vote.save( function(err, vote){
                     if(err)  {
                         console.log(err);
                         res.status(500).send('Internal server error');
                         return;
                     }
-                    console
                     res.status(201).send(vote);
 
                     // notify web socket vote_changed event
 
-                    console.log('saved vote ');
-                    console.log(vote);
                     db.Vote.findOne( {_id: vote._id})
                         .select( 'date state type song_id')
                         .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
                         .exec( function(err, vote_pop){
-                            console.log(vote_pop);
                             if(err) {
                                 console.log(err);
                             }
-                            console.log('notify vote');
                             votesWs.votesChanged(event._id, vote_pop);
                         });
 
