@@ -10,7 +10,7 @@
                     <th>Artist</th>
                     <th></th>
                 </tr>
-                <tr ng:repeat="vote in votes | unique: 'song._id'">
+                <tr ng:repeat="vote in votes | unique: 'song._id'" ng-show="getVotesForSong(vote.song) > 0">
                     <td>{{ vote.song.title || "-" }}{{song}}</td>
                     <td>{{ vote.song.artist || "-" }}</td>
                     <td >
