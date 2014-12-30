@@ -88,10 +88,17 @@ describe('VotingApiTests', function () {
         });
     });
 
+    // close event and logout user
     after(function (done) {
-        api.get('/logout').end(function (err, res) {
+        api.put('/event/current/end').send({}).end(function (err, res) {
             expect(err).to.not.exist;
-            done();
+            expect(res.body.end).to.not.equal(null);
+
+            api.get('/logout').end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+
         });
     });
 
