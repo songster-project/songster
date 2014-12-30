@@ -186,5 +186,76 @@ describe('VotingApiTests', function () {
         });
     });
 
+    it('should get vote via websocket from anonymous users vote ', function (done) {
+
+        api.get('/logout').end(function (err, res) {
+            expect(err).to.not.exist;
+
+            api.get('/voting/'+ eid).end(function (err, res) {
+                expect(err).to.not.exist;
+                expect(res.text).to.contain('Moved Temporarily');
+                console.log(res.text);
+
+                var postdata = {
+                    "type": "vote",
+                    "state": "new",
+                    "song_id": "5489e26c663534a4148bdfce",
+                    "event_id": eid
+                }
+
+                api.post('/voting/' + eid).send(postdata).end(function (err, res) {
+                    expect(err).to.not.exist;
+                    expect(res.status).to.equal(201);
+
+                    var first = true;
+                    var nClient = require('../lib/notification_client');
+                    var data = {
+                        eventid: eid
+                    };
+                    nClient.register_to_event('votes_changed', function (vote) {
+                        if (first) {
+                            expect(vote.song_id._id).to.equal("5489e26c663534a4148bdfce");
+                            first = false;
+                            done();
+                        }
+                    }, data);
+
+                });
+            });
+
+        });
+
+        api.get('/event').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.be.empty;
+            var postdata = {
+                "name": "websocketEvent1",
+                "accessKey": "theKey",
+                "owner_id": "5489e22a2b6671a414dcab8f",
+                "suggestionEnabled": true,
+                "votingEnabled": true,
+                "previewEnabled": true
+            };
+            api.post('/event').send(postdata).end(function (err, res) {
+                expect(err).to.not.exist;
+                expect(res.body).to.contain.key('start');
+                eid = res.body._id;
+                var first = true;
+                var nClient = require('../lib/notification_client');
+                var data = {
+                    eventid: eid
+                };
+                nClient.register_to_event('music_changed', function (msg) {
+                    if (first) {
+                        expect(msg.lastSongs.length).to.equal(0);
+                        expect(msg.nextSongs.length).to.equal(0);
+                        first = false;
+                        done();
+                    }
+                }, data);
+            });
+        });
+    });
+
 
 });
