@@ -110,7 +110,8 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
  * } },
  *  { song_id: {} } ]
  *
- * used for disabling multiple votes from a user 
+ * used for disabling multiple votes from a user
+ * the client aggregates those song_ids
  */
 router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, res){
 
