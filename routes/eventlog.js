@@ -52,9 +52,16 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
                     if(err)
                         console.log(err);
 
-                    console.log('update votes ' + numAffected);
                     if(numAffected > 0)
-                       voteWs.votesChanged(eventlog.event_id);
+                    // sends the last vote from the current song via web socket
+                    // if song is voted again since it was set to played this will be handled as a new vote
+                        db.Vote.findOne( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id})
+                            .sort( '-date')
+                            .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
+                            .exec( function(err, vote) {
+                                voteWs.votesChanged(eventlog.event_id, vote);
+                        } )
+
                 });
             }
             res.status(201).send(eventlog);
