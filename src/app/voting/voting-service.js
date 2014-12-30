@@ -13,6 +13,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     var _clientVotes = {}; // votes of current client
 
     this.loadVotes = function (event_id) {
+        console.log('load votes from server');
         var url = '/voting/votedsongs';
         if (!!event_id) {
             url += '/' + event_id;
@@ -77,6 +78,12 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         updateVotesMap();
         $rootScope.$broadcast('VOTES_UPDATED');
     };
+
+    this.addVote = function(vote) {
+        _votes.push(vote);
+        updateVotesMap();
+        $rootScope.$broadcast('VOTES_UPDATED');
+    }
 
     this.getSongObjectFromVoteSong = function (song) {
         var deferred = $q.defer();
