@@ -11,8 +11,8 @@ describe('VotingApiTests', function () {
     this.timeout(10000);
 
     var postdata_dj = {
-        "username": "user1",
-        "password": "user1"
+        "username": "user3",
+        "password": "user3"
     };
 
     var postdata_user = {
@@ -39,7 +39,7 @@ describe('VotingApiTests', function () {
                     var postdata = {
                         "name": "votingEvent1",
                         "accessKey": "theKey",
-                        "owner_id": "546b16fa2e3a10ea162d9355",
+                        "owner_id": "54a3b95eedcf85150a52bfd3",
                         "suggestionEnabled": true,
                         "votingEnabled": true,
                         "previewEnabled": true
@@ -132,7 +132,7 @@ describe('VotingApiTests', function () {
         var postdata = {
             "type": "vote",
             "state": "new",
-            "song_id": "5489e26c663534a4148bdfce",
+            "song_id": "5489e268663534a4148bdfab",
             "event_id": eid
         }
 
@@ -149,7 +149,7 @@ describe('VotingApiTests', function () {
         var postdata = {
             "type": "vote",
             "state": "new",
-            "song_id": "5489e26c663534a4148bdfce",
+            "song_id": "5489e268663534a4148bdfab",
             "event_id": eid
         }
 
@@ -165,7 +165,7 @@ describe('VotingApiTests', function () {
         api.get('/voting/votedsongs/' + eid).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.status).to.equal(200);
-            expect(res.body[0].song_id._id).to.equal("5489e26c663534a4148bdfce");
+            expect(res.body[0].song_id._id).to.equal("5489e268663534a4148bdfab");
             done();
         });
     });
@@ -174,7 +174,7 @@ describe('VotingApiTests', function () {
         api.get('/voting/uservotes/' + eid).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.status).to.equal(200);
-            expect(res.body[0].song_id._id).to.equal("5489e26c663534a4148bdfce");
+            expect(res.body[0].song_id._id).to.equal("5489e268663534a4148bdfab");
             done();
         });
     });
@@ -191,7 +191,7 @@ describe('VotingApiTests', function () {
                 var postdata = {
                     "type": "vote",
                     "state": "new",
-                    "song_id": "5489e26c663534a4148bdfce",
+                    "song_id": "5489e268663534a4148bdfab",
                     "event_id": eid
                 }
 
@@ -209,8 +209,8 @@ describe('VotingApiTests', function () {
         api.get('/voting/votedsongs/' + eid).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.status).to.equal(200);
-            expect(res.body[0].song_id._id).to.equal("5489e26c663534a4148bdfce");
-            expect(res.body[1].song_id._id).to.equal("5489e26c663534a4148bdfce");
+            expect(res.body[0].song_id._id).to.equal("5489e268663534a4148bdfab");
+            expect(res.body[1].song_id._id).to.equal("5489e268663534a4148bdfab");
             done();
         });
     });
@@ -229,7 +229,7 @@ describe('VotingApiTests', function () {
                 var postdata = {
                     "type": "vote",
                     "state": "new",
-                    "song_id": "5489e268663534a4148bdfcd",
+                    "song_id": "5489e268663534a4148bdfab",
                     "event_id": eid
                 }
 
@@ -242,7 +242,7 @@ describe('VotingApiTests', function () {
                 nClient.register_to_event('votes_changed', function (vote) {
                     expect(vote).to.exist;
                     if (first) {
-                        expect(vote.song_id._id).to.equal("5489e268663534a4148bdfcd");
+                        expect(vote.song_id._id).to.equal("5489e268663534a4148bdfab");
                         first = false;
                         done();
                     }
