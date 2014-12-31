@@ -13,6 +13,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     var _clientVotes = {}; // votes of current client
 
     this.loadVotes = function (event_id) {
+        console.log('load votes from server');
         var url = '/voting/votedsongs';
         if (!!event_id) {
             url += '/' + event_id;
@@ -63,11 +64,26 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         self.setVotes(votes);
     }
 
+    this.processWebsocketVote = function (vote) {
+        var vote = ReceivedVoteFactory.create(vote);
+        if(vote.state == 'new') {
+            self.addVote(vote);
+        } else if(vote.state == 'played') {
+           self.votedSongPlayed(vote.song);
+        }
+    }
+
     this.setVotes = function (votes) {
         _votes = votes;
         updateVotesMap();
         $rootScope.$broadcast('VOTES_UPDATED');
     };
+
+    this.addVote = function(vote) {
+        _votes.push(vote);
+        updateVotesMap();
+        $rootScope.$broadcast('VOTES_UPDATED');
+    }
 
     this.getSongObjectFromVoteSong = function (song) {
         var deferred = $q.defer();
@@ -108,13 +124,24 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     function updateVotesMap() {
         _votesMap = {};
         _.each(_votes, function (vote) {
-            _votesMap[vote.song._id] = vote.value;
+            var old = _votesMap[vote.song._id];
+            _votesMap[vote.song._id] = old ? old + 1 : 1;
         });
     }
 
     this.votedSongPlayed = function(song) {
-        if(song && !$rootScope.isDj()) {
-            removeUserVotesForSong(song._id);
+        if(song) {
+           var new_votes = _.filter(_votes, function (vote) {
+                return vote.song._id !== song._id;
+            });
+            self.setVotes(new_votes)
+
+            if(!$rootScope.isDj()) {
+                removeUserVotesForSong(song._id);
+
+            }
         }
     }
+
+
 }

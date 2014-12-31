@@ -12,5 +12,6 @@ angular
     .module('songster.voting', [
         'songster.voting.services',
         'ui.router',
-        'ui.bootstrap'
+        'ui.bootstrap',
+        'angular.filter'
     ]);

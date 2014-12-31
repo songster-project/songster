@@ -92,7 +92,8 @@ var voteSchema = new Schema({
     type: {type: String, enum: voteTypes},
     state: {type: String, enum: voteStates},
     song_id: {type: ObjectId, ref: 'Song' }, //Referencing to the song suggested
-    event_id: {type: ObjectId, index: true} //Referencing to the event that this vote was posted
+    event_id: {type: ObjectId, index: true}, //Referencing to the event that this vote was posted
+    date: {type: Date, default: Date.now}
 }, {collection: 'vote'});
 
 var eventLogSchema = new Schema({

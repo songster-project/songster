@@ -20,7 +20,6 @@ function SoEventSongsDirective() {
                 $scope.$apply();
 
                 $rootScope.notifyActivityStream(msg);
-                votingService.votedSongPlayed(msg.currentSong);
             }, data);
         },
         templateUrl: 'event-songs/so-event-songs.tpl.html'

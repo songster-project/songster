@@ -46,9 +46,28 @@ var votesWs = require('../backend/websockets/votes_suggests');
  }); */
 
 
+/**
+ * returns and array of all votes from the event with given event_id that have not been played yet
+ * [{ song_id: { title: 'xxxx', album: 'xxxx', artist: 'xxx', year: '2000', _id: xx },
+ *   state: 'new'
+  *  type: 'vote',
+  *  _id: xxxx,
+  *  date: xxx },
+ *  { song_id: .... },
+ *  { song_id: ....} ]
+ *
+ *  is called for initial load of vote-view page
+ */
 router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, res){
 
-    console.log('in votedsongs');
+    req.checkParams('eventid', 'Event ID must not be empty').notEmpty();
+    req.checkParams('eventid', 'event_id is not an ID').isMongoID();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -64,44 +83,46 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
             return;
         }
 
-        // find all voted songs from event and send them back
-        var o = {};
-        o.map = function() {
-            emit( this.song_id, 1);
-        };
-        o.reduce = function(key, values) {
-            return values.length;
-        };
-        o.out = {
-            replace: 'songsWithVotes'
-        };
-        o.query = {
-            event_id: event._id,
-            state: 'new',
-            type: 'vote'
-        };
-
-        db.Vote.mapReduce(o, function (err, model) {
-                model
-                    .find()
-                    .populate({path: '_id', model: 'Song', select: '_id title artist album year'})
-                    .exec( function(err, votes){
-                        if(err) {
-                            console.log(err);
-                            res.status(500).send('Internal server error');
-                            return;
-                        }
-                        res.status(200).send(votes);
-                    });
-
-            }
-        );
+        db.Vote.find( {event_id: event._id, type: 'vote', state: {$ne: 'played'}})
+            .select( 'date state type song_id')
+            .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
+            .exec( function(err, votes){
+                if(err) {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+                    return;
+                }
+                res.status(200).send(votes);
+            });
     });
 });
 
+
+/**
+ * returns an array of votes concerning only song information
+ * from the current user from the event with given event_id that have not been played yet
+ * [{ song_id: {
+ *      _id: ,
+ *      title: ,
+ *      artist: ,
+ *      album: ,
+ *      year:
+ * } },
+ *  { song_id: {} } ]
+ *
+ * used for disabling multiple votes from a user
+ * the client aggregates those song_ids
+ */
 router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, res){
 
-    console.log('in get uservotes');
+    req.checkParams('eventid', 'Event ID must not be empty').notEmpty();
+    req.checkParams('eventid', 'event_id is not an ID').isMongoID();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
 
     // get current event with eventid
     db.Event.findOne({_id: req.param('eventid'), end:null}, function (err, event) {
@@ -117,7 +138,6 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
             return;
         }
 
-        console.log('user id ' + req.user.id);
         db.Vote.find({event_id: event._id, owner_id: req.user.id, state: 'new', type: 'vote'})
             .populate({path: 'song_id', model: 'Song', select: '_id title artist album year'})
             .select( 'song_id -_id')
@@ -137,11 +157,18 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
 
 router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
 
-    console.log('in voting post');
     req.assert('type', 'Type does not match vote types').isInArray(('vote suggestion').split(' '));
     req.assert('state', 'State does not match any state type').isInArray(('new played').split(' '));
     req.checkBody('song_id', 'Song ID must not be empty').notEmpty();
-    req.checkBody('event_id', 'Event ID must not be empty').notEmpty();
+    req.checkParams('event_id', 'Event ID must not be empty').notEmpty();
+    req.checkBody('song_id', 'Song_id is not an ID').isMongoID();
+    req.checkParams('event_id', 'event_id is not an ID').isMongoID();
+
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
 
     // check that event id is active
     db.Event.findOne({_id: req.param('event_id'), end:null }, function (err, event){
@@ -203,7 +230,17 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                     res.status(201).send(vote);
 
                     // notify web socket vote_changed event
-                    votesWs.votesChanged(event._id);
+
+                    db.Vote.findOne( {_id: vote._id})
+                        .select( 'date state type song_id')
+                        .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
+                        .exec( function(err, vote_pop){
+                            if(err) {
+                                console.log(err);
+                            }
+                            votesWs.votesChanged(event._id, vote_pop);
+                        });
+
 
                     db.Song.find({_id: vote.song_id}, function (err, song) {
                         // save the vote to the event log

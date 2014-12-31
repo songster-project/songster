@@ -3,8 +3,12 @@
 angular.module('songster.domain.receivedVote')
     .factory('ReceivedVoteFactory', function(SongFactory) {
         window.ReceivedVote = function ReceivedVote(data) {
-            this.song = data ? SongFactory.create(data._id) : SongFactory.create();
-            this.value = data ? data.value : undefined;
+            console.log(data);
+            this.song = data ? SongFactory.create(data.song_id) : SongFactory.create();
+            //this.value = data ? data.value : undefined;
+            this.state = data ? data.state : undefined;
+            this.type = data ? data.type : undefined;
+            this.date = data ? data.type : undefined;
         };
 
         return {
