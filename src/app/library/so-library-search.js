@@ -34,6 +34,7 @@ function SoLibrarySearchDirective() {
                 {active: true},
                 {active: false},
                 {active: false},
+                {active: false},
                 {active: false}
             ];
 

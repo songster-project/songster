@@ -90,6 +90,27 @@ router.get('/album', passport.ensureAuthenticated, function (req, res) {
     searchSongs(res, body);
 });
 
+router.get('/random', passport.ensureAuthenticated, function (req, res) {
+    var body = {};
+
+    body["query"] = {
+        "function_score": {
+            "filter": createUserSongFilter(req.user),
+            "functions": [{
+                "random_score": {
+                    "seed": ('' + Math.random()).substring(2)
+                }
+            }],
+            "score_mode": "sum"
+        }
+    };
+
+    // pagination
+    addPagination(body, req.query);
+
+    searchSongs(res, body);
+});
+
 router.get('/event/:eventid/song', passport.ensureAuthenticated, function (req, res) {
 
     // Validation
@@ -231,6 +252,74 @@ router.get('/event/:eventid/album', passport.ensureAuthenticated, function (req,
         searchSongs(res, body);
     });
 
+});
+
+router.get('/event/:eventid/random', passport.ensureAuthenticated, function (req, res) {
+
+    // Validation
+    req.checkParams('eventid', 'ID is not a valid ID').isMongoID();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+
+    var query = req.query.q;
+    // get active event with eventid from req.param
+    db.Event.findOne({_id: req.param('eventid'), end: null}, function (err, event) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Internal server error');
+            return;
+        }
+
+        if (event == null) {
+            console.log('event not found');
+            res.status(400).send('Bad Request');
+            return;
+        }
+
+        var body = {};
+
+        body["query"] = {
+            "function_score": {
+                "filter": createUserOrEventSongFilter(req.user, event),
+                "functions": [{
+                    "random_score": {
+                        "seed": ('' + Math.random()).substring(2)
+                    }
+                }],
+                "score_mode": "sum"
+            }
+        };
+
+        // pagination
+        addPagination(body, req.query);
+
+        searchSongs(res, body);
+    });
+
+});
+
+router.get('/random', passport.ensureAuthenticated, function (req, res) {
+    var body = {};
+
+    body["query"] = {
+        "function_score": {
+            "filter": createUserSongFilter(req.user),
+            "functions": [{
+                "random_score": {
+                    "seed": ('' + Math.random()).substring(2)
+                }
+            }],
+            "score_mode": "sum"
+        }
+    };
+
+    // pagination
+    addPagination(body, req.query);
+
+    searchSongs(res, body);
 });
 
 function createUserSongFilter(user) {
