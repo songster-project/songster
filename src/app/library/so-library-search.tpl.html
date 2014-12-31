@@ -37,7 +37,13 @@
             </tab-heading>
             <so-library-artists></so-library-artists>
         </tab>
-        <tab active="tabs[2].active" ng-if="eventId">
+        <tab active="tabs[2].active">
+            <tab-heading>
+                Albums
+            </tab-heading>
+            <so-library-albums></so-library-albums>
+        </tab>
+        <tab active="tabs[3].active" ng-if="eventId">
             <tab-heading>
                 Youtube
             </tab-heading>
