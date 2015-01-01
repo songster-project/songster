@@ -1,8 +1,8 @@
 <div>
-    <div class="page-header event-name-header">
-        <h1 ng-click="goToHomeTab()">
+    <div class="page-header event-name-header" style="margin-bottom: 0px !important; border-bottom: 0px;">
+        <h2 ng-click="goToHomeTab()" style="margin-bottom: 0px !important">
             <i class="fa fa-bullhorn"></i> {{event.name}}
-        </h1>
+        </h2>
     </div>
 
     <so-authorize should-be="isDj()">
@@ -21,25 +21,29 @@
         </tab>
         <tab ng-if="!event.end" active="tabs[1].active">
             <tab-heading>
-                Playlist
+                <i class="fa fa-play"></i>
+                <span ng-if="tabs[1].active">Playlist</span>
             </tab-heading>
             <so-event-songs event-id="event._id"></so-event-songs>
         </tab>
         <tab active="tabs[2].active">
             <tab-heading>
-                Activity Stream
+                <i class="fa fa-list-alt"></i>
+                <span ng-if="tabs[2].active">Stream</span>
             </tab-heading>
             <so-event-activity-stream event-id="event._id"></so-event-activity-stream>
         </tab>
         <tab ng-if="!event.end" active="tabs[3].active">
             <tab-heading>
-                Vote
+                <i class="fa fa-thumbs-up"></i>
+                <span ng-if="tabs[3].active">Votes</span>
             </tab-heading>
             <div ng-include="'event/event-detail-votings.tpl.html'"></div>
         </tab>
-        <tab ng-if="!isDj() && !event.end" active="tabs[4].active">
+        <tab ng-if="!isDj() && !event.end" active="tabs[4].active" select="removeTabsForSuggestMode()">
             <tab-heading>
-                Suggest
+                <i class="fa fa-music"></i>
+                <span ng-if="tabs[4].active">Suggest</span>
             </tab-heading>
             <div ng-include="'event/event-detail-suggestions.tpl.html'"></div>
         </tab>

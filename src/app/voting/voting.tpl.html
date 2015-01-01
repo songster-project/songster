@@ -1,10 +1,8 @@
 <div ng-controller="VotingCtrl">
     <div class="row">
         <div class="col-lg-12">
-            <h2>
-                Votes
-            </h2>
-            <table class="table table-striped">
+            <h2 ng-if="!votes || votes.length == 0">No one has voted for a song yet</h2>
+            <table class="table table-striped" ng-if="votes && votes.length > 0">
                 <tr>
                     <th>Title</th>
                     <th>Artist</th>
@@ -13,7 +11,7 @@
                 <tr ng:repeat="vote in votes | unique: 'song._id'" ng-show="getVotesForSong(vote.song) > 0">
                     <td>{{ vote.song.title || "-" }}{{song}}</td>
                     <td>{{ vote.song.artist || "-" }}</td>
-                    <td >
+                    <td style="white-space: nowrap">
                         <div class="pull-right">
                             <i ng-if="isSongInQueue(vote.song)" title="Will be played soon." class="fa fa-clock-o fa-lg"></i>
                             <span class="badge badge-info">{{ getVotesForSong(vote.song) || "0"}}</span>
