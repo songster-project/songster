@@ -25,6 +25,8 @@
                     <td>{{video.title || "-"}}</td>
                     <td>{{video.channelTitle || "-"}}</td>
                     <td>
+                        <a title="open at youtube" ng-href="https://www.youtube.com/watch?v={{video.videoId}}" target="_blank"><i class="fa fa-youtube-play"></i>
+                        </a>
                         <div class="pull-right">
                             <div class="btn-group" role="group">
                                 <button ng-disabled="disableSuggestButton(video.videoId)" title="Suggest" ng-click="suggest(video.videoId)" class="btn btn-xs btn-primary"><i
@@ -34,12 +36,6 @@
                                 </button>
                             </div>
                         </div>
-
-
-                        <a title="open video" ng-href="https://www.youtube.com/watch?v={{video.videoId}}" target="_blank">open</a>
-                        <a title="add to library" ng-click="sendUrl(video.videoId)">
-                            add
-                        </a>
                     </td>
                 </tr>
             </table>
