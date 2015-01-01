@@ -54,7 +54,7 @@ router.get('/search', passport.ensureAuthenticated, function (req, res) {
     });
 });
 
-router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+router.post('/', passport.ensureAuthenticated, function (req, res) {
 
     req.checkBody('youtubeurl', 'URL is empty').notEmpty();
     req.checkBody('youtubeurl', 'Parameter is no valid URL').isValidUrl();
@@ -111,7 +111,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                     database.db.collection('song').insert(metadata, function (err, records) {
                         var record = records[0];
                         elasticSearchService.indexSong(record);
-                        res.status(200).send('OK');
+                        res.status(200).send(record);
                     });
                 });
             });
