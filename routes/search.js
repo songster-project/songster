@@ -148,15 +148,18 @@ router.get('/event/:eventid/song', passport.ensureAuthenticated, function (req, 
 
         var body = {};
 
-        var escapedQuery = elasticSearchService.escape(query);
-        var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
-        body["query"] = {
-            "query_string": {
-                "query": parsedQuery,
-                "fields": searchableFields,
-                "default_operator": "or"
-            }
-        };
+        if (query !== undefined) {
+            // specific song search
+            var escapedQuery = elasticSearchService.escape(query);
+            var parsedQuery = elasticSearchService.parseQuery(escapedQuery);
+            body["query"] = {
+                "query_string": {
+                    "query": parsedQuery,
+                    "fields": searchableFields,
+                    "default_operator": "or"
+                }
+            };
+        }
 
         // filter
         body["filter"] = {
