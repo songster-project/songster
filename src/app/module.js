@@ -22,5 +22,6 @@ angular.module('ngBoilerplate', [
     'songster.playlist-editor',
     'songster.event-activity-stream',
     'songster.youtube-upload',
-    'ui.router'
+    'ui.router',
+    'songster.suggest'
 ]);

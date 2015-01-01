@@ -5,5 +5,6 @@ angular
         'songster.event.services',
         'ui.router',
         'songster.menu',
-        'songster.eventHistory'
+        'songster.eventHistory',
+        'songster.suggest'
     ]);
