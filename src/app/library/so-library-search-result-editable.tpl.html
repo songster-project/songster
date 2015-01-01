@@ -12,7 +12,8 @@
             </tr>
             <tr ng:repeat="song in searchResult.results">
                 <td>
-                  <div draggable="true" effect-allowed="copy" draggable-type="song" draggable-data="{{ song }}">
+                    <div ng-if="song.active" draggable="true" effect-allowed="copy" draggable-type="song"
+                         draggable-data="{{ song }}">
                     <span sv-handle="" class="draggable-icon">
                       <i class="fa fa-ellipsis-v"></i>
                       <i class="fa fa-ellipsis-v"></i>
@@ -20,21 +21,30 @@
                   </div>
                 </td>
                 <td>
-                    <img class="img-rounded small-albumart"
-                         ng-src="{{song.getCoverSrc()}}">
+                    <div ng-if="song.active">
+                        <img class="img-rounded small-albumart"
+                             ng-src="{{song.getCoverSrc()}}">
 
-                    <div>
-                        <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload cover</a>
+                        <div>
+                            <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload
+                                cover</a>
+                        </div>
                     </div>
+                    <span ng-ig="!song.active">-</span>
                 </td>
-                <td><a href="#" editable-text="song.title" onaftersave="updateSongMetadata(song)">{{ song.title || "-" }}</a></td>
-                <td><a href="#" editable-text="song.artist" onaftersave="updateSongMetadata(song)">{{ song.artist || "-" }}</a></td>
-                <td><a href="#" editable-text="song.album" onaftersave="updateSongMetadata(song)">{{ song.album || "-" }}</a></td>
-                <td><a href="#" editable-number="song.year" onaftersave="updateSongMetadata(song)">{{ song.year || "-" }}</a></td>
+                <td><a ng-if="song.active" href="#" editable-text="song.title" onaftersave="updateSongMetadata(song)">{{
+                    song.title || "-" }}</a><span ng-if="!song.active">-</span></td>
+                <td><a ng-if="song.active" href="#" editable-text="song.artist" onaftersave="updateSongMetadata(song)">{{
+                    song.artist || "-" }}</a><span ng-if="!song.active">-</span></td>
+                <td><a ng-if="song.active" href="#" editable-text="song.album" onaftersave="updateSongMetadata(song)">{{
+                    song.album || "-" }}</a><span ng-if="!song.active">-</span></td>
+                <td><a ng-if="song.active" href="#" editable-number="song.year" onaftersave="updateSongMetadata(song)">{{
+                    song.year || "-" }}</a><span ng-if="!song.active">-</span></td>
                 <td ng-if="hasActions()">
-                    <div class="btn-group" role="group">
+                    <div ng-if="song.active" class="btn-group" role="group">
                         <button ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(song)" class="btn btn-xs btn-default"><i class="fa" ng-class="action.icon"></i></button>
                     </div>
+                    <span ng-if="!song.active">Deleted</span>
                 </td>
             </tr>
         </table>

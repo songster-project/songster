@@ -16,6 +16,7 @@ angular.module('songster.domain.song')
             this.cover = data ? data.cover : undefined;
             this.file_id = data ? data.file_id : undefined;
             this.addedDate = data ? data.addedDate : undefined;
+            this.active = data ? data.active : undefined;
 
             // for the player
             this.src = this.getRawSrc();

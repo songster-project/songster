@@ -2,7 +2,7 @@ angular
     .module('songster.player.services')
     .provider('$player', PlayerProvider);
 
-function Player() {
+function Player($rootScope) {
 
     // this contains the song elements with metadata - DONT recreate this array we need the references
     var queue = [];
@@ -63,13 +63,19 @@ function Player() {
             console.log('index to remove larger than queue length');
         }
     };
+
+    $rootScope.$on('SONG_DELETED', function (evt, deletedSong) {
+        var rmIndex = _.findIndex(queue, function (song) {
+            return song._id === deletedSong._id;
+        });
+        if (rmIndex >= 0) {
+            queue.splice(rmIndex, 1);
+        }
+    });
 }
 
 function PlayerProvider() {
-
-    var _player = new Player();
-
-    this.$get = function () {
-        return _player;
+    this.$get = function ($rootScope) {
+        return new Player($rootScope);
     };
 }

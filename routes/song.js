@@ -317,4 +317,30 @@ router.get('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, funct
     });
 });
 
+router.delete('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, function (req, res) {
+    req.checkParams('id', 'ID is not an ID').isMongoID();
+    req.checkParams('id', '_id of song not specified').notEmpty();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    var songId = req.param('id');
+    database.Song.findOne({"_id": mongo.ObjectID(songId), "owner_id": req.user._id}, function (err, song) {
+
+        // deactivate song
+        song.active = false;
+
+        song.save(function (err, song) {
+            if (err) {
+                console.log('error saving song to mongo');
+                res.status(500).send('Internal server error');
+            } else {
+                elasticSearchService.indexSong(song);
+                res.status(204).send();
+            }
+        });
+    });
+});
+
 module.exports = router;
