@@ -1,5 +1,5 @@
 <div>
-    <div ng-controller="YoutubeUploadCtrl">
+    <div ng-controller="SuggestController">
         <div class="col-lg-12">
             <div class="row">
                 <form>
@@ -25,6 +25,17 @@
                     <td>{{video.title || "-"}}</td>
                     <td>{{video.channelTitle || "-"}}</td>
                     <td>
+                        <div class="pull-right">
+                            <div class="btn-group" role="group">
+                                <button ng-disabled="disableSuggestButton(video.videoId)" title="Suggest" ng-click="suggest(video.videoId)" class="btn btn-xs btn-primary"><i
+                                        class="fa fa-thumbs-o-up"></i>
+                                    <span ng-if="disableSuggestButton(video.videoId)">Suggested</span>
+                                    <span ng-if="!disableSuggestButton(video.videoId)">Suggest</span>
+                                </button>
+                            </div>
+                        </div>
+
+
                         <a title="open video" ng-href="https://www.youtube.com/watch?v={{video.videoId}}" target="_blank">open</a>
                         <a title="add to library" ng-click="sendUrl(video.videoId)">
                             add
