@@ -83,7 +83,7 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
             return;
         }
 
-        db.Vote.find( {event_id: event._id, type: 'vote', state: {$ne: 'played'}})
+        db.Vote.find( {event_id: event._id, state: {$ne: 'played'}})
             .select( 'date state type song_id')
             .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
             .exec( function(err, votes){
@@ -138,9 +138,9 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
             return;
         }
 
-        db.Vote.find({event_id: event._id, owner_id: req.user.id, state: 'new', type: 'vote'})
+        db.Vote.find({event_id: event._id, owner_id: req.user.id, state: 'new'})
             .populate({path: 'song_id', model: 'Song', select: '_id title artist album year'})
-            .select( 'song_id -_id')
+            .select( 'song_id type -_id')
             .exec( function(err, votes) {
                 if (err) {
                     console.log(err);
