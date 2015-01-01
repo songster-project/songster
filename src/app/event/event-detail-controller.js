@@ -59,7 +59,15 @@ angular.module('songster.event')
                 $scope.tabs[i].active = false;
 
             }
-        }
+        };
+
+        // very ugly hack to remove the second tab bar - necessary because we used tabs and not routes
+        $scope.removeTabsForSuggestMode = function() {
+            var tabs = $(".nav-tabs");
+            if (tabs.length == 2) {
+                $(tabs[1]).hide();
+            }
+        };
     });
 
 

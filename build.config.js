@@ -76,7 +76,8 @@ module.exports = {
       'vendor/angular-xeditable/dist/js/xeditable.min.js',
       'vendor/angular-cookies/angular-cookies.min.js',
       'vendor/angular-draganddrop/angular-draganddrop.min.js',
-      'vendor/angular-filter/dist/angular-filter.min.js'
+      'vendor/angular-filter/dist/angular-filter.min.js',
+      'vendor/jquery/dist/jquery.min.js'
     ],
     css: [
     ],

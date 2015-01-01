@@ -83,6 +83,16 @@ function SoLibrarySearchDirective() {
                 $scope.tabs[1].active = false;
             };
 
+            // very ugly hack to remove the second tab bar - necessary because we used tabs and not routes
+            $scope.removeTabsForSuggestMode = function () {
+                if ($scope.suggestMode) {
+                    var tabs = $(".nav-tabs");
+                    if (tabs.length == 2) {
+                        $(tabs[1]).hide();
+                    }
+                }
+            };
+
             search($scope.searchRequest);
         },
         templateUrl: 'library/so-library-search.tpl.html'
