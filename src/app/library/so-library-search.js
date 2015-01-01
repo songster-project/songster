@@ -23,7 +23,10 @@ function SoLibrarySearchDirective() {
             // optional: you can specify a custom view for the results
             customView: "=",
 
-            eventId: "="
+            eventId: "=",
+
+            // can be set to indicate that the library is used in the suggestion-view
+            suggestMode: "="
         },
         transclude: true,
         replace: true,

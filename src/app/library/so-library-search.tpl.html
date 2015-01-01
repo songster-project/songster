@@ -1,10 +1,27 @@
 <div>
+    <div ng-if="suggestMode" style="margin-bottom: 10px">
+      <button title="Search" ng-click="tabs[0].active = true; tabs[1].active = false" class="btn btn-xs btn-primary" ng-if="!tabs[0].active">
+        <i class="fa fa-search"></i>
+        Search
+      </button>
+      <button title="Show artists" ng-click="tabs[0].active = false; tabs[1].active = true" class="btn btn-xs btn-primary" ng-if="!tabs[1].active">
+        <i class="fa fa-user"></i>
+        Show artists
+      </button>
+      <button title="Show albums" ng-click="TODO = true" class="btn btn-xs btn-primary" ng-if="true">
+        <i class="fa fa-picture-o"></i>
+        Show albums
+      </button>
+      <button title="Search Youtube" ng-click="TODO = true" class="btn btn-xs btn-primary" ng-if="true">
+        <i class="fa fa-youtube-play"></i>
+        Youtube
+      </button>
+    </div>
     <tabset>
-        <tab active="tabs[0].active">
+        <tab active="tabs[0].active" select="removeTabsForSuggestMode()">
             <tab-heading>
                 Songs
             </tab-heading>
-
             <div class="row">
                 <form>
                     <div class="col-lg-6">
@@ -19,7 +36,7 @@
                 </form>
             </div>
 
-            <div class="row">
+            <div class="row" ng-if="!suggestMode">
                 <div class="col-lg-6">
                     <p>Total: {{searchResult.total}}</p>
                 </div>
