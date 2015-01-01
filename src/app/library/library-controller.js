@@ -9,6 +9,12 @@ angular.module('songster.library')
                 'fn': function(song) {
                     $player.add(song);
                 }
+            }, {
+                'title': 'Delete song',
+                'icon': 'fa-trash-o',
+                'fn': function (song) {
+                    $library.deleteSong(song);
+                }
             }
         ];
 
