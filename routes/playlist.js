@@ -131,7 +131,7 @@ router.get('/:id/songs', passport.ensureAuthenticated, passport.ensureNotAnonymo
 
         if (playlist && playlist.length > 0) {
             var songIDs = playlist[0].songs;
-            db.Song.find({'_id': { $in: songIDs }, owner_id: req.user._id }, function (err, songs) {
+            db.Song.find({'_id': {$in: songIDs}, owner_id: req.user._id, active: true}, function (err, songs) {
                 if (err) {
                     console.log(err);
                     res.status(500).send('Internal server error');
