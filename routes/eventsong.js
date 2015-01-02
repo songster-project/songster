@@ -139,9 +139,7 @@ router.get('/:id/cover', passport.ensureAuthenticated, passport.ensureNotAnonymo
 
                             if(suggest) {
                                 // set req.user.id to song.owner_id to allow playing suggested song
-                                console.log('set user.id');
                                 req.user._id = song.owner_id;
-                                console.log(req.user);
                             }
                             next();
                         });

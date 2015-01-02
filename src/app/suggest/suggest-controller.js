@@ -36,8 +36,6 @@ angular.module('songster.suggest')
             if(suggestion.suggestion_type === 'youtube') {
                $suggestService.removeActiveClientYoutubeSuggestion(suggestion.video_id);
                $scope.$apply();
-            } else {
-                // TODO remove client song suggestion
             }
         }, data);
 
