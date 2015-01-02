@@ -3,15 +3,23 @@
         <div class="col-lg-12">
             <table class="table table-striped">
                 <tr>
+                    <!-- <th>src</th> for debugging only -->
                     <th>Title</th>
                     <th>Artist</th>
                     <th></th>
                 </tr>
-                <tr ng-repeat="song in searchResult.results" ng-show="getVotesForSong(song) <= 0 || (disableVoteButton(song) && song.owner_id === user._id) ">
+                <tr ng-repeat="song in searchResult.results">
+                    <!-- useful for debugging
+                    <td>
+                      <span ng-if="song.owner_id === event.owner_id">DJ</span>
+                      <span ng-if="song.owner_id === user._id">Yours</span>
+                      <span ng-if="song.owner_id !== user._id && song.owner_id !== event.owner_id">someone elses</span>
+                    </td>
+                    -->
                     <td>{{ song.title || "-" }}</td>
                     <td>{{ song.artist || "-" }}</td>
                     <td style="white-space: nowrap">
-                        <div class="pull-right" ng-if="song.owner_id === user._id">
+                        <div class="pull-right" ng-if="song.owner_id !== event.owner_id || song.owner_id === user._id">
                             <div class="btn-group" role="group">
                                 <button ng-disabled="disableVoteButton(song)" title="Suggest" ng-click="suggestSong(song)" class="btn btn-xs btn-primary">
                                     <i class="fa fa-thumbs-o-up"></i>

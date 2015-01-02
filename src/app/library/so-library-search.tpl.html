@@ -1,10 +1,10 @@
 <div>
     <div ng-if="suggestMode" style="margin-bottom: 10px">
-      <button title="Search" ng-click="tabs[0].active = true; tabs[1].active = false" class="btn btn-xs btn-primary" ng-if="!tabs[0].active">
+      <button title="Search" ng-click="tabs[0].active = true; tabs[1].active = false; tabs[2].active = false; tabs[3].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[0].active">
         <i class="fa fa-search"></i>
         Search
       </button>
-      <button title="Show artists" ng-click="tabs[0].active = false; tabs[1].active = true" class="btn btn-xs btn-primary" ng-if="!tabs[1].active">
+      <button title="Show artists" ng-click="tabs[0].active = false; tabs[1].active = true; tabs[2].active = false; tabs[3].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[1].active">
         <i class="fa fa-user"></i>
         Show artists
       </button>
@@ -12,7 +12,7 @@
         <i class="fa fa-picture-o"></i>
         Show albums
       </button>
-      <button title="Search Youtube" ng-click="TODO = true" class="btn btn-xs btn-primary" ng-if="true">
+      <button title="Search Youtube" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = true; tabs[3].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[2].active">
         <i class="fa fa-youtube-play"></i>
         Youtube
       </button>
@@ -72,7 +72,7 @@
             </tab-heading>
             <so-library-albums></so-library-albums>
         </tab>
-        <tab active="tabs[2].active" ng-if="eventId && !$root.isAnonymous()" select="removeTabsForSuggestMode()">
+        <tab active="tabs[2].active" ng-if="eventId" select="removeTabsForSuggestMode()">
             <tab-heading>
                 Youtube
             </tab-heading>

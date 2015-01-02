@@ -6,39 +6,39 @@
                     <div class="col-lg-6">
                         <div class="input-group">
                             <input type="text" class="form-control" ng-model="youtubeurl"
-                                   placeholder="search Youtube video ...">
+                                   placeholder="Search Youtube...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit" ng-click="searchVideos()">search Videos!</button>
+                        <button class="btn btn-default" type="submit" ng-click="searchVideos()">Search</button>
                     </span>
                         </div>
                     </div>
                 </form>
             </div>
-            <h2>Search Result</h2>
-            <table class="table table-striped">
+            <div ng-if="loading" class="loading-animation">
+              <i class="fa fa-cog fa-spin"></i>
+            </div>
+            <div ng-if="videos && videos.length > 0 && !loading" style="margin-top: 10px;">
+              <table class="table table-striped">
                 <tr>
-                    <th>Title</th>
-                    <th>Channel</th>
-                    <th></th>
+                  <th>Title</th>
+                  <th></th>
                 </tr>
                 <tr ng:repeat="video in videos">
-                    <td>{{video.title || "-"}}</td>
-                    <td>{{video.channelTitle || "-"}}</td>
-                    <td>
-                        <a title="open at youtube" ng-href="https://www.youtube.com/watch?v={{video.videoId}}" target="_blank"><i class="fa fa-youtube-play"></i>
-                        </a>
-                        <div class="pull-right">
-                            <div class="btn-group" role="group">
-                                <button ng-disabled="disableSuggestButton(video.videoId)" title="Suggest" ng-click="suggest(video.videoId)" class="btn btn-xs btn-primary"><i
-                                        class="fa fa-thumbs-o-up"></i>
-                                    <span ng-if="disableSuggestButton(video.videoId)">Suggested</span>
-                                    <span ng-if="!disableSuggestButton(video.videoId)">Suggest</span>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
+                  <td>{{video.title || "-"}}</td>
+                  <td>
+                    <div class="pull-right">
+                      <div class="btn-group" role="group">
+                        <button ng-disabled="disableSuggestButton(video.videoId)" title="Suggest" ng-click="suggest(video.videoId)" class="btn btn-xs btn-primary"><i
+                            class="fa fa-thumbs-o-up"></i>
+                          <span ng-if="disableSuggestButton(video.videoId)">Suggested</span>
+                          <span ng-if="!disableSuggestButton(video.videoId)">Suggest</span>
+                        </button>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
-            </table>
+              </table>
+            </div>
         </div>
     </div>
 </div>
