@@ -5,10 +5,13 @@ angular.module('songster.domain.receivedVote')
         window.ReceivedVote = function ReceivedVote(data) {
             console.log(data);
             this.song = data ? SongFactory.create(data.song_id) : SongFactory.create();
-            //this.value = data ? data.value : undefined;
             this.state = data ? data.state : undefined;
             this.type = data ? data.type : undefined;
-            this.date = data ? data.type : undefined;
+            this.date = data ? data.date : undefined;
+            this.suggestion_type = data ? data.suggestion_type : undefined;
+            this.video_id = data ? data.video_id : undefined;
+            this.owner_id = data ? data.owner_id : undefined;
+            this.event_id = data ? data.event_id : undefined;
         };
 
         return {

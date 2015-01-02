@@ -1,6 +1,6 @@
 angular.module('songster.voting')
 
-    .controller('VotingCtrl', function VotingCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $websocket) {
+    .controller('VotingCtrl', function VotingCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $websocket, $suggestService, ReceivedVoteFactory) {
         $scope.event = $event.getEvent();
 
         $scope.votes = [];
@@ -13,7 +13,16 @@ angular.module('songster.voting')
             eventid: $scope.event._id
         };
         $websocket.register_to_event('votes_changed', function (vote) {
-            votingService.processWebsocketVote(vote);
+            var vote = ReceivedVoteFactory.create(vote);
+            if(vote.state == 'new') {
+                votingService.addVote(vote);
+                if(vote.type === 'suggestion') {
+                    $suggestService.addClientYoutubeSuggestionToAll(vote);
+                }
+            } else if(vote.state == 'played') {
+                votingService.votedSongPlayed(vote.song);
+            }
+            console.log('voting controller - in votes changed');
             $scope.$apply(function (){
                 $scope.votes = votingService.getVotes();
             });

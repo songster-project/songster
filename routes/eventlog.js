@@ -54,13 +54,20 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
 
                     if(numAffected > 0)
                     // sends the last vote from the current song via web socket
-                    // if song is voted again since it was set to played this will be handled as a new vote
-                        db.Vote.findOne( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id})
+                        db.Vote.findOne( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id, state: 'played'})
                             .sort( '-date')
                             .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
                             .exec( function(err, vote) {
                                 voteWs.votesChanged(eventlog.event_id, vote);
                         } )
+                    // find suggestion from current song if there exists one
+                    db.Vote.findOne( {event_id: eventlog.event_id, song_id: eventlog.message.currentSong._id, state: 'played', type: 'suggestion'})
+                        .sort( '-date')
+                        .exec( function(err, suggestion) {
+                            if(suggestion) {
+                                voteWs.suggestionPlayed(eventlog.event_id, suggestion);
+                            }
+                        })
 
                 });
             }

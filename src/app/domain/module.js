@@ -9,6 +9,7 @@ angular.module('songster.domain.searchAggregation', []);
 angular.module('songster.domain.updateSong', []);
 angular.module('songster.domain.event', []);
 angular.module('songster.domain.user', []);
+angular.module('songster.domain.postingSuggest', []);
 
 angular.module('songster.domain', [
         'songster.domain.services',
@@ -20,5 +21,6 @@ angular.module('songster.domain', [
         'songster.domain.searchAggregation',
         'songster.domain.updateSong',
         'songster.domain.event',
-        'songster.domain.user'
+        'songster.domain.user',
+        'songster.domain.postingSuggest'
     ]);

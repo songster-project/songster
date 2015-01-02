@@ -31,7 +31,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
 
     this.postVote = function (event_id, song_id) {
         var deferred = $q.defer();
-        if (!!event_id || !!song_id) {
+        if (!!event_id && !!song_id) {
 
             var vote = PostingVoteFactory.create({event_id: event_id, song_id: song_id});
 
@@ -62,15 +62,6 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
             return ReceivedVoteFactory.create(vote);
         });
         self.setVotes(votes);
-    }
-
-    this.processWebsocketVote = function (vote) {
-        var vote = ReceivedVoteFactory.create(vote);
-        if(vote.state == 'new') {
-            self.addVote(vote);
-        } else if(vote.state == 'played') {
-           self.votedSongPlayed(vote.song);
-        }
     }
 
     this.setVotes = function (votes) {
