@@ -7,6 +7,8 @@ angular.module('songster.domain.postingSuggest')
             this.song_id = data  ? data.song_id : undefined;
             this.type = 'suggestion';
             this.state = 'new';
+            this.suggestion_type = data ? data.suggestion_type : undefined;
+            this.video_id = data ? data.video_id : undefined;
         };
 
         return {
