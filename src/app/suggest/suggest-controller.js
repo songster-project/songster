@@ -17,13 +17,30 @@ angular.module('songster.suggest')
 
         $scope.suggest = function (videoId) {
 
-            $scope.suggests_vidoeid[videoId] = true;
+            $suggestService.addActiveClientYoutubeSuggestion(videoId);
             $suggestService.postSuggest(videoId, $scope.event._id);
 
         }
 
         $scope.disableSuggestButton = function (videoId) {
-            return $scope.suggests_vidoeid[videoId] !== undefined ? true : false;
+            return $suggestService.hasClientActiveSuggestedYoutubeVideo(videoId);
         }
+
+        var data = {
+            eventid: $scope.event._id
+        };
+
+        $websocket.register_to_event('suggestion_played', function (suggestion) {
+            console.log('suggest-controller in suggestion played event')
+            if(suggestion.suggestion_type === 'youtube') {
+               $suggestService.removeActiveClientYoutubeSuggestion(suggestion.video_id);
+               $scope.$apply();
+            } else {
+                // TODO remove client song suggestion
+            }
+        }, data);
+
+        // init load of client suggestions
+        $suggestService.loadClientSuggestionsFromServer($scope.event._id);
 
     });
