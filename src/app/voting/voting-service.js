@@ -30,7 +30,6 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     };
 
     this.postVote = function (event_id, song_id) {
-        console.log('in post vote');
         var deferred = $q.defer();
         if (!!event_id && !!song_id) {
 

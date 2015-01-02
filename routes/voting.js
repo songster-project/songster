@@ -233,8 +233,6 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
         }
     }
 
-    console.log(req.body);
-
     var errors = req.validationErrors();
     if (errors) {
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));

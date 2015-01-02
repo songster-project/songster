@@ -24,9 +24,7 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
                 votingService.addClientVote(song_id);
             }).error(function (err) {
                 _self.removeActiveClientYoutubeSuggestion(videoId);
-                console.log('posting youtube suggest error');
             });
-
 
         } else {
             // upload youtube to user library
@@ -37,7 +35,6 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
                 url: msg.youtubeurl,
                 finished: false
             });
-            console.log('before http post youtube');
             $http.post('/youtube/', msg)
                 .success(function (data) {
                     // file is uploaded successfully
@@ -47,7 +44,6 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
                         }
                     }
 
-                    console.log('load youtube finished - before post vote');
                     var suggest = PostingSuggestFactory.create({event_id: event_id, song_id: data.id, suggestion_type: 'youtube', video_id: videoId});
                     $http.post('/voting/' + event_id, suggest).success(function () {
                         votingService.addClientVote(data.id);
@@ -57,7 +53,6 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
                 })
                 .error(function (err) {
                     _self.removeActiveClientYoutubeSuggestion(videoId);
-                    console.log('posting youtube suggestion failed in suggestService');
                     console.log(err);
                 });
         }
