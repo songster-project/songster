@@ -65,15 +65,6 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         self.setVotes(votes);
     }
 
-    this.processWebsocketVote = function (vote) {
-        var vote = ReceivedVoteFactory.create(vote);
-        if(vote.state == 'new') {
-            self.addVote(vote);
-        } else if(vote.state == 'played') {
-           self.votedSongPlayed(vote.song);
-        }
-    }
-
     this.setVotes = function (votes) {
         _votes = votes;
         updateVotesMap();
