@@ -5,13 +5,14 @@ angular.module('songster.suggest')
 
         $scope.event =  $scope.event = $event.getEvent();
         $scope.videos = [];
-        $scope.suggests_vidoeid = [];
 
         $scope.searchVideos = function() {
             var params = {q: $scope.youtubeurl||''};
             $http.get('/youtube/search', {params: params})
                 .success(function (data) {
-                    $scope.videos = data.result;
+                    if(data) {
+                        $scope.videos = data.result;
+                    }
                 });
         }
 
