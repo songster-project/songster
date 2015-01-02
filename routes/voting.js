@@ -313,7 +313,6 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                         });
 
 
-                    //TODO adapt eventlog to save suggestions vote.type === suggestion
                     db.Song.find({_id: vote.song_id}, function (err, song) {
                         // save the vote to the event log
                         if (song && song.length > 0) {
@@ -326,7 +325,12 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                                 vote: vote,
                                 song: song[0]
                             };
-                            evLog.type = 'songvoted';
+
+                            if (vote.type && vote.type === 'suggestion') {
+                                evLog.type = 'songsuggested';
+                            } else {
+                                evLog.type = 'songvoted';
+                            }
 
                             evLog.save(function (err, eventlog) {
                                 if (err) {

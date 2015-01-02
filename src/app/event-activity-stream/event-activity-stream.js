@@ -56,6 +56,23 @@ function SoEventActivityStreamDirective() {
                     $scope.cleanUpLog();
                 });
 
+            $http.get('/eventlog/suggestions/' + $scope.eventId)
+                .success(function(data) {
+
+                    data.forEach(function (item) {
+                        if (item.message && item.logDate) {
+                            if (item.message.vote && item.message.song && item.message.song.title) {
+                                $scope.log.push({
+                                    type: 'song_suggested',
+                                    content: item.message.song,
+                                    date: item.logDate
+                                });
+                            }
+                        }
+                    });
+                    $scope.cleanUpLog();
+                });
+
 
             /*
                 the following two function are meant to clean up the log
@@ -216,6 +233,12 @@ function SoEventActivityStreamDirective() {
                             content: msg.song,
                             date: new Date(msg.date),
                             count: 1
+                        });
+                    } else if (msg.type && msg.type === 'suggestion') {
+                        $scope.log.push({
+                            type: 'song_suggested',
+                            content: msg.song,
+                            date: new Date(msg.date)
                         });
                     }
                 }
