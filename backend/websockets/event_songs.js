@@ -23,13 +23,12 @@ function sendSongs(id, clients) {
                 console.log(err);
                 return;
             }
-            if (logEntries && logEntries.length>0) {
-
-                if (logEntries[0].message) {
-                    var msg = logEntries[0].message;
-                    if (msg.nextSongs) {
-                        response.nextSongs = msg.nextSongs.slice(0,MAX_NUM_NEXT_SONGS);
-                    }
+            if (eventmap[id] && eventmap[id].nextSongs) {
+                response.nextSongs = eventmap[id].nextSongs;
+            }
+            if (logEntries && logEntries.length > 0) {
+                if (logEntries[0].message && response.nextSongs.length<=0 && logEntries[0].message.nextSongs) {
+                    response.nextSongs = logEntries[0].message.nextSongs.slice(0, MAX_NUM_NEXT_SONGS);
                 }
                 logEntries.forEach(function (entry) {
                     response.lastSongs.push(entry.message.currentSong);
@@ -37,6 +36,9 @@ function sendSongs(id, clients) {
                 if (response.lastSongs.length > 0) {
                     response.currentSong = response.lastSongs[0];
                     response.lastSongs.splice(0, 1);
+                }
+                if (response.currentSong && eventmap[id].nextSongs && eventmap[id].nextSongs[0] && response.currentSong._id === eventmap[id].nextSongs[0]._id) {
+                    response.nextSongs.splice(0, 1);
                 }
             }
             nserver.send_Notifications('music_changed', response, clients);
@@ -76,7 +78,7 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
             if (events === null) {
                 return;
             }
-            if (events.end !== null) {
+            if (events.end === null) {
                 eventmap[data.eventid] = {
                     clients: []
                 };
@@ -117,12 +119,13 @@ module.exports.removeEvent = function (id) {
  *
  * @param id the Id of the event where the song update occured
  */
-module.exports.newSong = function (id) {
+module.exports.newSong = function (id, nSongs) {
     if (!eventmap[id]) {
         eventmap[id] = {
             clients: []
         };
     }
+    eventmap[id].nextSongs = nSongs.slice(0, MAX_NUM_NEXT_SONGS);
     if (eventmap[id]) {
         sendSongs(id, eventmap[id].clients);
     }
