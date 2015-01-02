@@ -303,7 +303,6 @@ router.post('/:event_id', passport.ensureAuthenticated, function(req, res) {
                     // notify web socket vote_changed event
 
                     db.Vote.findOne( {_id: vote._id})
-                        .select( 'date state type song_id suggestion_type')
                         .populate( {path: 'song_id', model: 'Song', select: '_id title artist album year'})
                         .exec( function(err, vote_pop){
                             if(err) {
