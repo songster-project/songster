@@ -105,8 +105,11 @@ router.get('/votedsongs/:eventid', passport.ensureAuthenticated, function(req, r
  *      title: ,
  *      artist: ,
  *      album: ,
- *      year:
- * } },
+ *      year:  },
+ *   event_id: ,
+ *   owner_id: ,
+ *   state: ,
+ *   type:
  *  { song_id: {} } ]
  *
  * used for disabling multiple votes from a user
@@ -155,13 +158,18 @@ router.get('/uservotes/:eventid', passport.ensureAuthenticated, function(req, re
 /**
  * returns an array of suggestions
  * from the current user from the event with given event_id that have not been played yet
- * [ { song_id:,
- *     event_id:
+ * [ { song_id: {
+ *          _id: ,
+ *          title: ,
+ *          artist: },
+ *     event_id: ,
  *     date: ,
+ *     state: ,
+ *     type: ,
  *     suggestion_type: {type: String, enum: songTypes},
  *     video_id: String
  *    },
- *  { song_id:, ... } ]
+ *  { song_id: {} }  ]
  *
  * used for disabling multiple votes from a user
  * the client aggregates those song_ids
