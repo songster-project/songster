@@ -33,9 +33,10 @@ router.get('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, fu
                 }
 
                 // check if song owner has suggested this song at the event
+                // if song was suggested once it can be accessed by the dj several times at the same event
                 if(song) {
                     var song_owner = song.owner_id;
-                    db.Vote.findOne({event_id: event._id, owner_id: song.owner_id, song_id: song._id, state: 'new', type:'suggestion'})
+                    db.Vote.findOne({event_id: event._id, owner_id: song.owner_id, song_id: song._id, type:'suggestion'})
                         .exec( function(err, suggest) {
                             if (err) {
                                 console.log(err);
@@ -80,9 +81,10 @@ router.get('/:id/raw', passport.ensureAuthenticated, passport.ensureNotAnonymous
                 }
 
                 // check if song owner has suggested this song at the event
+                // if song was suggested once it can be accessed by the dj several times at the same event
                 if(song) {
                     var song_owner = song.owner_id;
-                    db.Vote.findOne({event_id: event._id, owner_id: song.owner_id, song_id: song._id, state: 'new', type:'suggestion'})
+                    db.Vote.findOne({event_id: event._id, owner_id: song.owner_id, song_id: song._id, type:'suggestion'})
                         .exec( function(err, suggest) {
                             if (err) {
                                 console.log(err);
