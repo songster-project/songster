@@ -61,7 +61,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     }
 
     this.getVotesForSong = function (song) {
-        return _votesMap[song._id];
+        return _votesMap[song._id] !== undefined ? _votesMap[song._id] : 0;
     };
 
     this.getVotes = function() {

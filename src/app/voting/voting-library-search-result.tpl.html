@@ -9,7 +9,7 @@
                     <th>Artist</th>
                     <th></th>
                 </tr>
-                <tr ng-repeat="song in searchResult.results">
+                <tr ng-repeat="song in searchResult.results" ng-show="getVotesForSong(song) <= 0 || (disableVoteButton(song) && song.owner_id === user._id) ">
                     <td>
                         <span ng-if="song.owner_id === event.owner_id">DJ</span>
                         <span ng-if="song.owner_id === user._id">Yours</span>
@@ -17,7 +17,7 @@
                     <td>{{ song.title || "-" }}</td>
                     <td>{{ song.artist || "-" }}</td>
                     <td>
-                        <div ng-controller="SuggestController" class="pull-right" ng-if="song.owner_id === user._id">
+                        <div class="pull-right" ng-if="song.owner_id === user._id">
                             <div class="btn-group" role="group">
                                 <button ng-disabled="disableVoteButton(song)" title="Suggest" ng-click="suggestSong(song)" class="btn btn-xs btn-primary">
                                     <i class="fa fa-thumbs-o-up"></i>
