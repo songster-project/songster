@@ -10,9 +10,8 @@ var MAX_NUM_NEXT_SONGS = 5;
 /*
  sends the new songs to the clients
  */
-function sendSongs(id, clients) {
+function sendSongs(id, clients, currentSongChanged) {
     var response = {
-        lastSongs: [],
         nextSongs: []
     };
     db.EventLog.find({
@@ -26,19 +25,22 @@ function sendSongs(id, clients) {
             if (eventmap[id] && eventmap[id].nextSongs) {
                 response.nextSongs = eventmap[id].nextSongs;
             }
-            if (logEntries && logEntries.length > 0) {
-                if (logEntries[0].message && response.nextSongs.length<=0 && logEntries[0].message.nextSongs) {
-                    response.nextSongs = logEntries[0].message.nextSongs.slice(0, MAX_NUM_NEXT_SONGS);
-                }
-                logEntries.forEach(function (entry) {
-                    response.lastSongs.push(entry.message.currentSong);
-                });
-                if (response.lastSongs.length > 0) {
-                    response.currentSong = response.lastSongs[0];
-                    response.lastSongs.splice(0, 1);
-                }
-                if (response.currentSong && eventmap[id].nextSongs && eventmap[id].nextSongs[0] && response.currentSong._id === eventmap[id].nextSongs[0]._id) {
-                    response.nextSongs.splice(0, 1);
+            if (currentSongChanged) {
+                response.lastSongs = [];
+                if (logEntries && logEntries.length > 0) {
+                    if (logEntries[0].message && response.nextSongs.length <= 0 && logEntries[0].message.nextSongs) {
+                        response.nextSongs = logEntries[0].message.nextSongs.slice(0, MAX_NUM_NEXT_SONGS);
+                    }
+                    logEntries.forEach(function (entry) {
+                        response.lastSongs.push(entry.message.currentSong);
+                    });
+                    if (response.lastSongs.length > 0) {
+                        response.currentSong = response.lastSongs[0];
+                        response.lastSongs.splice(0, 1);
+                    }
+                    if (response.currentSong && eventmap[id].nextSongs && eventmap[id].nextSongs[0] && response.currentSong._id === eventmap[id].nextSongs[0]._id) {
+                        response.nextSongs.splice(0, 1);
+                    }
                 }
             }
             nserver.send_Notifications('music_changed', response, clients);
@@ -67,7 +69,7 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
         }
         //send the songs to the new client
         if (eventmap[data.eventid]) {
-            sendSongs(data.eventid, [ws]);
+            sendSongs(data.eventid, [ws], true);
         }
     } else {//add entry for event if event exists
         db.Event.findOne({'_id': data.eventid}, function (err, events) {
@@ -86,7 +88,7 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
             }
             //send the songs to the new client
             if (eventmap[data.eventid]) {
-                sendSongs(data.eventid, [ws]);
+                sendSongs(data.eventid, [ws], true);
             }
         });
     }
@@ -118,8 +120,10 @@ module.exports.removeEvent = function (id) {
  * sends Songs to clients if a song update occurs
  *
  * @param id the Id of the event where the song update occured
+ * @param nSongs the next songs to send
+ * @param currentSongChanged true if the current song has changed
  */
-module.exports.newSong = function (id, nSongs) {
+module.exports.newSong = function (id, nSongs, currentSongChanged) {
     if (!eventmap[id]) {
         eventmap[id] = {
             clients: []
@@ -127,6 +131,6 @@ module.exports.newSong = function (id, nSongs) {
     }
     eventmap[id].nextSongs = nSongs.slice(0, MAX_NUM_NEXT_SONGS);
     if (eventmap[id]) {
-        sendSongs(id, eventmap[id].clients);
+        sendSongs(id, eventmap[id].clients, currentSongChanged);
     }
 };

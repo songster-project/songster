@@ -14,9 +14,9 @@ function SoEventSongsDirective() {
                 eventid: $scope.eventId
             };
             $websocket.register_to_event('music_changed', function (msg) {
-                $scope.lastSongs = msg.lastSongs;
-                $scope.currentSong = msg.currentSong;
-                $scope.nextSongs = msg.nextSongs;
+                $scope.lastSongs = msg.lastSongs||$scope.lastSongs;
+                $scope.currentSong = msg.currentSong||$scope.currentSong;
+                $scope.nextSongs = msg.nextSongs||$scope.nextSongs;
                 $scope.$apply();
 
                 $rootScope.notifyActivityStream(msg);

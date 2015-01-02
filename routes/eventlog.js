@@ -46,7 +46,7 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
                 type: 'songplayed'
             }).sort('-logDate').exec(function (err, lastSong) {
                 if (lastSong && lastSong.message && lastSong.message.currentSong && lastSong.message.currentSong._id === evLog.message.currentSong._id) {
-                    songwebsocket.newSong(evLog.event_id, evLog.message.nextSongs || []);
+                    songwebsocket.newSong(evLog.event_id, evLog.message.nextSongs||[],true);
                     res.status(201).send(evLog);
                     return;
                 }
@@ -56,7 +56,7 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
                         res.status(500).send('Internal server error');
                         return;
                     }
-                    songwebsocket.newSong(eventlog.event_id, eventlog.message.nextSongs || []);
+                    songwebsocket.newSong(eventlog.event_id, eventlog.message.nextSongs||[],true);
                     db.Vote.update({
                         event_id: eventlog.event_id,
                         song_id: eventlog.message.currentSong._id,
@@ -97,7 +97,7 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
                 });
             });
         } else if (req.body.type === 'queuechanged') {
-            songwebsocket.newSong(evLog.event_id, req.body.message.nextSongs || []);
+            songwebsocket.newSong(evLog.event_id, req.body.message.nextSongs||[],false);
             db.EventLog.findOne({
                 event_id: event._id,
                 type: 'songplayed'
