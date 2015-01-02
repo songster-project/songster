@@ -1,12 +1,12 @@
 angular
     .module('songster.voting.services.votingService')
     .provider('votingService', function () {
-        this.$get = function ($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory) {
-            return new VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory);
+        this.$get = function ($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory) {
+            return new VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory);
         };
     });
 
-function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory) {
+function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory) {
     var self = this;
     var _votes = [];
     var _votesMap = {}; // song id to votes count
@@ -49,8 +49,19 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         return deferred.promise;
     };
 
+    this.postFileSuggestion = function (event_id, song_id) {
+        var deferred = $q.defer();
+        var suggest = PostingSuggestFactory.create({event_id: event_id, song_id: song_id, suggestion_type: 'file'});
+        $http.post('/voting/' + event_id, suggest).success(function () {
+            deferred.resolve();
+        }).error(function (err) {
+            deferred.reject(err);
+        });
+        return deferred.promise;
+    }
+
     this.getVotesForSong = function (song) {
-        return _votesMap[song._id];
+        return _votesMap[song._id] !== undefined ? _votesMap[song._id] : 0;
     };
 
     this.getVotes = function() {
@@ -104,7 +115,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         _clientVotes[songId] = true;
     }
 
-    function removeUserVotesForSong(songId){
+    this.removeUserVotesForSong = function(songId){
         delete _clientVotes[songId];
     };
 
@@ -128,7 +139,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
             self.setVotes(new_votes)
 
             if(!$rootScope.isDj()) {
-                removeUserVotesForSong(song._id);
+                self.removeUserVotesForSong(song._id);
 
             }
         }

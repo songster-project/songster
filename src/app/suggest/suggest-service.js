@@ -11,8 +11,6 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
     var uploadedSongs = [];
     var _activeClientYoutubeSuggestions = {}; // active youtube suggestions of current user - for disableButton - indexed by videoId
     var _allClientYoutubeSuggestions = []; // all youtube suggestion of current user - contain ReceivedVote objects
-    var _clientSongSuggestions = {}; // song suggestions of current user - indexed by songId
-
 
     this.postSuggest = function (videoId, event_id) {
 
@@ -89,7 +87,6 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
         if(!$rootScope.isDj()) {
             $http.get('/voting/usersuggestions/' + event_id).success(function(data, status, headers, config) {
                 _activeClientYoutubeSuggestions = {};
-                _clientSongSuggestions = {};
                 _.each(data, function(suggestion) {
                     var suggestion = ReceivedVoteFactory.create(suggestion);
                     if(suggestion.suggestion_type === 'youtube' && suggestion.video_id) {
@@ -97,8 +94,6 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
                         if(suggestion.state === 'new') {
                             _self.addActiveClientYoutubeSuggestion(suggestion.video_id)
                         }
-                    } else if(suggestion.suggestion_type === 'file' && suggestion.song._id) {
-                        _clientSongSuggestions[suggestion.song_id] = true;
                     }
                 });
             }).error(function() {

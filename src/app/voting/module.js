@@ -13,5 +13,6 @@ angular
         'songster.voting.services',
         'ui.router',
         'ui.bootstrap',
-        'angular.filter'
+        'angular.filter',
+        'songster.suggest'
     ]);

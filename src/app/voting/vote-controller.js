@@ -49,9 +49,19 @@ angular.module('songster.voting')
                 then(function () {
                     votingService.addClientVote(song._id);
                 }, function (err) {
+                    votingService.removeUserVotesForSong(song._id);
                     $scope.message = err;
                 });
         };
+
+        $scope.suggestSong = function (song) {
+            votingService.postFileSuggestion($scope.event._id, song._id).
+                then(function () {
+                    votingService.addClientVote(song._id);
+                }, function (err) {
+                    votingService.removeUserVotesForSong(song._id);
+                })
+        }
 
 
         // required for voting-library-search-result.tpl.html
