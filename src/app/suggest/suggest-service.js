@@ -23,7 +23,7 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
             $http.post('/voting/' + event_id, suggest).success(function () {
                 votingService.addClientVote(song_id);
             }).error(function (err) {
-                removeActiveClientYoutubeSuggestion(videoId);
+                _self.removeActiveClientYoutubeSuggestion(videoId);
                 console.log('posting youtube suggest error');
             });
 
@@ -52,11 +52,11 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
                     $http.post('/voting/' + event_id, suggest).success(function () {
                         votingService.addClientVote(data.id);
                     }).error(function (err) {
-                        removeActiveClientYoutubeSuggestion(videoId);
+                        _self.removeActiveClientYoutubeSuggestion(videoId);
                     });
                 })
                 .error(function (err) {
-                    removeActiveClientYoutubeSuggestion(videoId);
+                    _self.removeActiveClientYoutubeSuggestion(videoId);
                     console.log('posting youtube suggestion failed in suggestService');
                     console.log(err);
                 });
