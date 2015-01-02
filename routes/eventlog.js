@@ -140,4 +140,36 @@ router.get('/votes/:id', passport.ensureAuthenticated, function (req, res) {
             return;
         });
 });
+
+// returns the suggestions of the given event - copied from above
+router.get('/suggestions/:id', passport.ensureAuthenticated, function (req, res) {
+    req.checkParams('id', 'ID is not an ID').isMongoID();
+    req.checkParams('id', '_id of event not specified').notEmpty();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.status(400).send('There have been validation errors: ' + util.inspect(errors));
+        return;
+    }
+    db.EventLog.find(
+        {
+            type: "songsuggested",
+            event_id: req.param('id')
+        },
+        {
+            _id: 0,
+            logDate: 1,
+            'message.vote': 1,
+            'message.song': 1
+        },
+        //1 because when you imagine a playlist, the newest songs are higher up
+        {sort: {logDate: -1}},
+        function (err, suggestions) {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Internal server error');
+            }
+            res.send(suggestions);
+            return;
+        });
+});
 module.exports = router;

@@ -56,6 +56,23 @@ function SoEventActivityStreamDirective() {
                     $scope.cleanUpLog();
                 });
 
+            $http.get('/eventlog/suggestions/' + $scope.eventId)
+                .success(function(data) {
+
+                    data.forEach(function (item) {
+                        if (item.message && item.logDate) {
+                            if (item.message.vote && item.message.song && item.message.song.title) {
+                                $scope.log.push({
+                                    type: 'song_suggested',
+                                    content: item.message.song,
+                                    date: item.logDate
+                                });
+                            }
+                        }
+                    });
+                    $scope.cleanUpLog();
+                });
+
 
             /*
                 the following two function are meant to clean up the log
@@ -203,14 +220,27 @@ function SoEventActivityStreamDirective() {
             };
 
             $rootScope.notifyActivityStream = function notifyActivityStream(msg) {
-                if (msg.currentSong) {
-                    $scope.log.unshift({
-                        type: 'song_played',
-                        content: msg.currentSong,
-                        date: new Date()
-                    });
-                } else if (msg.vote) {
-                    // TODO add handling for votes
+                if (msg) {
+                    if (msg.currentSong) {
+                        $scope.log.unshift({
+                            type: 'song_played',
+                            content: msg.currentSong,
+                            date: new Date()
+                        });
+                    } else if (msg.type && msg.type === 'vote') {
+                        $scope.log.push({
+                            type: 'song_voted',
+                            content: msg.song,
+                            date: new Date(msg.date),
+                            count: 1
+                        });
+                    } else if (msg.type && msg.type === 'suggestion') {
+                        $scope.log.push({
+                            type: 'song_suggested',
+                            content: msg.song,
+                            date: new Date(msg.date)
+                        });
+                    }
                 }
 
                 $scope.cleanUpLog();
