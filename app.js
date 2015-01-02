@@ -32,6 +32,7 @@ var eventlog = require('./routes/eventlog');
 var settings = require('./config/settings.js');
 var voting = require('./routes/voting');
 var youtube = require('./routes/youtube');
+var eventsong = require('./routes/eventsong');
 
 
 // view engine setup
@@ -83,6 +84,7 @@ app.use('/app', passportinit.ensureAuthenticated, express.static(path.join(__dir
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/account', account);
+app.use('/song', eventsong);
 app.use('/song', song);
 app.use('/playlist', playlist);
 app.use('/registration', registration);
