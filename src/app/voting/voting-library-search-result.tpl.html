@@ -17,7 +17,15 @@
                     <td>{{ song.title || "-" }}</td>
                     <td>{{ song.artist || "-" }}</td>
                     <td>
-                        <!-- TODO this is only here for votes. for suggestions there need to be a suggest button -->
+                        <div ng-controller="SuggestController" class="pull-right" ng-if="song.owner_id === user._id">
+                            <div class="btn-group" role="group">
+                                <button ng-disabled="disableVoteButton(song)" title="Suggest" ng-click="suggestSong(song)" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-thumbs-o-up"></i>
+                                    <span ng-if="disableVoteButton(song)">Suggested</span>
+                                    <span ng-if="!disableVoteButton(song)">Suggest</span>
+                                </button>
+                            </div>
+                        </div>
                         <div class="pull-right" ng-if="song.owner_id === event.owner_id">
                             <span class="badge badge-info">{{ getVotesForSong(song) || "0"}}</span>
                             <div class="btn-group" role="group">
