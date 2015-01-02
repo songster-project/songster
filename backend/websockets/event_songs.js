@@ -12,7 +12,8 @@ var MAX_NUM_NEXT_SONGS = 5;
  */
 function sendSongs(id, clients, currentSongChanged) {
     var response = {
-        nextSongs: []
+        nextSongs: [],
+        lastSongs: []
     };
     db.EventLog.find({
         event_id: id,
@@ -25,23 +26,27 @@ function sendSongs(id, clients, currentSongChanged) {
             if (eventmap[id] && eventmap[id].nextSongs) {
                 response.nextSongs = eventmap[id].nextSongs;
             }
-            if (currentSongChanged) {
-                response.lastSongs = [];
-                if (logEntries && logEntries.length > 0) {
-                    if (logEntries[0].message && response.nextSongs.length <= 0 && logEntries[0].message.nextSongs) {
-                        response.nextSongs = logEntries[0].message.nextSongs.slice(0, MAX_NUM_NEXT_SONGS);
-                    }
-                    logEntries.forEach(function (entry) {
-                        response.lastSongs.push(entry.message.currentSong);
-                    });
-                    if (response.lastSongs.length > 0) {
-                        response.currentSong = response.lastSongs[0];
-                        response.lastSongs.splice(0, 1);
-                    }
-                    if (response.currentSong && eventmap[id].nextSongs && eventmap[id].nextSongs[0] && response.currentSong._id === eventmap[id].nextSongs[0]._id) {
-                        response.nextSongs.splice(0, 1);
-                    }
+            if (logEntries && logEntries.length > 0) {
+                if (logEntries[0].message && response.nextSongs.length <= 0 && logEntries[0].message.nextSongs) {
+                    response.nextSongs = logEntries[0].message.nextSongs;
                 }
+                logEntries.forEach(function (entry) {
+                    response.lastSongs.push(entry.message.currentSong);
+                });
+                if (response.lastSongs.length > 0) {
+                    response.currentSong = response.lastSongs[0];
+                    response.lastSongs.splice(0, 1);
+                }
+                if (response.currentSong && eventmap[id].nextSongs && eventmap[id].nextSongs[0] && response.currentSong._id === eventmap[id].nextSongs[0]._id) {
+                    response.nextSongs.splice(0, 1);
+                }
+            }
+            response.nextSongs = response.nextSongs.slice(0, MAX_NUM_NEXT_SONGS);
+            if (!currentSongChanged) {
+                response.lastSongs = undefined;
+                response.currentSong = undefined;
+            }else{
+                response.lastSongs = response.lastSongs.slice(0, MAX_NUM_PREV_SONGS);
             }
             nserver.send_Notifications('music_changed', response, clients);
         }
@@ -129,7 +134,7 @@ module.exports.newSong = function (id, nSongs, currentSongChanged) {
             clients: []
         };
     }
-    eventmap[id].nextSongs = nSongs.slice(0, MAX_NUM_NEXT_SONGS);
+    eventmap[id].nextSongs = nSongs;
     if (eventmap[id]) {
         sendSongs(id, eventmap[id].clients, currentSongChanged);
     }
