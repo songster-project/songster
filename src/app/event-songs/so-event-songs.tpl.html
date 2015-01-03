@@ -9,12 +9,16 @@
                 <th>Artist</th>
                 <th>Album</th>
                 <th>Year</th>
+                <th></th>
             </tr>
             <tr ng:repeat="song in nextSongs track by $index">
                 <td>{{ song.title }}</td>
                 <td>{{ song.artist }}</td>
                 <td>{{ song.album }}</td>
                 <td>{{ song.year }}</td>
+                <td> <div class="pull-right" ng-controller="VoteController" >
+                    <span class="badge badge-info">{{ getVotesForSong(song) || "0"}}</span>
+                </div></td>
             </tr>
         </table>
     </div>
