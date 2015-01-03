@@ -17,21 +17,24 @@ function SoPlayerDirective() {
 
             $timeout(function () {
                 var lastsongid;
-                function sendNextSongs(){
-                    var currevent = $event.getBroadcastEvent();
-                    // check if broadcast event is running
-                    if (currevent !== undefined && !!currevent.previewEnabled) {
-                        var currtrackidx = $scope.mediaPlayer.currentTrack;
-                        //create message for server
-                        var msg = {
-                            message: {nextSongs: []},
-                            type: 'queuechanged'
-                        };
-                        //copy next five songs starting from current
-                        msg.message.nextSongs = $scope.mediaPlayer.$playlist.slice(currtrackidx>0?currtrackidx-1:currtrackidx, currtrackidx + EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS);
-                        //send massage for current event to server;
-                        $http.post('/eventlog/' + currevent._id, msg);
-                    }
+
+                function sendNextSongs() {
+                    $timeout(function () {
+                        var currevent = $event.getBroadcastEvent();
+                        // check if broadcast event is running
+                        if (currevent !== undefined && !!currevent.previewEnabled) {
+                            var currtrackidx = $scope.mediaPlayer.currentTrack;
+                            //create message for server
+                            var msg = {
+                                message: {nextSongs: []},
+                                type: 'queuechanged'
+                            };
+                            //copy next five songs starting from current
+                            msg.message.nextSongs = $scope.mediaPlayer.$playlist.slice(currtrackidx > 0 ? currtrackidx - 1 : currtrackidx, currtrackidx + EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS);
+                            //send massage for current event to server;
+                            $http.post('/eventlog/' + currevent._id, msg);
+                        }
+                    });
                 }
 
                 $scope.$on('BROADCAST_STARTED', function () {
