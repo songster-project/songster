@@ -21,15 +21,16 @@ module.exports = function ( karma ) {
     frameworks: [ 'jasmine' ],
       plugins
   :
-  ['karma-jasmine', 'karma-phantomjs-launcher', 'karma-coffee-preprocessor', 'karma-htmlfile-reporter', 'karma-story-reporter', 'karma-junit-reporter'],
+  ['karma-jasmine', 'karma-phantomjs-launcher', 'karma-coffee-preprocessor', 'karma-htmlfile-reporter', 'karma-story-reporter', 'karma-junit-reporter', 'karma-coverage'],
     preprocessors: {
       '**/*.coffee': 'coffee',
+        'src/**/*.js': 'coverage'
     },
 
     /**
      * How to report, by default.
      */
-  reporters: ['story', 'progress', 'dots', 'html', 'junit'],
+  reporters: ['story', 'progress', 'dots', 'html', 'junit', 'coverage'],
 
       htmlReporter
   :
@@ -45,6 +46,10 @@ module.exports = function ( karma ) {
     ''
   }
   ,
+  coverageReporter: {
+    type : 'html',
+    dir : 'frontend_coverage/'
+  },
     /**
      * On which port should the browser connect, on which port is the test runner
      * operating, and what is the URL path for the browser to use.
