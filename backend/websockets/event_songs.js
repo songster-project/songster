@@ -10,7 +10,7 @@ var MAX_NUM_NEXT_SONGS = 5;
 /*
  sends the new songs to the clients
  */
-function sendSongs(id, clients, currentSongChanged) {
+function sendSongs(id, clients, currentSongChanged,registration) {
     var response = {
         nextSongs: [],
         lastSongs: []
@@ -41,11 +41,15 @@ function sendSongs(id, clients, currentSongChanged) {
                     response.nextSongs.splice(0, 1);
                 }
             }
+            console.log(response.nextSongs);
             response.nextSongs = response.nextSongs.slice(0, MAX_NUM_NEXT_SONGS);
-            if (!currentSongChanged) {
+            if(!registration && response){
+                response.lastSongs=undefined;
+            }
+            if (!currentSongChanged && response) {
                 response.lastSongs = undefined;
                 response.currentSong = undefined;
-            }else{
+            }else if(response.lastSongs && response){
                 response.lastSongs = response.lastSongs.slice(0, MAX_NUM_PREV_SONGS);
             }
             nserver.send_Notifications('music_changed', response, clients);
@@ -74,7 +78,7 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
         }
         //send the songs to the new client
         if (eventmap[data.eventid]) {
-            sendSongs(data.eventid, [ws], true);
+            sendSongs(data.eventid, [ws], true,true);
         }
     } else {//add entry for event if event exists
         db.Event.findOne({'_id': data.eventid}, function (err, events) {
@@ -93,7 +97,7 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
             }
             //send the songs to the new client
             if (eventmap[data.eventid]) {
-                sendSongs(data.eventid, [ws], true);
+                sendSongs(data.eventid, [ws], true,true);
             }
         });
     }
@@ -136,6 +140,6 @@ module.exports.newSong = function (id, nSongs, currentSongChanged) {
     }
     eventmap[id].nextSongs = nSongs;
     if (eventmap[id]) {
-        sendSongs(id, eventmap[id].clients, currentSongChanged);
+        sendSongs(id, eventmap[id].clients, currentSongChanged,false);
     }
 };

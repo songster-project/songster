@@ -1,7 +1,8 @@
 angular
     .module('songster.player')
     .constant("EVENT_SONG_CONFIG", {
-        "MAX_NUMBER_OF_NEXT_SONGS": 5 // number of next songs to send
+        "MAX_NUMBER_OF_NEXT_SONGS": 5, // number of next songs to send
+        "MAX_NUM_PREV_SONGS": 7
     })
     .run(function SoPlayerRun(editableOptions, editableThemes) {
         editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
