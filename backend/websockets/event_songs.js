@@ -41,7 +41,6 @@ function sendSongs(id, clients, currentSongChanged,registration) {
                     response.nextSongs.splice(0, 1);
                 }
             }
-            console.log(response.nextSongs);
             response.nextSongs = response.nextSongs.slice(0, MAX_NUM_NEXT_SONGS);
             if(!registration && response){
                 response.lastSongs=undefined;
