@@ -26,6 +26,9 @@
             <li ng-click="player.removeSong($index); player.play($index);">
               <i class="fa fa-times"></i>
             </li>
+            <div ng-controller="VoteController">
+                <span ng-if="isDj()" class="badge badge-info">{{ getVotesForSong(item) || "0"}}</span>
+            </div>
           </ul>
         </div>
         <div class="media-body">

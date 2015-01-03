@@ -100,7 +100,7 @@ function EventService($http, $q, $rootScope, EventFactory) {
     };
 
     this.isDj = function() {
-        return _broadcastEvent !== undefined && _broadcastEvent._id == _event._id;
+        return _broadcastEvent !== undefined && _event !== undefined  && _broadcastEvent._id == _event._id;
     };
 
     this.getEvents = function () {
