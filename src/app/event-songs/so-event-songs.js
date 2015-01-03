@@ -34,6 +34,7 @@ function SoEventSongsDirective() {
                 $scope.$apply();
 
                 $rootScope.notifyActivityStream(msg);
+                votingService.setVotesongsOfQueue(msg.nextSongs);
             }, data);
         },
         templateUrl: 'event-songs/so-event-songs.tpl.html'

@@ -11,6 +11,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     var _votes = [];
     var _votesMap = {}; // song id to votes count
     var _clientVotes = {}; // votes of current client
+    var _votesongsInQueue = {};
 
     this.loadVotes = function (event_id) {
         console.log('load votes from server');
@@ -143,6 +144,17 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
 
             }
         }
+    }
+
+    this.setVotesongsOfQueue = function(songs) {
+        _votesongsInQueue = {};
+        _.each(songs, function(song){
+            _votesongsInQueue[song._id] = true;
+        })
+    }
+
+    this.isSongInQueue = function(song) {
+        return _votesongsInQueue[song._id] !== undefined ? true : false;
     }
 
 
