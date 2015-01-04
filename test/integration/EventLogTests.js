@@ -77,12 +77,54 @@ describe('EventLogApi', function () {
         });
     });
 
-    it('should log songs if message is correct', function (done) {
+    it('should update next songs on queuechanged', function (done) {
+        var postdata = {
+            message: {
+                nextSongs: [{
+                    id: "5489e267663534a4148bdfaaa111",
+                    _id: "5489e267663534a4148bdfaaa111",
+                    title: "Meet The Enemy",
+                    artist: "Eluveitie",
+                    album: "Helvetios",
+                    year: "",
+                    cover: "5489e2682b6671a414dcab9c",
+                    file_id: "5489e2612b6671a414dcab93",
+                    addedDate: "2014-12-11T18:28:49.658Z",
+                    src: "/song/5489e2612b6671a414dcab93/raw",
+                    type: "audio/mp3"
+                }]
+            },
+            type: "queuechanged"
+        };
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+                expect(err).to.not.be.ok;
+                expect(res.statusCode).to.equal(201);
+                var started = true;
+                var nClient = require('../lib/notification_client');
+                var data = {
+                    eventid: eid
+                };
+                nClient.register_to_event('music_changed', function (msg) {
+                    if (started) {
+                        started = false;
+                        expect(msg.nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
+                        done();
+                    }
+                }, data);
+            });
+        });
+    });
+
+    it('should log songs if message is correct with next songs', function (done) {
         var postdata = {
             message: {
                 currentSong: {
-                    id: "5489e267663534a4148bdfcc",
-                    _id: "5489e267663534a4148bdfcc",
+                    id: "5489e267663534a4148bdfaaa112",
+                    _id: "5489e267663534a4148bdfaaa112",
                     title: "Contrails",
                     artist: "Glowworm",
                     album: "The Coachlight Woods",
@@ -94,8 +136,8 @@ describe('EventLogApi', function () {
                     type: "audio/mp3"
                 },
                 nextSongs: [{
-                    id: "5489e268663534a4148bdfcd",
-                    _id: "5489e268663534a4148bdfcd",
+                    id: "5489e267663534a4148bdfaaa113",
+                    _id: "5489e267663534a4148bdfaaa113",
                     title: "Meet The Enemy",
                     artist: "Eluveitie",
                     album: "Helvetios",
@@ -128,12 +170,12 @@ describe('EventLogApi', function () {
         });
     });
 
-    it('should log songs if message is correct', function (done) {
+    it('should log songs if message is correct without next songs', function (done) {
         var postdata = {
             message: {
                 currentSong: {
-                    id: "5489e267663534a4148bdfaa",
-                    _id: "5489e267663534a4148bdfcc",
+                    id: "5489e267663534a4148bdfaaa114",
+                    _id: "5489e267663534a4148bdfaaa114",
                     title: "Contrails",
                     artist: "Glowworm",
                     album: "The Coachlight Woods",
@@ -142,7 +184,7 @@ describe('EventLogApi', function () {
                     file_id: "5489e2612b6671a414dcab94",
                     addedDate: "2014-12-11T18:28:49.672Z",
                     src: "/song/5489e2612b6671a414dcab94/raw",
-                    type: "audio/mp3",
+                    type: "audio/mp3"
                 }
             },
             type: "songplayed"
@@ -157,9 +199,9 @@ describe('EventLogApi', function () {
                 type: 'songplayed'
             }).sort('-logDate').limit(1).exec(function (err, logEntries) {
                     if (logEntries[0]) {
-                        expect((logEntries[0].message).nextSongs).to.not.be.ok;
                         expect((logEntries[0].message).currentSong.id).to.equal(postdata.message.currentSong.id);
                         expect(logEntries[0].type).to.equal(postdata.type);
+                        expect((logEntries[0].message).nextSongs).to.not.be.ok;
                         done();
                     }
                 }
@@ -191,8 +233,8 @@ describe('EventLogApi', function () {
         var postdata = {
             message: {
                 currentSong: {
-                    id: "5489e267663534a4148bdfcc",
-                    _id: "5489e267663534a4148bdfcc",
+                    id: "5489e267663534a4148bdfaaa115",
+                    _id: "5489e267663534a4148bdfaaa115",
                     title: "Contrails",
                     artist: "Glowworm",
                     album: "The Coachlight Woods",
@@ -204,8 +246,8 @@ describe('EventLogApi', function () {
                     type: "audio/mp3"
                 },
                 nextSongs: [{
-                    id: "5489e268663534a4148bdfcd",
-                    _id: "5489e268663534a4148bdfcd",
+                    id: "5489e267663534a4148bdfaaa116",
+                    _id: "5489e267663534a4148bdfaaa116",
                     title: "Meet The Enemy",
                     artist: "Eluveitie",
                     album: "Helvetios",
@@ -229,8 +271,8 @@ describe('EventLogApi', function () {
         var postdata = {
             message: {
                 currentSong: {
-                    id: "5489e267663534a4148bdfcc",
-                    _id: "5489e267663534a4148bdfcc",
+                    id: "5489e267663534a4148bdfaaa117",
+                    _id: "5489e267663534a4148bdfaaa117",
                     title: "Contrails",
                     artist: "Glowworm",
                     album: "The Coachlight Woods",
@@ -242,8 +284,8 @@ describe('EventLogApi', function () {
                     type: "audio/mp3"
                 },
                 nextSongs: [{
-                    id: "5489e268663534a4148bdfcd",
-                    _id: "5489e268663534a4148bdfcd",
+                    id: "5489e267663534a4148bdfaaa118",
+                    _id: "5489e267663534a4148bdfaaa118",
                     title: "Meet The Enemy",
                     artist: "Eluveitie",
                     album: "Helvetios",
@@ -298,8 +340,8 @@ describe('EventLogApi', function () {
         var postdata = {
             message: {
                 currentSong: {
-                    id: "5489e267663534a4148bdfdddddd",
-                    _id: "5489e267663534a4148bdfcc",
+                    id: "5489e267663534a4148bdfaaa119",
+                    _id: "5489e267663534a4148bdfaaa119",
                     title: "Contrails",
                     artist: "Glowworm",
                     album: "The Coachlight Woods",
@@ -311,8 +353,8 @@ describe('EventLogApi', function () {
                     type: "audio/mp3"
                 },
                 nextSongs: [{
-                    id: "5489e268663534a4148bdgfddd",
-                    _id: "5489e268663534a4148bdfcd",
+                    id: "5489e267663534a4148bdfaaa120",
+                    _id: "5489e267663534a4148bdfaaa120",
                     title: "Meet The Enemy",
                     artist: "Eluveitie",
                     album: "Helvetios",
@@ -339,11 +381,10 @@ describe('EventLogApi', function () {
                     eventid: eid
                 };
                 nClient.register_to_event('music_changed', function (msg) {
-                    expect(msg.lastSongs[0].id).to.equal(postdata.message.currentSong.id);
-                    expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
-                    expect(msg.nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
                     if (started) {
                         started = false;
+                        expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
+                        expect(msg.nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
                         done();
                     }
                 }, data);
@@ -356,8 +397,8 @@ describe('EventLogApi', function () {
         var postdata = {
             message: {
                 currentSong: {
-                    id: "5489e267663534a4148bdfdrt",
-                    _id: "5489e267663534a4148bdfcc",
+                    id: "5489e267663534a4148bdfaaa121",
+                    _id: "5489e267663534a4148bdfaaa121",
                     title: "Contrails",
                     artist: "Glowworm",
                     album: "The Coachlight Woods",
@@ -369,8 +410,8 @@ describe('EventLogApi', function () {
                     type: "audio/mp3"
                 },
                 nextSongs: [{
-                    id: "5489e268663534a4148bdgrtdd",
-                    _id: "5489e268663534a4148bdfcd",
+                    id: "5489e267663534a4148bdfaaa122",
+                    _id: "5489e267663534a4148bdfaaa122",
                     title: "Meet The Enemy",
                     artist: "Eluveitie",
                     album: "Helvetios",
@@ -401,6 +442,19 @@ describe('EventLogApi', function () {
                     api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
                         expect(err).to.not.be.ok;
                         expect(res.statusCode).to.equal(201);
+                        postdata.message.currentSong={
+                            id: "5489e267663534a4148bdfaaa123",
+                            _id: "5489e267663534a4148bdfaaa123",
+                            title: "Contrails",
+                            artist: "Glowworm",
+                            album: "The Coachlight Woods",
+                            year: "",
+                            cover: "5489e2672b6671a414dcab9a",
+                            file_id: "5489e2612b6671a414dcab94",
+                            addedDate: "2014-12-11T18:28:49.672Z",
+                            src: "/song/5489e2612b6671a414dcab94/raw",
+                            type: "audio/mp3"
+                        };
 
                         api.post('/eventlog/' + id).send(postdata).end(function (err, res) {
                             expect(err).to.not.be.ok;
@@ -414,7 +468,7 @@ describe('EventLogApi', function () {
                                 if (started) {
                                     started = false;
                                     expect(msg.lastSongs.length).to.equal(1);
-                                    expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal(postdata.message.currentSong.id);
+                                    expect(msg.lastSongs[msg.lastSongs.length - 1].id).to.equal("5489e267663534a4148bdfaaa121");
                                     expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
                                     expect(msg.nextSongs.length).to.equal(0);
                                     api.put('/event/current/end').send({}).end(function (err, res) {

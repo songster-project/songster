@@ -1,5 +1,5 @@
 <div>
-  <ul class="list-unstyled queue" sv-root sv-part="queue">
+  <ul class="list-unstyled queue" sv-root sv-part="queue" sv-on-sort="player.queueChanged()">
     <li ng-repeat="item in queue track by item._id" sv-element="opts"
         ng-class="{'current-song': $index === mediaPlayer.currentTrack - 1}">
 

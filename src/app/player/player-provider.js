@@ -7,6 +7,11 @@ function Player($rootScope) {
     // this contains the song elements with metadata - DONT recreate this array we need the references
     var queue = [];
 
+    var QUEUE_CHANGED = 'QUEUE_CHANGED';
+
+    this.queueChanged = function queueChanged(){
+        $rootScope.$broadcast(QUEUE_CHANGED);
+    };
 
     function queueContainsSong(obj) {
         var ret = false;
@@ -23,6 +28,7 @@ function Player($rootScope) {
     this.add = function add(song) {
         if (song._id && song.addedDate && song.file_id && !queueContainsSong(song)) {
             queue.push(song);
+            this.queueChanged();
         } else {
             console.log('attempted to add invalid or duplicate song-object to playlist');
         }
@@ -34,11 +40,13 @@ function Player($rootScope) {
 
     this.clear = function clear() {
         queue.length = 0;
+        this.queueChanged();
     };
 
     this.addFirst = function addFirst(song) {
         if (song._id && song.addedDate && song.file_id && !queueContainsSong(song)) {
             queue.unshift(song);
+            this.queueChanged();
         } else {
             console.log('attempted to add invalid or duplicate song-object to playlist');
         }
@@ -47,18 +55,21 @@ function Player($rootScope) {
     this.pushSongUp = function pushSongUp(index) {
         if (index >= 1 && index < queue.length) {
             queue.swap(index, index - 1);
+            this.queueChanged();
         }
     };
 
     this.pushSongDown = function pushSongDown(index) {
         if (index >= 0 && index < queue.length - 1) {
             queue.swap(index, index + 1);
+            this.queueChanged();
         }
     };
 
     this.removeSong = function remove(index) {
         if (index >= 0 && index < queue.length) {
             queue.splice(index, 1);
+            this.queueChanged();
         } else {
             console.log('index to remove larger than queue length');
         }
@@ -70,6 +81,7 @@ function Player($rootScope) {
         });
         if (rmIndex >= 0) {
             queue.splice(rmIndex, 1);
+            this.queueChanged();
         }
     });
 }

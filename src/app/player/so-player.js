@@ -17,18 +17,39 @@ function SoPlayerDirective() {
 
             $timeout(function () {
                 var lastsongid;
+
+                function sendNextSongs() {
+                    $timeout(function () {
+                        var currevent = $event.getBroadcastEvent();
+                        // check if broadcast event is running
+                        if (currevent !== undefined && !!currevent.previewEnabled) {
+                            var currtrackidx = $scope.mediaPlayer.currentTrack;
+                            //create message for server
+                            var msg = {
+                                message: {nextSongs: []},
+                                type: 'queuechanged'
+                            };
+                            //copy next five songs starting from current
+                            msg.message.nextSongs = $scope.mediaPlayer.$playlist.slice(currtrackidx > 0 ? currtrackidx - 1 : currtrackidx, currtrackidx + EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS);
+                            //send massage for current event to server;
+                            $http.post('/eventlog/' + currevent._id, msg);
+                        }
+                    });
+                }
+
                 $scope.$on('BROADCAST_STARTED', function () {
                     lastsongid = undefined;
                 });
+
                 //add listener to player 'playing' event
                 $scope.mediaPlayer.on('playing', function () {
                     var currevent = $event.getBroadcastEvent();
                     // check if broadcast event is running
                     if (currevent !== undefined) {
                         var currtrackidx = $scope.mediaPlayer.currentTrack;
-                        var currentSong = $scope.queue[currtrackidx - 1];
+                        var currentSong = $scope.mediaPlayer.$playlist[currtrackidx - 1];
                         //see if song has changed
-                        if (!lastsongid || lastsongid != currentSong.id) {
+                        if (!lastsongid || lastsongid !== currentSong.id) {
                             //create message for server
                             var msg = {
                                 message: {nextSongs: [], currentSong: currentSong},
@@ -36,11 +57,21 @@ function SoPlayerDirective() {
                             };
                             lastsongid = currentSong.id;
                             //copy next five songs starting from current plus 1
-                            msg.message.nextSongs = $scope.queue.slice(currtrackidx, currtrackidx + EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS);
-                            //send massege for current event to server;
+                            if (currevent.previewEnabled) {
+                                msg.message.nextSongs = $scope.mediaPlayer.$playlist.slice(currtrackidx, currtrackidx + EVENT_SONG_CONFIG.MAX_NUMBER_OF_NEXT_SONGS);
+                            }
+                            //send massage for current event to server;
                             $http.post('/eventlog/' + currevent._id, msg);
                         }
                     }
+                });
+
+                $rootScope.$on('QUEUE_CHANGED', function () {
+                    sendNextSongs();
+                });
+
+                $scope.mediaPlayer.on('loadedmetadata', function () {
+                    sendNextSongs();
                 });
             });
 

@@ -1,6 +1,6 @@
 angular.module('songster.event')
 
-    .controller('EventNewController', function EventCtrl($scope, $location, $event, $state, EventFactory) {
+    .controller('EventNewController', function EventCtrl($scope, $location, $event, $state, EventFactory,$rootScope) {
         $scope.event = $event.getEvent();
         $scope.editEvent = EventFactory.create({
             votingEnabled: true,
@@ -11,6 +11,7 @@ angular.module('songster.event')
         $scope.startEvent = function () {
             $event.startBroadcast($scope.editEvent).then(
                 function (broadcastEvent) {
+                    $rootScope.$broadcast('QUEUE_CHANGED');
                     $state.go('eventDetail', {id: broadcastEvent._id})
                 });
         };
