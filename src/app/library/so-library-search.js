@@ -32,6 +32,9 @@ function SoLibrarySearchDirective() {
             $scope.searchResult = SearchResultFactory.create();
             $scope.tabs = [
                 {active: true},
+                {active: false},
+                {active: false},
+                {active: false},
                 {active: false}
             ];
 
