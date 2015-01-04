@@ -40,9 +40,7 @@ angular.module('songster.voting')
             }];
 
             // load user votes for disabling vote button at loading page
-            if($scope.event) {
-                votingService.loadClientVotesFromServer($scope.event._id);
-            }
+            votingService.loadClientVotesFromServer($scope.event._id);
 
         }
 
@@ -77,6 +75,10 @@ angular.module('songster.voting')
 
         $scope.isDj = function() {
             return $rootScope.isDj();
+        }
+
+        $scope.isSongInQueue = function(song) {
+            return votingService.isSongInQueue(song);
         }
     });
 
