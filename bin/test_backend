@@ -1,4 +1,4 @@
 #!/bin/bash
 echo "_____ starting backend tests _____"
-./node_modules/mocha/bin/mocha -R dot $(find test/unit/backend -name '*.js')
+./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -- -R List $(find test/unit/backend -name '*.js')
 echo "_____ backend testing finished _____"

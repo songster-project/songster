@@ -25,3 +25,4 @@ vendor/*
 /test/data/export/
 /out/
 /frontend_coverage/
+/coverage/
