@@ -1,9 +1,8 @@
 angular.module('songster.event')
 
-    .controller('EventDetailController', function EventCtrl($scope,$http,$account, $location, $event, $state, $rootScope) {
+    .controller('EventDetailController', function EventCtrl($scope,$http, $location, $event, $state, $rootScope) {
         $scope.event = $event.getEvent();
-        $scope.user = $account.getUser();
-        $scope.isDJ =  $account.getUser() !== null && $event.getEvent().owner_id ==  $account.getUser()._id;//$rootScope.isDj();
+        $scope.isDJ =  $rootScope.isDj();
 
         $scope.endEvent = function () {
             $event.stopBroadcast().then(function () {
