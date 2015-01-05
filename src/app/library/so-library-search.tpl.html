@@ -1,18 +1,14 @@
 <div>
-    <div ng-if="suggestMode" style="margin-bottom: 10px">
-      <button title="Search" ng-click="tabs[0].active = true; tabs[1].active = false; tabs[2].active = false; tabs[3].active = false; tabs[4].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[0].active">
+    <div ng-if="suggestMode" style="margin-bottom: 10px; text-align: center">
+      <button title="Search" ng-click="tabs[0].active = true; tabs[1].active = false; tabs[2].active = false; tabs[3].active = false; tabs[4].active = false;" class="btn btn-xs btn-primary">
         <i class="fa fa-search"></i>
         Search
       </button>
-      <button title="Show artists" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = true; tabs[3].active = false; tabs[4].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[2].active">
+      <button title="Show artists" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = true; tabs[3].active = false; tabs[4].active = false;" class="btn btn-xs btn-primary">
         <i class="fa fa-user"></i>
         Show artists
       </button>
-      <button title="Show albums" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = false; tabs[3].active = true; tabs[4].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[3].active">
-        <i class="fa fa-picture-o"></i>
-        Show albums
-      </button>
-      <button title="Search Youtube" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = false; tabs[3].active = false; tabs[4].active = true;" class="btn btn-xs btn-primary" ng-if="!tabs[4].active">
+      <button title="Search Youtube" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = false; tabs[3].active = false; tabs[4].active = true;" class="btn btn-xs btn-primary">
         <i class="fa fa-youtube-play"></i>
         Youtube
       </button>
