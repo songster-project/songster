@@ -99,6 +99,10 @@ function EventService($http, $q, $rootScope, EventFactory, $account) {
         return _event;
     };
 
+    this.isDj = function() {
+        return _broadcastEvent !== undefined && _event !== undefined && _broadcastEvent._id == _event._id;
+    }
+
     this.isBroadcastActive = function() {
         return _broadcastEvent && $account.getUser()  && _broadcastEvent.owner_id == $account.getUser()._id ;
     };
