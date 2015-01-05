@@ -23,7 +23,7 @@
             <td>Started</td>
             <td>{{event.start | date: 'd.M.y H:m'}}</td>
         </tr>
-        <tr ng-if="!!event.end">
+        <tr ng-if="isDJ && !!event.end">
             <td>Delete Event</td>
             <td>
                 <button ng-click="deleteEvent(event)" class="btn btn-xs">Delete</button>
