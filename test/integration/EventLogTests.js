@@ -68,7 +68,7 @@ describe('EventLogApi', function () {
                 nClient.register_to_event('music_changed', function (msg) {
                     if (first) {
                         expect(msg.lastSongs.length).to.equal(0);
-                        expect(msg.nextSongs.length).to.equal(0);
+                        expect(msg.nextSongs).to.not.exist;
                         first = false;
                         done();
                     }

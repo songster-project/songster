@@ -97,17 +97,32 @@ router.post('/:id', passport.ensureAuthenticated, passport.ensureNotAnonymous, f
                 });
             });
         } else if (req.body.type === 'queuechanged') {
-            songwebsocket.newSong(evLog.event_id, req.body.message.nextSongs||[],false);
+            songwebsocket.newSong(evLog.event_id, req.body.message.nextSongs || [], false);
             db.EventLog.findOne({
                 event_id: event._id,
                 type: 'songplayed'
             }).sort('-logDate').exec(function (err, lastLog) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Internal server error');
+                    return;
+                }
                 if (lastLog && lastLog.message) {
                     lastLog.message.nextSongs = req.body.message.nextSongs;
-                    lastLog.save();
+                    lastLog.markModified('message');
+                    lastLog.save(function (err) {
+                        if (err) {
+                            console.log(err);
+                            res.status(500).send('Internal server error');
+                            return;
+                        }
+                        res.status(201).send(evLog);
+                        return;
+                    });
+                }else{
+                    res.status(201).send(evLog);
+                    return;
                 }
-                res.status(201).send(evLog);
-                return;
             });
         } else {
             evLog.save(function (err, eventlog) {

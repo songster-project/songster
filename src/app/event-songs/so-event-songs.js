@@ -29,7 +29,7 @@ function SoEventSongsDirective() {
                 }
                 $scope.currentSong = msg.currentSong||$scope.currentSong;
                 if($scope.previewEnabled) {
-                    $scope.nextSongs = msg.nextSongs || $scope.nextSongs;
+                    $scope.nextSongs = msg.nextSongs;
                 }
                 $scope.$apply();
 
