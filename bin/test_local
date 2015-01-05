@@ -6,7 +6,7 @@ echo "_____ run grunt _____"
 grunt > /dev/null
 
 echo "_____ starting backend tests _____"
-./node_modules/mocha/bin/mocha -R dot $(find test/unit/backend -name '*.js')
+./node_modules/mocha/bin/mocha -R List $(find test/unit/backend -name '*.js')
 echo "_____ backend testing finished _____"
 
 echo "_____ starting frontend tests _____"
@@ -24,7 +24,7 @@ echo "_____ setting up testdata _____"
 ./bin/importdb > /dev/null
 
 echo "_____ starting integration tests _____"
-./node_modules/mocha/bin/mocha -R dot $(find test/integration -name '*.js')
+./node_modules/mocha/bin/mocha -R List $(find test/integration -name '*.js')
 echo "_____ integration testing finished _____"
 
 echo "_____ setting up testdata _____"
