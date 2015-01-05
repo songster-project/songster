@@ -58,4 +58,26 @@ describe('Login', function () {
 
     });
 
+    it('should get redirected if user is authenticated', function (done) {
+        console.log('login user1');
+        var postdata = {
+            "username": "user1",
+            "password": "user1"
+        };
+
+        api.post('/login')
+            .send(postdata)
+            .expect(302, 'Moved Temporarily. Redirecting to /')
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                api.get('/login')
+                    .expect(302, 'Moved Temporarily. Redirecting to /app')
+                    .end(function (err, res) {
+                        expect(err).to.not.exist;
+                        done();
+                    });
+            });
+
+    });
+
 });

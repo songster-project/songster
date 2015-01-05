@@ -138,6 +138,16 @@ describe('YoutubeApi', function () {
         });
     });
 
+    it('upload should send 400 with not valid youtube url', function (done) {
+        var postdata = {
+            youtubeurl: 'https://www.youtube.com/watch?v=ZZbIx7xy',
+        };
+        api.post('/youtube').send(postdata).expect(400).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
     it('upload should send 400 if youtube url is missing in post request', function (done) {
         var postdata = {};
         api.post('/youtube').send(postdata).expect(400).end(function (err, res) {

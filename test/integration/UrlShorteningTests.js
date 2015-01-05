@@ -74,4 +74,20 @@ describe('UrlShortening', function () {
         });
     });
 
+
+    it('should return same url when i make a valid request for a url i already shortened',function(done){
+        api.get('/event/shorten?q=http://www.gmx.at').end(function (err, res) {
+            var short;
+            expect(res.body.url).to.exist;
+            expect(res.body.url.indexOf('http://bit.ly/')).to.equal(0);
+            short=res.body.url;
+            api.get('/event/shorten?q=http://www.gmx.at').end(function (err, res) {
+                expect(res.body.url).to.exist;
+                expect(res.body.url.indexOf('http://bit.ly/')).to.equal(0);
+                expect(res.body.url).to.equal(short);
+                done();
+            });
+        });
+    });
+
 });

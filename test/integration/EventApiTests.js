@@ -7,6 +7,7 @@ var api = supertest.agent('http://localhost:3000');
 
 describe('EventApi', function () {
     this.timeout(10000);
+    var id_event;
 
     //Callback - Magic provided by: https://github.com/visionmedia/superagent/issues/314
     //Basically solves that we can be logged in
@@ -67,7 +68,7 @@ describe('EventApi', function () {
                 console.log(res.text);
                 expect(err).to.not.exist;
                 expect(res.body).to.contain.key('start');
-                eventid = res.body._id;
+                id_event = res.body._id;
                 done();
             });
         }
@@ -208,6 +209,34 @@ describe('EventApi', function () {
         api.get('/event/past').end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body).to.have.length(1);
+            done();
+        });
+    });
+
+    it('should return 400 if parameter is missing', function (done) {
+        api.get('/event/qr').expect(400).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('should return 400 if parameter is not a valid url', function (done) {
+        api.get('/event/qr?q=test').expect(400).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('should return 200 if valid url', function (done) {
+        api.get('/event/qr?q=https%3A%2F%2Fwww.youtube.com%2F').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('should return 400 with not valid mongo id', function (done) {
+        api.get('/event/zzz').expect(400).end(function (err, res) {
+            expect(err).to.not.exist;
             done();
         });
     });
