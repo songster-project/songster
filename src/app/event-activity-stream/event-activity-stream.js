@@ -227,7 +227,7 @@ function SoEventActivityStreamDirective() {
                             content: msg.currentSong,
                             date: new Date()
                         });
-                    } else if (msg.type && msg.type === 'vote') {
+                    } else if (msg.type && msg.type === 'vote' && msg.state && msg.state === 'new') {
                         $scope.log.push({
                             type: 'song_voted',
                             content: msg.song,
