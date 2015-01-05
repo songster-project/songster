@@ -1,8 +1,8 @@
 <div>
-    <div class="page-header">
-        <h1>
+    <div class="page-header event-name-header" style="margin-bottom: 0px !important; border-bottom: 0px;">
+        <h2 ng-click="goToHomeTab()" style="margin-bottom: 0px !important">
             <i class="fa fa-bullhorn"></i> {{event.name}}
-        </h1>
+        </h2>
     </div>
 
     <so-authorize should-be="isDj()">
@@ -13,41 +13,45 @@
     </so-authorize>
 
     <tabset>
-        <tab>
+        <tab active="tabs[0].active">
             <tab-heading>
-                Home
+                <i class="fa fa-home"></i>
             </tab-heading>
             <div ng-include="'event/event-detail-home.tpl.html'"></div>
         </tab>
-        <tab ng-if="!event.end">
+        <tab ng-if="!event.end" active="tabs[1].active">
             <tab-heading>
-                Playlist
+                <i class="fa fa-play"></i>
+                <span ng-if="tabs[1].active">Playlist</span>
             </tab-heading>
             <so-event-songs event-id="event._id"></so-event-songs>
         </tab>
-        <tab ng-if="!event.end">
+        <tab active="tabs[2].active">
             <tab-heading>
-                Votings
+                <i class="fa fa-list-alt"></i>
+                <span ng-if="tabs[2].active">Stream</span>
+            </tab-heading>
+            <so-event-activity-stream event-id="event._id"></so-event-activity-stream>
+        </tab>
+        <tab ng-if="!event.end" active="tabs[3].active">
+            <tab-heading>
+                <i class="fa fa-thumbs-up"></i>
+                <span ng-if="tabs[3].active">Votes</span>
             </tab-heading>
             <div ng-include="'event/event-detail-votings.tpl.html'"></div>
         </tab>
-        <tab ng-if="!isDj() && !event.end">
+        <tab ng-if="!isDj() && !event.end" active="tabs[4].active" select="removeTabsForSuggestMode()">
             <tab-heading>
-                Suggestion
+                <i class="fa fa-lightbulb-o"></i>
+                <span ng-if="tabs[4].active">Suggest</span>
             </tab-heading>
             <div ng-include="'event/event-detail-suggestions.tpl.html'"></div>
         </tab>
-        <tab ng-if="!!event.end">
+        <tab ng-if="!!event.end" active="tabs[5].active">
             <tab-heading>
                 Played Songs
             </tab-heading>
         <so-event-history event-id="event._id"></so-event-history>
-        </tab>
-        <tab>
-            <tab-heading>
-              Activity Stream
-            </tab-heading>
-            <so-event-activity-stream event-id="event._id"></so-event-activity-stream>
         </tab>
     </tabset>
 </div>

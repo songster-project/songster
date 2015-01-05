@@ -23,7 +23,10 @@ function SoLibrarySearchDirective() {
             // optional: you can specify a custom view for the results
             customView: "=",
 
-            eventId: "="
+            eventId: "=",
+
+            // can be set to indicate that the library is used in the suggestion-view
+            suggestMode: "="
         },
         transclude: true,
         replace: true,
@@ -81,6 +84,16 @@ function SoLibrarySearchDirective() {
             $scope.jumpToResultTab = function () {
                 $scope.tabs[0].active = true;
                 $scope.tabs[1].active = false;
+            };
+
+            // very ugly hack to remove the second tab bar - necessary because we used tabs and not routes
+            $scope.removeTabsForSuggestMode = function () {
+                if ($scope.suggestMode) {
+                    var tabs = $(".nav-tabs");
+                    if (tabs.length == 2) {
+                        $(tabs[1]).hide();
+                    }
+                }
             };
 
             search($scope.searchRequest);

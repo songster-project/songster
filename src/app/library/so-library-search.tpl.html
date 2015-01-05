@@ -1,11 +1,28 @@
 <div>
+    <div ng-if="suggestMode" style="margin-bottom: 10px">
+      <button title="Search" ng-click="tabs[0].active = true; tabs[1].active = false; tabs[2].active = false; tabs[3].active = false; tabs[4].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[0].active">
+        <i class="fa fa-search"></i>
+        Search
+      </button>
+      <button title="Show artists" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = true; tabs[3].active = false; tabs[4].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[2].active">
+        <i class="fa fa-user"></i>
+        Show artists
+      </button>
+      <button title="Show albums" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = false; tabs[3].active = true; tabs[4].active = false;" class="btn btn-xs btn-primary" ng-if="!tabs[3].active">
+        <i class="fa fa-picture-o"></i>
+        Show albums
+      </button>
+      <button title="Search Youtube" ng-click="tabs[0].active = false; tabs[1].active = false; tabs[2].active = false; tabs[3].active = false; tabs[4].active = true;" class="btn btn-xs btn-primary" ng-if="!tabs[4].active">
+        <i class="fa fa-youtube-play"></i>
+        Youtube
+      </button>
+    </div>
     <tabset>
-        <tab active="tabs[0].active">
+        <tab active="tabs[0].active" select="removeTabsForSuggestMode()">
             <tab-heading>
                 Songs
             </tab-heading>
-
-            <div class="row">
+            <div class="row" style="margin-bottom: 10px">
                 <form>
                     <div class="col-lg-6">
                         <div class="input-group">
@@ -19,37 +36,43 @@
                 </form>
             </div>
 
-            <div class="row">
+            <div class="row" ng-if="!suggestMode">
                 <div class="col-lg-6">
                     <p>Total: {{searchResult.total}}</p>
                 </div>
             </div>
 
-            <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+            <div ng-if="searchResult && searchResult.total > 0">
+                <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
 
-            <div class="row" ng-include="resultView"></div>
+                <div class="row" ng-include="resultView"></div>
 
-            <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+                <so-search-pagination search-request="searchRequest" search-result="searchResult"></so-search-pagination>
+            </div>
+
+            <div ng-if="searchResult && searchResult.total == 0">
+                <h4>No search results!</h4>
+            </div>
         </tab>
-        <tab active="tabs[1].active">
+        <tab active="tabs[1].active" select="removeTabsForSuggestMode()">
             <tab-heading>
                 Random
             </tab-heading>
             <so-library-random></so-library-random>
         </tab>
-        <tab active="tabs[2].active">
+        <tab active="tabs[2].active" select="removeTabsForSuggestMode()">
             <tab-heading>
                 Artists
             </tab-heading>
             <so-library-artists></so-library-artists>
         </tab>
-        <tab active="tabs[3].active">
+        <tab active="tabs[3].active" select="removeTabsForSuggestMode()">
             <tab-heading>
                 Albums
             </tab-heading>
             <so-library-albums></so-library-albums>
         </tab>
-        <tab active="tabs[4].active" ng-if="eventId">
+        <tab active="tabs[4].active" ng-if="eventId" select="removeTabsForSuggestMode()">
             <tab-heading>
                 Youtube
             </tab-heading>
