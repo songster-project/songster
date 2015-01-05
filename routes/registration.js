@@ -19,7 +19,7 @@ router.post('/', function (req, res, next) {
     req.checkBody('username', 'Username is required').notEmpty();
     req.checkBody('password', 'Password is required').notEmpty();
     req.checkBody('confirm_password', 'Confirm Password is required').notEmpty();
-    req.checkBody('email', 'Valid E-Mail is required').isEmail();
+    req.checkBody('email', 'Valid E-Mail Address is required').isEmail();
     req.checkBody('first_name', 'First name is required').notEmpty();
     req.checkBody('last_name', 'Last name is required').notEmpty();
     req.assert('password', 'Passwords do not match').equals(req.body.confirm_password);
@@ -27,8 +27,15 @@ router.post('/', function (req, res, next) {
     var errors = req.validationErrors();
 
     if (errors) {
+        var error_message = "";
+        for(var i=0; i < errors.length; i++) {
+            error_message += errors[i].msg;
+            if(i < errors.length-1) {
+                error_message += ", ";
+            }
+        }
         res.status(400);
-        res.render('registration', {message: util.inspect(errors)});
+        res.render('registration', {message: error_message});
         return;
     }
 
