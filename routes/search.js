@@ -301,27 +301,6 @@ router.get('/event/:eventid/random', passport.ensureAuthenticated, function (req
 
 });
 
-router.get('/random', passport.ensureAuthenticated, function (req, res) {
-    var body = {};
-
-    body["query"] = {
-        "function_score": {
-            "filter": createUserSongFilter(req.user),
-            "functions": [{
-                "random_score": {
-                    "seed": ('' + Math.random()).substring(2)
-                }
-            }],
-            "score_mode": "sum"
-        }
-    };
-
-    // pagination
-    addPagination(body, req.query);
-
-    searchSongs(res, body);
-});
-
 function createUserSongFilter(user) {
     return {
         "and": [{
