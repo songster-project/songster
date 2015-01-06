@@ -118,12 +118,12 @@ module.exports.addEvent = function (id) {
  * remove Event entry if a event is closed
  *
  * @param id the id of the closed event
- *//*
+ */
 module.exports.removeEvent = function (id) {
     if (eventmap[id]) {
         delete eventmap[id];
     }
-};*/
+};
 
 /**
  * sends Songs to clients if a song update occurs
