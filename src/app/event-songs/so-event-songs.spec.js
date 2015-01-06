@@ -124,17 +124,32 @@ describe('soEventSongs', function () {
             expect($scope.lastSongs).toBe(msg.lastSongs);
         });
 
-        it('should cut next Songs if there are too many', function () {
+        it('should cut last Songs if there are too many', function () {
             var msg = {
                 currentSong: {_id: '12345'},
                 nextSongs: ['1', '2', '3', '4', '5', '6', '7'],
                 lastSongs: ['1', '2', '3', '4', '5', '6', '7']
             };
             func(msg);
-            func({});
             expect($scope.currentSong).toBe(msg.currentSong);
             expect($scope.nextSongs).toBeUndefined();
-            expect($scope.lastSongs).toBe(['1', '2', '3', '4', '5']);
+            expect($scope.lastSongs).toEqual(['1', '2', '3', '4', '5']);
+        });
+
+        it('should add currentSong to lastSongs if new', function () {
+            var msg = {
+                currentSong: {_id: '1'},
+                nextSongs: ['1', '2', '3', '4', '5', '6', '7'],
+                lastSongs: ['1', '2', '3', '4', '5', '6', '7']
+            };
+            var msg2 = {
+                currentSong: {_id: '2'}
+            };
+            func(msg);
+            func(msg2);
+            expect($scope.currentSong).toBe(msg2.currentSong);
+            expect($scope.nextSongs).toBeUndefined();
+            expect($scope.lastSongs).toEqual([{_id: '1'},'1', '2', '3', '4']);
         });
     });
 });

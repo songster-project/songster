@@ -199,4 +199,44 @@ describe('SongApi', function () {
                 done();
             });
     });
+
+    it('save song should return 400 if post data is empty', function (done) {
+        api.post('/song/')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('updateCover should return 400 if put data is empty', function (done) {
+        api.put('/song/zzz/updateCover')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('put song should return 400 if id is not valid', function (done) {
+        api.put('/song/zzz')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('put song should return 404 if there is no song with the id', function (done) {
+        var putdata ={
+            _id:'54abb9f6005967151a7aaaaa'
+        };
+        api.put('/song/54abb9f6005967151a7aaaaa')
+            .expect(404)
+            .send(putdata)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
 });

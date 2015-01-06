@@ -240,4 +240,25 @@ describe('EventApi', function () {
             done();
         });
     });
+
+    it('should send 404 if i want to end the current event and no event is active', function (done) {
+        api.put('/event/current/end').expect(404).send({}).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('should send 400 if post data is not valid on event creation', function (done) {
+        api.post('/event/').expect(400).send({}).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('should send 400 i want to delete a event with not valid mongoid', function (done) {
+        api.delete('/event/notactive/zzz').expect(400).end(function (err, res) {
+            expect(err).to.not.exist;
+            done();
+        });
+    });
 });

@@ -10,11 +10,11 @@ describe('SearchApi', function () {
     var eid;
 
     var postdata_dj = {
-        "username": "user2",
-        "password": "user2"
+        "username": "user3",
+        "password": "user3"
     };
 
-    // before all tests create event as user1
+    // before all tests create event as user3
     before(function (done) {
 
         var cb = function (x) {
@@ -31,14 +31,14 @@ describe('SearchApi', function () {
                     expect(err).to.not.exist;
                     expect(res.body).to.be.empty;
                     var postdata = {
-                        "name": "searchEvent1",
+                        "name": "votingEvent1",
                         "accessKey": "theKey",
-                        "owner_id": "5489e22a2b6671a414dcab8f",
+                        "owner_id": "54a3b95eedcf85150a52bfd3",
                         "suggestionEnabled": true,
                         "votingEnabled": true,
                         "previewEnabled": true
                     };
-                    api.post('/event').send(postdata).expect(201).end(function (err, res) {
+                    api.post('/event').send(postdata).end(function (err, res) {
                         expect(err).to.not.exist;
                         expect(res.body).to.contain.key('start');
                         eid = res.body._id;
@@ -91,8 +91,8 @@ describe('SearchApi', function () {
 
     beforeEach(function (done) {
         var postdata = {
-            "username": "user2",
-            "password": "user2"
+            "username": "user3",
+            "password": "user3"
         };
         var cb = function (x) {
             return;
@@ -124,41 +124,179 @@ describe('SearchApi', function () {
         api.get('/search/song')
             .expect(200)
             .end(function (err, res) {
-                console.log('####________####');
-                console.log(res.body);
+                expect(res.body.hits.hits.length).to.equal(2);
+                expect(res.body.hits.hits[0]._id).to.equal('5489e268663534a4148bdfab');
+                expect(res.body.hits.hits[1]._id).to.equal('5489e26c663534a4148bdfac');
                 expect(err).to.not.exist;
                 done();
             });
     });
 
-    it('get artists', function (done) {
+    it('get artist', function (done) {
         api.get('/search/artist')
             .expect(200)
             .end(function (err, res) {
-                console.log('####________####');
-                console.log(res.body);
+                expect(res.body.aggregations.artists.buckets.length).to.equal(2);
                 expect(err).to.not.exist;
                 done();
             });
     });
 
-    it('get event artists', function (done) {
+    it('search event artist get event artists', function (done) {
         api.get('/search/event/' + eid + '/artist')
             .expect(200)
             .end(function (err, res) {
-                console.log('####________####');
-                console.log(res.body);
+                expect(res.body.aggregations.artists.buckets.length).to.equal(2);
+                expect(res.body.aggregations.artists.buckets[0].key).to.equal('Eluveitie');
+                expect(res.body.aggregations.artists.buckets[1].key).to.equal('Frankie Rose');
                 expect(err).to.not.exist;
                 done();
             });
     });
 
-    it('get event songs', function (done) {
+    it('search event artist get event artists with querry', function (done) {
+        api.get('/search/event/' + eid + '/artist?q=Glowworm')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.aggregations.artists.buckets.length).to.equal(2);
+                expect(res.body.aggregations.artists.buckets[0].key).to.equal('Eluveitie');
+                expect(res.body.aggregations.artists.buckets[1].key).to.equal('Frankie Rose');
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event artist should return 400 if event id is no valid mongoid', function (done) {
+        api.get('/search/event/zzz/artist')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event artist should return 400 if event does not exist', function (done) {
+        api.get('/search/event/54abb9f6005967151a7aaaaa/artist')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event song get event songs', function (done) {
         api.get('/search/event/' + eid + '/song')
             .expect(200)
             .end(function (err, res) {
-                console.log('####________####');
-                console.log(res.body);
+                expect(res.body.hits.hits.length).to.equal(2);
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event song should return 400 if event id is no valid mongoid', function (done) {
+        api.get('/search/event/zzz/song')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event song should return 400 if event does not exist', function (done) {
+        api.get('/search/event/54abb9f6005967151a7aaaaa/song')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event album get event albums', function (done) {
+        api.get('/search/event/' + eid + '/album')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.aggregations.albums.buckets.length).to.equal(2);
+                expect(res.body.aggregations.albums.buckets[0].key).to.equal('Helvetios');
+                expect(res.body.aggregations.albums.buckets[1].key).to.equal('Interstellar');
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event album should return 400 if event id is no valid mongoid', function (done) {
+        api.get('/search/event/zzz/album')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event album should return 400 if event does not exist', function (done) {
+        api.get('/search/event/54abb9f6005967151a7aaaaa/album')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('query song', function (done) {
+        api.get('/search/song?q=test')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.hits.hits.length).to.equal(0);
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search album should return my albums', function (done) {
+        api.get('/search/album')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.aggregations.albums.buckets.length).to.equal(2);
+                expect(res.body.aggregations.albums.buckets[0].key).to.equal('Helvetios');
+                expect(res.body.aggregations.albums.buckets[1].key).to.equal('Interstellar');
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('random should return my songs', function (done) {
+        api.get('/search/random')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.hits.hits.length).to.equal(2);
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event random get random event songs', function (done) {
+        api.get('/search/event/' + eid + '/random')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.hits.hits.length).to.equal(2);
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event random should return 400 if event id is no valid mongoid', function (done) {
+        api.get('/search/event/zzz/random')
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event random should return 400 if event does not exist', function (done) {
+        api.get('/search/event/54abb9f6005967151a7aaaaa/random')
+            .expect(400)
+            .end(function (err, res) {
                 expect(err).to.not.exist;
                 done();
             });

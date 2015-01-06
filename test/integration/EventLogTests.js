@@ -483,4 +483,207 @@ describe('EventLogApi', function () {
         });
     });
 
+    it('should send websocket request if data is correct', function (done) {
+        var postdata = {
+            message: {
+                currentSong: {
+                    id: "5489e267663534a4148bdfaaa119",
+                    _id: "5489e267663534a4148bdfaaa119",
+                    title: "Contrails",
+                    artist: "Glowworm",
+                    album: "The Coachlight Woods",
+                    year: "",
+                    cover: "5489e2672b6671a414dcab9a",
+                    file_id: "5489e2612b6671a414dcab94",
+                    addedDate: "2014-12-11T18:28:49.672Z",
+                    src: "/song/5489e2612b6671a414dcab94/raw",
+                    type: "audio/mp3"
+                }
+            },
+            type: "songplayed"
+        };
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+                expect(err).to.not.be.ok;
+                expect(res.statusCode).to.equal(201);
+                var started = true;
+                var nClient = require('../lib/notification_client');
+                var data = {
+                    eventid: eid
+                };
+                nClient.register_to_event('music_changed', function (msg) {
+                    if (started) {
+                        started = false;
+                        expect(msg.currentSong.id).to.equal(postdata.message.currentSong.id);
+                        done();
+                    }
+                }, data);
+            });
+        });
+    });
+
+    it('registration to websocket request should not work if event id is no valid id', function (done) {
+        var postdata = {
+            message: {
+                currentSong: {
+                    id: "5489e267663534a4148bdfaaa119",
+                    _id: "5489e267663534a4148bdfaaa119",
+                    title: "Contrails",
+                    artist: "Glowworm",
+                    album: "The Coachlight Woods",
+                    year: "",
+                    cover: "5489e2672b6671a414dcab9a",
+                    file_id: "5489e2612b6671a414dcab94",
+                    addedDate: "2014-12-11T18:28:49.672Z",
+                    src: "/song/5489e2612b6671a414dcab94/raw",
+                    type: "audio/mp3"
+                }
+            },
+            type: "songplayed"
+        };
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+                expect(err).to.not.be.ok;
+                expect(res.statusCode).to.equal(201);
+                var started = true;
+                var nClient = require('../lib/notification_client');
+                var data = {
+                    eventid: 'aaa'
+                };
+                done();
+                nClient.register_to_event('music_changed', function (msg) {
+                    //expect(true).to.equal(false);
+                }, data);
+            });
+        });
+    });
+
+    it('registration to websocket request should not work if event doesn\'t exist', function (done) {
+        var postdata = {
+            message: {
+                currentSong: {
+                    id: "5489e267663534a4148bdfaaa119",
+                    _id: "5489e267663534a4148bdfaaa119",
+                    title: "Contrails",
+                    artist: "Glowworm",
+                    album: "The Coachlight Woods",
+                    year: "",
+                    cover: "5489e2672b6671a414dcab9a",
+                    file_id: "5489e2612b6671a414dcab94",
+                    addedDate: "2014-12-11T18:28:49.672Z",
+                    src: "/song/5489e2612b6671a414dcab94/raw",
+                    type: "audio/mp3"
+                }
+            },
+            type: "songplayed"
+        };
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+
+            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+                expect(err).to.not.be.ok;
+                expect(res.statusCode).to.equal(201);
+                var started = true;
+                var nClient = require('../lib/notification_client');
+                var data = {
+                    eventid: '54abb9f6005967151a7aaaaa'
+                };
+                done();
+                nClient.register_to_event('music_changed', function (msg) {
+                    //expect(true).to.equal(false);
+                }, data);
+            });
+        });
+    });
+
+    it('should return 403 if i want to log something on someone elses event', function (done) {
+        var logindata = {
+            "username": "user1",
+            "password": "user1"
+        };
+        var postdata = {
+            message: {
+                currentSong: {
+                    id: "5489e267663534a4148bdfaaa119",
+                    _id: "5489e267663534a4148bdfaaa119",
+                    title: "Contrails",
+                    artist: "Glowworm",
+                    album: "The Coachlight Woods",
+                    year: "",
+                    cover: "5489e2672b6671a414dcab9a",
+                    file_id: "5489e2612b6671a414dcab94",
+                    addedDate: "2014-12-11T18:28:49.672Z",
+                    src: "/song/5489e2612b6671a414dcab94/raw",
+                    type: "audio/mp3"
+                }
+            },
+            type: "songplayed"
+        };
+        api.get('/logout').end(function (err, res) {
+            api.post('/login')
+                .send(logindata)
+                .end(function (err) {
+                    api.post('/eventlog/' + eid).expect(403).send(postdata).end(function (err, res) {
+                        expect(err).to.not.be.ok;
+                        done();
+                    });
+                });
+        });
+    });
+
+    it('should update data if queue changed', function (done) {
+        var postdata = {
+            message: {
+                nextSongs: [{
+                    id: "5489e267663534a4148bdfaaa120",
+                    _id: "5489e267663534a4148bdfaaa120",
+                    title: "Meet The Enemy",
+                    artist: "Eluveitie",
+                    album: "Helvetios",
+                    year: "",
+                    cover: "5489e2682b6671a414dcab9c",
+                    file_id: "5489e2612b6671a414dcab93",
+                    addedDate: "2014-12-11T18:28:49.658Z",
+                    src: "/song/5489e2612b6671a414dcab93/raw",
+                    type: "audio/mp3"
+                }]
+            },
+            type: "queuechanged"
+        };
+        var started = true;
+        var first = true;
+        var nClient = require('../lib/notification_client');
+        var data = {
+            eventid: eid
+        };
+        nClient.register_to_event('music_changed', function (msg) {
+            if(first){
+                first = false;
+                return;
+            }
+            if (started) {
+                started = false;
+                expect(msg.nextSongs[0].id).to.equal(postdata.message.nextSongs[0].id);
+                done();
+            }
+        }, data);
+        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(201);
+        });
+    });
+
+    it('songs should send 400 if id is not valid mongoid', function (done) {
+        api.get('/eventlog/songs/zzzzz').expect(400).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            done();
+        });
+    });
 });

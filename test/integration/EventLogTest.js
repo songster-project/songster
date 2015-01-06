@@ -60,4 +60,27 @@ describe('EventLog', function () {
             done();
         });
     });
+
+    it('votes should send vote if id is valid', function (done) {
+        api.get('/eventlog/votes/548eb4134bb971760975bcba').expect(200).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.body).to.have.length(0);
+            done();
+        });
+    });
+
+    it('suggestions should send suggestions if id is valid', function (done) {
+        api.get('/eventlog/suggestions/548eb4134bb971760975bcba').expect(200).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.body).to.have.length(0);
+            done();
+        });
+    });
+
+    it('suggestions should send 400 if id is not valid mongoid', function (done) {
+        api.get('/eventlog/suggestions/zzzzz').expect(400).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            done();
+        });
+    });
 });

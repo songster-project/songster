@@ -8,7 +8,7 @@ var api = supertest.agent('http://localhost:3000');
 describe('Login', function () {
     this.timeout(10000);
 
-   beforeEach(function (done) {
+    beforeEach(function (done) {
         api.get('/logout').end(function (err, res) {
             expect(err).to.not.exist;
             done();
@@ -52,14 +52,13 @@ describe('Login', function () {
         api.post('/login')
             .send(postdata)
             .expect(400).end(function (err, res) {
-              expect(err).to.not.exist;
-              done();
+                expect(err).to.not.exist;
+                done();
             })
 
     });
 
     it('should get redirected if user is authenticated', function (done) {
-        console.log('login user1');
         var postdata = {
             "username": "user1",
             "password": "user1"
@@ -76,6 +75,19 @@ describe('Login', function () {
                         expect(err).to.not.exist;
                         done();
                     });
+            });
+
+    });
+
+    it('should return 400 if postdata is empty', function (done) {
+        var postdata = {};
+
+        api.post('/login')
+            .send(postdata)
+            .expect(400)
+            .end(function (err, res) {
+                expect(err).to.not.exist;
+                done();
             });
 
     });
