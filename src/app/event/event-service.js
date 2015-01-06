@@ -3,7 +3,7 @@ angular
     .provider('$event', EventServiceProvider);
 
 
-function EventService($http, $q, $rootScope, EventFactory) {
+function EventService($http, $q, $rootScope, EventFactory, $account) {
 
     var _broadcastEvent = undefined;
     var _event = undefined;
@@ -100,7 +100,11 @@ function EventService($http, $q, $rootScope, EventFactory) {
     };
 
     this.isDj = function() {
-        return _broadcastEvent !== undefined && _event !== undefined  && _broadcastEvent._id == _event._id;
+        return _broadcastEvent !== undefined && _event !== undefined && _broadcastEvent._id == _event._id;
+    }
+
+    this.isBroadcastActive = function() {
+        return _broadcastEvent && $account.getUser()  && _broadcastEvent.owner_id == $account.getUser()._id ;
     };
 
     this.getEvents = function () {
@@ -118,7 +122,7 @@ function EventService($http, $q, $rootScope, EventFactory) {
 }
 
 function EventServiceProvider() {
-    this.$get = function ($http, $q, $rootScope, EventFactory) {
-        return new EventService($http, $q, $rootScope, EventFactory);
+    this.$get = function ($http, $q, $rootScope, EventFactory, $account) {
+        return new EventService($http, $q, $rootScope, EventFactory, $account);
     };
 }

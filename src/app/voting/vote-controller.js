@@ -79,6 +79,10 @@ angular.module('songster.voting')
             return $rootScope.isDj();
         }
 
+        $scope.isBroadcastActive = function() {
+            return $event.isBroadcastActive();
+        }
+
         $scope.isSongInQueue = function(song) {
             return votingService.isSongInQueue(song);
         }
