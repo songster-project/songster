@@ -239,7 +239,7 @@ router.post('/', passport.ensureAuthenticated, passport.ensureNotAnonymous, func
                 res.status(500).send('Internal server error');
                 return;
             }
-            songwebsocket.addEvent(event._id);
+            //songwebsocket.addEvent(event._id);
             res.status(201).send(event);
         });
 

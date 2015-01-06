@@ -107,12 +107,12 @@ nserver.register_to_UserRegistrations('music_changed', function (ws, req, data) 
  * get new Events if one is created
  *
  * @param id the id of the newly created event
- */
+ *//*
 module.exports.addEvent = function (id) {
     eventmap[id] = {
         clients: []
     };
-};
+};*/
 
 /**
  * remove Event entry if a event is closed

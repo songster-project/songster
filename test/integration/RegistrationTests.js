@@ -212,4 +212,27 @@ describe('Registration', function () {
 
     });
 
+    it('should redirect to registration if not authenticated', function (done) {
+        api.get('/registration').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.text).to.contain('Songster - Registration');
+            done();
+        });
+    });
+
+    it('should redirect to app if logged in', function (done) {
+        var logindata = {
+            "username": "user2",
+            "password": "user2"
+        };
+        api.post('/login')
+            .send(logindata)
+            .end(function (err, res) {
+                api.get('/registration').expect(302, 'Moved Temporarily. Redirecting to /app').end(function (err, res) {
+                    expect(err).to.not.exist;
+                    done();
+                });
+            });
+    });
+
 });

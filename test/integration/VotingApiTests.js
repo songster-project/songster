@@ -256,5 +256,195 @@ describe('VotingApiTests', function () {
         });
     });
 
+    it('votedsongs should return 400 if eventid is not a valid mongoid', function (done) {
+        api.get('/voting/votedsongs/zzz').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
 
+    it('votedsongs should return 400 if there is no event with the id', function (done) {
+        api.get('/voting/votedsongs/aaaaaaaaaaaaaaaaaaaaaaaa').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('uservotes should return 400 if eventid is not a valid mongoid', function (done) {
+        api.get('/voting/uservotes/zzz').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('uservotes should return 400 if there is no event with the id', function (done) {
+        api.get('/voting/uservotes/aaaaaaaaaaaaaaaaaaaaaaaa').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('usersuggestions should return 400 if eventid is not a valid mongoid', function (done) {
+        api.get('/voting/usersuggestions/zzz').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('usersuggestions should return 400 if there is no event with the id', function (done) {
+        api.get('/voting/usersuggestions/aaaaaaaaaaaaaaaaaaaaaaaa').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('post vote should return 400 if eventid is not a valid mongoid', function (done) {
+        var postdata = {
+            "type": "suggestion",
+            "state": "new",
+            "song_id": "5489e268663534a4148bdfab",
+            "event_id": eid
+        }
+
+        api.post('/voting/zzz').send(postdata).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('post vote should return 400 if there is no event with the id', function (done) {
+        var postdata = {
+            "type": "suggestion",
+            "state": "new",
+            "song_id": "5489e268663534a4148bdfab",
+            "event_id": eid,
+            "suggestion_type": 'file'
+        }
+
+        api.post('/voting/54abb9f6005967151a7aaaaa').send(postdata).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('post vote should return 400 if there is no song with the id', function (done) {
+        var postdata = {
+            "type": "suggestion",
+            "state": "new",
+            "song_id": "54abb9f6005967151a7aaaaa",
+            "event_id": eid,
+            "suggestion_type": 'file'
+        }
+
+        api.post('/voting/' + eid).send(postdata).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('usersuggestions should return 200 if valid event and empty response', function (done) {
+        api.get('/voting/usersuggestions/' + eid).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(200);
+            expect(res.body.length).to.equal(0);
+            done();
+        });
+    });
+
+    it('post vote should add suggestion of own song', function (done) {
+        var postdata = {
+            "type": "suggestion",
+            "state": "new",
+            "song_id": "5489e267663534a4148bdfcc",
+            "event_id": eid,
+            "suggestion_type": 'file'
+        }
+
+        api.post('/voting/'+eid).send(postdata).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(201);
+            expect(res.body.song_id).to.equal("5489e267663534a4148bdfcc");
+            done();
+        });
+    });
+
+    it('usersuggestions should return 200 if valid event and send suggestions', function (done) {
+        api.get('/voting/usersuggestions/' + eid).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(200);
+            expect(res.body[0].song_id._id).to.equal("5489e267663534a4148bdfcc");
+            done();
+        });
+    });
+
+    it('post vote should return 400 if youtube suggestion and no youtubeid', function (done) {
+        var postdata = {
+            "type": "suggestion",
+            "state": "new",
+            "song_id": "54abb9f6005967151a7aaaaa",
+            "event_id": eid,
+            "suggestion_type": 'youtube'
+        }
+
+        api.post('/voting/' + eid).send(postdata).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('post vote should return 400 if youtube suggestion and no youtubeid', function (done) {
+        var postdata = {
+            "type": "suggestion",
+            "state": "new",
+            "song_id": "54abb9f6005967151a7aaaaa",
+            "event_id": eid,
+            "suggestion_type": 'youtube'
+        }
+
+        api.post('/voting/' + eid).send(postdata).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(400);
+            done();
+        });
+    });
+
+    it('get vote should redirect to event vote page', function (done) {
+        api.get('/voting/' + eid).expect(302,'Moved Temporarily. Redirecting to /app/#/event/'+eid).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('get vote should return 500 if not valid mongoid', function (done) {
+        api.get('/voting/zzz').expect(500).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            done();
+        });
+    });
+
+    it('get vote should return 400 if there is no event with the id', function (done) {
+        api.get('/voting/54abb9f6005967151a7aaaaa').expect(400).end(function (err, res) {
+            console.log('Error: ' + err);
+            expect(err).to.not.exist;
+            done();
+        });
+    });
 });
