@@ -8,6 +8,7 @@ angular.module('ngBoilerplate', [
     'ngBoilerplate.upload',
     'songster.config',
     'songster.domain',
+    'songster.account',
     'songster.authentication',
     'songster.menu',
     'songster.main-menu',
