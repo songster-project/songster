@@ -106,23 +106,23 @@ function sendVotes(event_name, vote, clients) {
  * get new Events if one is created
  *
  * @param id the id of the newly created event
- */
+ *//*
 module.exports.addEvent = function (id) {
     votes_eventmap[id] = {
         clients: []
     };
-};
+};*/
 
 /**
  * remove Event entry if a event is closed
  *
  * @param id the id of the closed event
- */
+ *//*
 module.exports.removeEvent = function (id) {
     if (votes_eventmap[id]) {
         delete votes_eventmap[id];
     }
-};
+};*/
 
 /**
  * sends vote to clients if a vote is updated
