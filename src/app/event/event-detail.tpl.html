@@ -5,7 +5,7 @@
         </h2>
     </div>
 
-    <so-authorize should-be="isDj()">
+    <so-authorize should-be="isDj() && isBroadcastActive()">
         <div class="well">
             <p>Welcome DJ. This is your event and you are live ON AIR!</p>
             <button ng-click="endEvent()" class="btn btn-primary">Stop Broadcast</button>
