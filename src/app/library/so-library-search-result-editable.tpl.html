@@ -26,11 +26,11 @@
                              ng-src="{{song.getCoverSrc()}}">
 
                         <div>
-                            <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload
+                            <a ng-if="!song.cover" href="" ng-click="updateCover(song)">Redownload
                                 cover</a>
                         </div>
                     </div>
-                    <span ng-ig="!song.active">-</span>
+                    <span ng-if="!song.active">-</span>
                 </td>
                 <td><a ng-if="song.active" href="#" editable-text="song.title" onaftersave="updateSongMetadata(song)">{{
                     song.title || "-" }}</a><span ng-if="!song.active">-</span></td>

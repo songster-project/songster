@@ -24,7 +24,7 @@
                          ng-src="{{song.getCoverSrc()}}">
 
                     <div>
-                        <a ng-if="!song.cover" href="javascript:void(0)" ng-click="updateCover(song)">Redownload cover</a>
+                        <a ng-if="!song.cover" href="" ng-click="updateCover(song)">Redownload cover</a>
                     </div>
                 </td>
                 <td>{{song.title || "-"}}</td>
