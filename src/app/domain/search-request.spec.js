@@ -15,22 +15,35 @@ describe('SearchRequest', function () {
         expect(SearchRequestFactory).toBeDefined();
     }));
 
-    describe('factory', function () {
-        it('should create a new SearchRequest', function () {
-            var searchRequest = SearchRequestFactory.create();
-            expect(searchRequest).toBeDefined();
-        });
-    });
-
-    describe('instance', function () {
+    describe('factory instance', function () {
         it('should have from property set to 0 by default', function () {
             var searchRequest = SearchRequestFactory.create();
             expect(searchRequest.from).toBe(0);
+        });
+    });
+
+    describe('factory instance by create', function () {
+        it('should have been created', function () {
+            var searchRequest = SearchRequestFactory.create();
+            expect(searchRequest).toBeDefined();
         });
 
         it('should have size to be the config size (2) by default', function () {
             var searchRequest = SearchRequestFactory.create();
             expect(searchRequest.size).toBe(2);
+        });
+    });
+
+    describe('factory instance by createGetAll', function () {
+        it('should have been created', function () {
+            var searchRequest = SearchRequestFactory.createGetAll();
+            expect(searchRequest).toBeDefined();
+        });
+
+        it('should have no size limit', function () {
+            var searchRequest = SearchRequestFactory.createGetAll();
+            console.log(searchRequest.size);
+            expect(searchRequest.size).toBeUndefined();
         });
     });
 
