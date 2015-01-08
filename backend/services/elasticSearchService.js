@@ -95,11 +95,22 @@ exports.indexSong = function createSong(song) {
 exports.escape = function escape(str) {
     // http://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Escaping Special Characters
     // + - && || ! ( ) { } [ ] ^ " ~ * ? : \
-    return ('' + str).replace(/([-\\&\|!\(\){}\[\]\^"~\*\?:\+])/g, "\\$1");
+    return ('' + str)
+        .replace(/([-\\&\|!\(\){}\[\]\^"~\*\?:\+])/g, "\\$1") // lucene special characters
+
+        // TODO does not work... I don't know why. so I just replace the / with a space
+        // the problem with that is, that we can not search for slashes -> /
+        //.replace(/([/])/g, "\\$1"); // special character for regex in lucene
+        .replace(/([/])/g, " ");
 };
 
 exports.parseQuery = function parseQuery(query) {
-    return '*' + ('' + query).replace(/\s+/g, '* *') + '*';
+    return '*' +
+        ('' + query)
+            .trim()
+            .replace(/\s{2,}/g, ' ') // remove double spaces
+            .replace(/\s+/g, '* *') +
+        '*';
 };
 
 exports.getClient = function () {
