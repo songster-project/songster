@@ -6,7 +6,7 @@ angular
             transclude: true,
             controller: function ($scope, $library, SongFactory, SearchRequestFactory, SearchResultFactory) {
                 $scope.albumsResult = SearchResultFactory.create();
-                var searchRequest = SearchRequestFactory.create();
+                var searchRequest = SearchRequestFactory.createGetAll();
 
                 var url = '/search';
                 if ($scope.eventId !== undefined) {

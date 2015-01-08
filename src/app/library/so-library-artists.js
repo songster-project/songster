@@ -6,7 +6,7 @@ angular
             transclude: true,
             controller: function SoLibrarySearchDirective($scope, $library, SongFactory, SearchRequestFactory, SearchResultFactory) {
                 $scope.artistsResult = SearchResultFactory.create();
-                var searchRequest = SearchRequestFactory.create();
+                var searchRequest = SearchRequestFactory.createGetAll();
 
                 var url = '/search';
                 if ($scope.eventId !== undefined) {

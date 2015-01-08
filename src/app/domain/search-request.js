@@ -6,7 +6,7 @@ angular.module('songster.domain.searchRequest')
             this.url = data ? data.url : undefined;
             this.q = data ? data.q : undefined;
             this.from = data && data.from ? data.from : 0;
-            this.size = data && data.size ? data.size : CONFIG.resultsPerPage;
+            this.size = data ? data.size : undefined;
         };
 
         window.SearchRequest.prototype.generateRequest = function generateRequest() {
@@ -48,7 +48,14 @@ angular.module('songster.domain.searchRequest')
 
         return {
             create: function(data) {
-                return new window.SearchRequest(data);
+                var dataObj = data || {};
+                dataObj.size = dataObj.size || CONFIG.resultsPerPage;
+                return new window.SearchRequest(dataObj);
+            },
+            createGetAll: function(data) {
+                var dataObj = data || {};
+                dataObj.size = undefined;
+                return new window.SearchRequest(dataObj);
             }
         };
     });
