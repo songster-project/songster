@@ -7,27 +7,17 @@ angular
                 searchRequest: "=",
                 searchResult: "="
             },
-            controller: function($scope) {
+            controller: function($scope, CONFIG, paginationConfig) {
+                // configuration
+                paginationConfig.itemsPerPage = CONFIG.resultsPerPage;
+                paginationConfig.rotate = false;
+                $scope.maxSize = CONFIG.pagination.maxShownPages;
+
                 $scope.searchResult.currentPage = 1;
-                $scope.pages = [];
-                $scope.$watch('searchResult.total', function(total) {
-                    $scope.lastPage = Math.ceil(total / $scope.searchRequest.size);
-                    var pages = [];
-                    for(var i=1; i<=$scope.lastPage; i++) {
-                        pages.push({
-                            nr: i
-                        });
-                    }
-                    $scope.pages = pages;
-                });
-                $scope.goToPage = function(page) {
-                    if(page < 1 || page > $scope.lastPage) {
-                        return;
-                    }
-                    $scope.searchResult.currentPage = page;
-                    $scope.searchRequest.setPage(page);
+                $scope.pageChanged = function() {
+                    $scope.searchRequest.setPage($scope.searchResult.currentPage);
                     $scope.$parent.search($scope.searchRequest);
-                }
+                };
             },
             templateUrl: 'library/so-search-pagination.tpl.html'
         }
