@@ -37,6 +37,8 @@ router.get('/song', passport.ensureAuthenticated, function (req, res) {
                 "default_operator": "or"
             }
         };
+    } else {
+        addDefaultSongOrder(body);
     }
 
     // filter
@@ -149,6 +151,8 @@ router.get('/event/:eventid/song', passport.ensureAuthenticated, function (req, 
                     "default_operator": "or"
                 }
             };
+        } else {
+            addDefaultSongOrder(body);
         }
 
         // filter
@@ -356,6 +360,15 @@ function createSongAlbumAggregation() {
             "order": {"_term": "asc"}
         }
     };
+}
+
+function addDefaultSongOrder(body) {
+    body["sort"] = [
+        { "artist.raw" : "asc" },
+        { "album.raw" : "asc" },
+        { "title.raw" : "asc" },
+        "_score"
+    ];
 }
 
 function searchSongs(res, esBody) {
