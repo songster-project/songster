@@ -9,6 +9,8 @@ angular
 
         $rootScope.isDj = function() {
             return $account.getUser() && $event.getEvent() && $event.getEvent().owner_id ==  $account.getUser()._id;
-        }
+        };
 
+        $rootScope.isMenuVisible = true;
+        $rootScope.isPlayerVisible = true;
     });

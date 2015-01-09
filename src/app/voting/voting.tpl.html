@@ -15,7 +15,7 @@
                         <div class="pull-right">
                             <i ng-if="isSongInQueue(vote.song)" title="Will be played soon." class="fa fa-clock-o fa-lg"></i>
                             <span class="badge badge-info">{{vote.count}}</span>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" ng-show="!readOnlyMode">
                                 <button data-ng-disabled="action.disabled(vote.song)" ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(vote.song)" class="{{action.class}}"><i class="fa" ng-class="action.icon"></i> {{action.text}}</button>
                             </div>
                         </div>

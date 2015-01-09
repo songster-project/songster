@@ -1,0 +1,23 @@
+<div>
+    <div class="page-header">
+        <h1><i class="fa fa-bullhorn"></i> {{event.name}}</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <h2>
+                Votes
+            </h2>
+            <div ng-controller="VoteController" ng-include="'voting/voting.tpl.html'" ng-init="readOnlyMode = true"></div>
+        </div>
+        <div class="col-lg-4">
+            <so-event-songs event-id="event._id"></so-event-songs>
+        </div>
+        <div class="col-lg-4">
+            <h2>
+                Activity Stream
+            </h2>
+            <so-event-activity-stream event-id="event._id"></so-event-activity-stream>
+        </div>
+    </div>
+</div>

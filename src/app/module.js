@@ -24,5 +24,6 @@ angular.module('ngBoilerplate', [
     'songster.event-activity-stream',
     'songster.youtube-upload',
     'ui.router',
-    'songster.suggest'
+    'songster.suggest',
+    'songster.eventTv'
 ]);
