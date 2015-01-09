@@ -78,6 +78,15 @@ exports.reindexSongs = function () {
                                     "index": "not_analyzed"
                                 }
                             }
+                        },
+                        "title": {
+                            "type": "string",
+                            "fields": {
+                                "raw": {
+                                    "type": "string",
+                                    "index": "not_analyzed"
+                                }
+                            }
                         }
                     }
                 }
