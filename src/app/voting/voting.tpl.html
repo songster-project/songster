@@ -8,7 +8,7 @@
                     <th>Artist</th>
                     <th></th>
                 </tr>
-                <tr ng:repeat="vote in votes | unique: 'song._id' | orderBy : 'count' : true">
+                <tr ng:repeat="vote in votes | unique: 'song._id' | orderBy : 'count' : true" ng-show="vote.count > 0">
                     <td>{{ vote.song.title || "-" }}{{song}}</td>
                     <td>{{ vote.song.artist || "-" }}</td>
                     <td style="white-space: nowrap">
