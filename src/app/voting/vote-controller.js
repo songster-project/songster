@@ -63,7 +63,7 @@ angular.module('songster.voting')
                 }, function (err) {
                     votingService.removeUserVotesForSong(song._id);
                 })
-        }
+        };
 
 
         // required for voting-library-search-result.tpl.html
@@ -77,11 +77,11 @@ angular.module('songster.voting')
 
         $scope.isDj = function() {
             return $rootScope.isDj();
-        }
+        };
 
         $scope.isBroadcastActive = function() {
             return $event.isBroadcastActive();
-        }
+        };
 
         $scope.isSongInQueue = function(song) {
             return votingService.isSongInQueue(song);

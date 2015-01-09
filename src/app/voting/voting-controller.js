@@ -6,7 +6,14 @@ angular.module('songster.voting')
         $scope.votes = [];
 
         $scope.$on('VOTES_UPDATED', function() {
-            $scope.votes = votingService.getVotes();
+            var votes = votingService.getVotes();
+
+            // TODO this should have been done already in the service
+            _.each(votes, function (vote) {
+                vote.count = votingService.getVotesForSong(vote.song) || 0;
+            });
+
+            $scope.votes = votes;
         });
 
         var data = {

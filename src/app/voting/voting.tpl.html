@@ -8,13 +8,13 @@
                     <th>Artist</th>
                     <th></th>
                 </tr>
-                <tr ng:repeat="vote in votes | unique: 'song._id'" ng-show="getVotesForSong(vote.song) > 0">
+                <tr ng:repeat="vote in votes | unique: 'song._id' | orderBy : 'count' : true">
                     <td>{{ vote.song.title || "-" }}{{song}}</td>
                     <td>{{ vote.song.artist || "-" }}</td>
                     <td style="white-space: nowrap">
                         <div class="pull-right">
                             <i ng-if="isSongInQueue(vote.song)" title="Will be played soon." class="fa fa-clock-o fa-lg"></i>
-                            <span class="badge badge-info">{{ getVotesForSong(vote.song) || "0"}}</span>
+                            <span class="badge badge-info">{{vote.count}}</span>
                             <div class="btn-group" role="group">
                                 <button data-ng-disabled="action.disabled(vote.song)" ng-repeat="action in actions" title="{{action.title}}" ng-click="action.fn(vote.song)" class="{{action.class}}"><i class="fa" ng-class="action.icon"></i> {{action.text}}</button>
                             </div>
