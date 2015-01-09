@@ -59,7 +59,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
             deferred.reject(err);
         });
         return deferred.promise;
-    }
+    };
 
     this.getVotesForSong = function (song) {
         return _votesMap[song._id] !== undefined ? _votesMap[song._id] : 0;
@@ -74,7 +74,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
             return ReceivedVoteFactory.create(vote);
         });
         self.setVotes(votes);
-    }
+    };
 
     this.setVotes = function (votes) {
         _votes = votes;
@@ -86,7 +86,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
         _votes.push(vote);
         updateVotesMap();
         $rootScope.$broadcast('VOTES_UPDATED');
-    }
+    };
 
     this.getSongObjectFromVoteSong = function (song) {
         var deferred = $q.defer();
@@ -103,18 +103,18 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
     this.loadClientVotesFromServer = function (event_id) {
         $http.get('/voting/uservotes/' + event_id).success(function(data, status, headers, config) {
             _clientVotes = {};
-            _.each(data, function(song) {
-                var song = new SongFactory.create(song.song_id);
+            _.each(data, function (songData) {
+                var song = new SongFactory.create(songData.song_id);
                 _clientVotes[song._id] = true;
             });
         }).error(function() {
             console.log('getting uservotes error');
         });
-    }
+    };
 
     this.addClientVote = function(songId) {
         _clientVotes[songId] = true;
-    }
+    };
 
     this.removeUserVotesForSong = function(songId){
         delete _clientVotes[songId];
@@ -137,25 +137,24 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
            var new_votes = _.filter(_votes, function (vote) {
                 return vote.song._id !== song._id;
             });
-            self.setVotes(new_votes)
+            self.setVotes(new_votes);
 
             if(!$rootScope.isDj()) {
                 self.removeUserVotesForSong(song._id);
 
             }
         }
-    }
+    };
 
     this.setVotesongsOfQueue = function(songs) {
         _votesongsInQueue = {};
         _.each(songs, function(song){
             _votesongsInQueue[song._id] = true;
         })
-    }
+    };
 
     this.isSongInQueue = function(song) {
         return _votesongsInQueue[song._id] !== undefined ? true : false;
     }
-
 
 }
