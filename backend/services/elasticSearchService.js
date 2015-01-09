@@ -105,12 +105,13 @@ exports.escape = function escape(str) {
     // http://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Escaping Special Characters
     // + - && || ! ( ) { } [ ] ^ " ~ * ? : \
     return ('' + str)
-        .replace(/([-\\&\|!\(\){}\[\]\^"~\*\?:\+])/g, "\\$1") // lucene special characters
+        .replace(/([-\\\|!\(\){}\[\]\^"~\*\?:\+])/g, "\\$1") // lucene special characters
 
         // TODO does not work... I don't know why. so I just replace the / with a space
         // the problem with that is, that we can not search for slashes -> /
         //.replace(/([/])/g, "\\$1"); // special character for regex in lucene
-        .replace(/([/])/g, " ");
+        .replace(/([/])/g, " ")
+        .replace(/([&])/g, " ");
 };
 
 exports.parseQuery = function parseQuery(query) {
