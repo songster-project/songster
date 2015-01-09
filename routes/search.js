@@ -349,7 +349,7 @@ function createSongArtistAggregation() {
         "terms": {
             "field": "artist.raw",
             "order": {"_term": "asc"},
-            "size": 0
+            "size": 2147483647
         }
     };
 }
@@ -359,7 +359,7 @@ function createSongAlbumAggregation() {
         "terms": {
             "field": "album.raw",
             "order": {"_term": "asc"},
-            "size": 0
+            "size": 2147483647
         }
     };
 }
