@@ -2,7 +2,6 @@ angular.module('songster.event')
 
     .controller('EventDetailController', function EventCtrl($scope,$http, $location, $event, $state, $rootScope) {
         $scope.event = $event.getEvent();
-        $scope.isDJ =  $rootScope.isDj();
 
         $scope.endEvent = function () {
             $event.stopBroadcast().then(function () {
@@ -42,8 +41,6 @@ angular.module('songster.event')
                 $scope.qrLink = "http://"+url+"/event/qr?q="+data.url;
                 console.log($scope.qrLink);
             });
-
-
 
         $scope.tabs = [
             {active: true},

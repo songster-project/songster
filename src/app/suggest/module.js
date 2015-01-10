@@ -10,6 +10,7 @@ angular
 
 angular
     .module('songster.suggest', [
+        'songster.event',
         'songster.voting.services',
         'songster.suggest.services',
         'ui.router',

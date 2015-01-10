@@ -1,11 +1,11 @@
 angular.module('songster.voting')
 
-    .controller('VoteController', function VoteCtrl($scope, $rootScope, $http, $state, $stateParams, votingService, $event, $player, SongFactory, $account) {
+    .controller('VoteController', function VoteCtrl($scope, $http, $state, $stateParams, votingService, $event, $player, SongFactory, $account) {
         $scope.event = $event.getEvent();
         $scope.user = $account.getUser();
         $scope.actions = [];
 
-        if($rootScope.isDj()) {
+        if($event.isDj()) {
             $scope.actions = [{
                 'title': 'Add to queue',
                 'text': '',
@@ -65,7 +65,6 @@ angular.module('songster.voting')
                 })
         };
 
-
         // required for voting-library-search-result.tpl.html
         $scope.disableVoteButton = function(song) {
             return votingService.hasClientVotedForSong(song);
@@ -73,14 +72,6 @@ angular.module('songster.voting')
 
         $scope.getVotesForSong = function (song) {
             return votingService.getVotesForSong(song);
-        };
-
-        $scope.isDj = function() {
-            return $rootScope.isDj();
-        };
-
-        $scope.isBroadcastActive = function() {
-            return $event.isBroadcastActive();
         };
 
         $scope.isSongInQueue = function(song) {

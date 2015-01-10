@@ -11,6 +11,14 @@ angular
             return $account.getUser() && $event.getEvent() && $event.getEvent().owner_id ==  $account.getUser()._id;
         };
 
+        $rootScope.isBroadcastActive = function() {
+            return $event.isBroadcastActive();
+        };
+
+        $rootScope.isBroadcastEvent = function() {
+            return $event.isBroadcastEvent();
+        };
+
         $rootScope.isMenuVisible = true;
         $rootScope.isPlayerVisible = true;
     });

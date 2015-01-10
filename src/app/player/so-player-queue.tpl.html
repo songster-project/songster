@@ -27,7 +27,7 @@
               <i class="fa fa-times"></i>
             </li>
             <div ng-controller="VoteController">
-                <span ng-if="isBroadcastActive()" class="badge badge-info">{{ getVotesForSong(item) || "0"}}</span>
+                <span ng-if="$root.isBroadcastActive()" class="badge badge-info">{{ getVotesForSong(item) || "0"}}</span>
             </div>
           </ul>
         </div>
