@@ -100,7 +100,8 @@ function EventService($http, $q, $rootScope, EventFactory, $account) {
     };
 
     this.isDj = function() {
-        return _event && $account.getUser() && _event.owner_id == $account.getUser()._id;
+        var user = $account.getUser();
+        return _event && user && _event.owner_id == user._id;
     };
 
     this.isBroadcastActive = function() {
