@@ -21,15 +21,18 @@ function Library($http, $q, SearchResultFactory, UpdateSongFactory, $rootScope) 
     };
 
     this.deleteSong = function(song) {
-        var deferred = $q.defer();
-        $http.delete('/song/' + song._id).success(function (res) {
-            song.active = false;
-            $rootScope.$broadcast(EVENT_SONG_DELETED, song);
-            deferred.resolve();
-        }).error(function(err) {
-            deferred.reject(err);
-        });
-        return deferred.promise;
+        var answer = confirm('Are you sure you want to delete "' + song.title + '" ?');
+        if (answer) {
+            var deferred = $q.defer();
+            $http.delete('/song/' + song._id).success(function (res) {
+                song.active = false;
+                $rootScope.$broadcast(EVENT_SONG_DELETED, song);
+                deferred.resolve();
+            }).error(function (err) {
+                deferred.reject(err);
+            });
+            return deferred.promise;
+        }
     };
 
     this.updateSongMetadata = function(song) {
