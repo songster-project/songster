@@ -1,12 +1,12 @@
 angular
     .module('songster.suggest.services.suggestService')
     .provider('$suggestService', function () {
-        this.$get = function ($http, votingService, PostingSuggestFactory, ReceivedVoteFactory, $rootScope) {
-            return new SuggestService($http, votingService, PostingSuggestFactory, ReceivedVoteFactory, $rootScope);
+        this.$get = function ($http, votingService, PostingSuggestFactory, ReceivedVoteFactory, $event) {
+            return new SuggestService($http, votingService, PostingSuggestFactory, ReceivedVoteFactory, $event);
         };
     });
 
-function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVoteFactory, $rootScope) {
+function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVoteFactory, $event) {
     var _self = this;
     var uploadedSongs = [];
     var _activeClientYoutubeSuggestions = {}; // active youtube suggestions of current user - for disableButton - indexed by videoId
@@ -56,14 +56,13 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
         }
     };
 
-
     this.removeActiveClientYoutubeSuggestion = function(videoId) {
         delete _activeClientYoutubeSuggestions[videoId];
-    }
+    };
 
     this.addActiveClientYoutubeSuggestion = function(videoId) {
         _activeClientYoutubeSuggestions[videoId] = true;
-    }
+    };
 
     this.hasClientActiveSuggestedYoutubeVideo = function(videoId) {
         return _activeClientYoutubeSuggestions[videoId] !== undefined ? true : false;
@@ -71,20 +70,20 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
 
     this.addClientYoutubeSuggestionToAll = function(suggestion) {
         _allClientYoutubeSuggestions.push(suggestion);
-    }
+    };
 
     function getSongOfVideoIfClientAlreadySuggestedYoutubeVideo (videoId) {
-        var suggestion = _.find(_allClientYoutubeSuggestions, { 'video_id': videoId })
+        var suggestion = _.find(_allClientYoutubeSuggestions, { 'video_id': videoId });
         return suggestion !== undefined ? suggestion.song._id : undefined;
     }
 
     function hasClientAlreadySuggestedYoutubeVideo (videoId) {
-        var suggestion = _.find(_allClientYoutubeSuggestions, { 'video_id': videoId })
+        var suggestion = _.find(_allClientYoutubeSuggestions, { 'video_id': videoId });
         return suggestion !== undefined ? true : false;
     }
 
     this.loadClientSuggestionsFromServer = function (event_id) {
-        if(!$rootScope.isDj()) {
+        if(!$event.isDj()) {
             $http.get('/voting/usersuggestions/' + event_id).success(function(data, status, headers, config) {
                 _activeClientYoutubeSuggestions = {};
                 _.each(data, function(suggestion) {
@@ -102,9 +101,5 @@ function SuggestService($http, votingService, PostingSuggestFactory, ReceivedVot
 
         }
 
-    }
-
-
-
-
+    };
 }

@@ -5,7 +5,7 @@
         </h2>
     </div>
 
-    <so-authorize should-be="isDj() && isBroadcastActive()">
+    <so-authorize should-be="$root.isDj() && $root.isBroadcastEvent()">
         <div class="well">
             <p>Welcome DJ. This is your event and you are live ON AIR!</p>
             <button ng-click="endEvent()" class="btn btn-primary">Stop Broadcast</button>
@@ -40,7 +40,7 @@
             </tab-heading>
             <div ng-include="'event/event-detail-votings.tpl.html'"></div>
         </tab>
-        <tab ng-if="!isDj() && !event.end" active="tabs[4].active" select="removeTabsForSuggestMode()">
+        <tab ng-if="!$root.isDj() && !event.end" active="tabs[4].active" select="removeTabsForSuggestMode()">
             <tab-heading>
                 <i class="fa fa-lightbulb-o"></i>
                 <span ng-if="tabs[4].active">Suggest</span>

@@ -100,11 +100,15 @@ function EventService($http, $q, $rootScope, EventFactory, $account) {
     };
 
     this.isDj = function() {
-        return _broadcastEvent !== undefined && _event !== undefined && _broadcastEvent._id == _event._id;
-    }
+        return _event && $account.getUser() && _event.owner_id == $account.getUser()._id;
+    };
 
     this.isBroadcastActive = function() {
-        return _broadcastEvent && $account.getUser()  && _broadcastEvent.owner_id == $account.getUser()._id ;
+        return _broadcastEvent !== undefined;
+    };
+
+    this.isBroadcastEvent = function() {
+        return _broadcastEvent !== undefined && _event !== undefined && _broadcastEvent._id == _event._id;
     };
 
     this.getEvents = function () {

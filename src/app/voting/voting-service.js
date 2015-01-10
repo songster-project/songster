@@ -1,12 +1,12 @@
 angular
     .module('songster.voting.services.votingService')
     .provider('votingService', function () {
-        this.$get = function ($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory) {
-            return new VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory);
+        this.$get = function ($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory, $event) {
+            return new VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory, $event);
         };
     });
 
-function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory) {
+function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, PostingVoteFactory, PostingSuggestFactory, $event) {
     var self = this;
     var _votes = [];
     var _votesMap = {}; // song id to votes count
@@ -139,7 +139,7 @@ function VotingService($http, $rootScope, $q, SongFactory, ReceivedVoteFactory, 
             });
             self.setVotes(new_votes);
 
-            if(!$rootScope.isDj()) {
+            if(!$event.isDj()) {
                 self.removeUserVotesForSong(song._id);
 
             }

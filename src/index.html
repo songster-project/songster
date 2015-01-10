@@ -30,8 +30,8 @@
 </head>
 <body>
 
-<so-main-menu ng-if="!isAnonymous() && isMenuVisible"></so-main-menu>
-<so-player ng-if="!isAnonymous() && isPlayerVisible"></so-player>
+<so-main-menu ng-if="!$root.isAnonymous() && $root.isMenuVisible"></so-main-menu>
+<so-player ng-if="!$root.isAnonymous() && $root.isPlayerVisible"></so-player>
 
 <div class="container-fluid" ui-view="main"></div>
 
