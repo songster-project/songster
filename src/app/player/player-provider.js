@@ -84,6 +84,12 @@ function Player($rootScope) {
             this.queueChanged();
         }
     });
+
+    window.onbeforeunload = function () {
+        if (queue.length > 0) {
+            return "You have songs in the queue.";
+        }
+    };
 }
 
 function PlayerProvider() {
