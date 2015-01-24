@@ -27,7 +27,7 @@ describe('PlaylistApi', function () {
                     done();
                 });
 
-            })
+            });
 
 
     });
@@ -38,6 +38,7 @@ describe('PlaylistApi', function () {
             done();
         });
     });
+
     //Logged In
     //#########################################################################################
 
@@ -46,7 +47,7 @@ describe('PlaylistApi', function () {
             "name": "thePlaylist",
             "songs": ['546a5aba06be233f0d93ecde'],
             "owner_id": "546b16fa2e3a10ea162d9355"
-        }
+        };
         api.post('/playlist').send(postdata).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body).to.contain.key('owner_id');
@@ -62,7 +63,7 @@ describe('PlaylistApi', function () {
             done();
         });
     });
-    //546d3e88021c21731917fed6
+
     it('should return status 204 after a successfull delete', function (done) {
         api.delete('/playlist/546d3e88021c21731917fed6').end(function (err, res) {
             expect(err).to.not.exist;
@@ -70,7 +71,6 @@ describe('PlaylistApi', function () {
             done();
         });
     });
-
 
     it('should respond with status 200 and the updated playlist after the update', function (done) {
 
@@ -112,7 +112,7 @@ describe('PlaylistApi', function () {
         var postdata = {
             "name": "the Playlist reloaded",
             "owner_id": "546b16fa2e3a10ea162d9355"
-        }
+        };
         api.post('/playlist').send(postdata).expect(201).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body).to.contain.key('owner_id');
@@ -153,7 +153,7 @@ describe('PlaylistApi', function () {
     it('post should not work if name is missing ', function (done) {
         var postdata = {
             "owner_id": "546b16fa2e3a10ea162d9355"
-        }
+        };
         api.post('/playlist').send(postdata).expect(400).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body).to.be.empty;
@@ -164,7 +164,7 @@ describe('PlaylistApi', function () {
     it('put should not work if name and id are missing ', function (done) {
         var postdata = {
             "owner_id": "546b16fa2e3a10ea162d9355"
-        }
+        };
         api.put('/playlist').send(postdata).expect(400).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body).to.be.empty;
@@ -209,6 +209,14 @@ describe('PlaylistApi', function () {
 
     it('should not get songs if not valid mongoid ', function (done) {
         api.get('/playlist/zzz/songs').expect(400).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.be.empty;
+            done();
+        });
+    });
+
+    it('should get empty response if there is no playlist with this id ', function (done) {
+        api.get('/playlist/5489e22a2b6671a414dcab8f/songs').expect(200).end(function (err, res) {
             expect(err).to.not.exist;
             expect(res.body).to.be.empty;
             done();

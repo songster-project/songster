@@ -40,7 +40,7 @@ describe('Index', function () {
                         expect(err).to.not.exist;
                         done();
                     });
-            })
+            });
 
     });
 });

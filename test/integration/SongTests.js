@@ -36,21 +36,23 @@ describe('SongApi', function () {
             done();
         });
     });
+
     //Logged In
     //#########################################################################################
 
-
     it('should return my songs', function (done) {
-        api.get('/song')
-            .expect(200)
-            .end(function (err, res) {
-                expect(err).to.not.exist;
-                expect(res.body.length).to.equal(3);
-                expect(res.body[0]._id).to.equal('5489e267663534a4148bdfcc');
-                expect(res.body[1]._id).to.equal('5489e268663534a4148bdfcd');
-                expect(res.body[2]._id).to.equal('5489e26c663534a4148bdfce');
-                done();
-            });
+        api.put('/event/current/end').send({}).end(function (err, res) {
+            api.get('/song')
+                .expect(200)
+                .end(function (err, res) {
+                    expect(err).to.not.exist;
+                    expect(res.body.length).to.equal(3);
+                    expect(res.body[0]._id).to.equal('5489e267663534a4148bdfcc');
+                    expect(res.body[1]._id).to.equal('5489e268663534a4148bdfcd');
+                    expect(res.body[2]._id).to.equal('5489e26c663534a4148bdfce');
+                    done();
+                });
+        });
     });
 
     it('should delete song', function (done) {
@@ -65,15 +67,6 @@ describe('SongApi', function () {
     it('delete should not work if there is no song with this id', function (done) {
         api.delete('/song/aaa')
             .expect(500)
-            .end(function (err, res) {
-                expect(err).to.not.exist;
-                done();
-            });
-    });
-
-    it('get cover should get cover of song', function (done) {
-        api.get('/song/5489e2682b6671a414dcab9c/cover')
-            .expect(200)
             .end(function (err, res) {
                 expect(err).to.not.exist;
                 done();
@@ -121,15 +114,6 @@ describe('SongApi', function () {
         });
     });
 
-    it('get raw should get song', function (done) {
-        api.get('/song/5489e2612b6671a414dcab94/raw')
-            .expect(200)
-            .end(function (err, res) {
-                expect(err).to.not.exist;
-                done();
-            });
-    });
-
     it('get raw should not work if there is no song with this id', function (done) {
         api.get('/song/aaaa/raw')
             .expect(500)
@@ -139,7 +123,7 @@ describe('SongApi', function () {
             });
     });
 
-    it('should not get raw data of song from different user', function (done) {
+    it('should not get cover of song from different user', function (done) {
         api.get('/logout').end(function (err, res) {
             expect(err).to.not.exist;
             var postdata = {
@@ -162,17 +146,6 @@ describe('SongApi', function () {
         });
     });
 
-    it('get raw should get song, range request', function (done) {
-        var range = '1-2';
-        api.get('/song/5489e2612b6671a414dcab94/raw')
-            .expect(206)
-            .set('range', range)
-            .end(function (err, res) {
-                expect(err).to.not.exist;
-                done();
-            });
-    });
-
     it('get raw should not work if id is not valid', function (done) {
         api.get('/song/%25%24§"23ed/raw')
             .expect(500)
@@ -182,17 +155,8 @@ describe('SongApi', function () {
             });
     });
 
-    it('get song with valid id', function (done) {
-        api.get('/song/5489e2612b6671a414dcab94')
-            .expect(200)
-            .end(function (err, res) {
-                expect(err).to.not.exist;
-                done();
-            });
-    });
-
     it('get song with not valid id', function (done) {
-        api.get('/song/%25%24§"23ed')
+        api.get('/song/5489e2612b6671a414dcab9_')
             .expect(500)
             .end(function (err, res) {
                 expect(err).to.not.exist;
@@ -228,8 +192,8 @@ describe('SongApi', function () {
     });
 
     it('put song should return 404 if there is no song with the id', function (done) {
-        var putdata ={
-            _id:'54abb9f6005967151a7aaaaa'
+        var putdata = {
+            _id: '54abb9f6005967151a7aaaaa'
         };
         api.put('/song/54abb9f6005967151a7aaaaa')
             .expect(404)

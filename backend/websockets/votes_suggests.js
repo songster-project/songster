@@ -23,9 +23,9 @@ nserver.register_to_UserRegistrations('votes_changed', function (ws, req, data) 
             votes_eventmap[data.eventid].clients.push(ws);
         }
         //send the songs to the new client
-        if (votes_eventmap[data.eventid]) {
+        /*if (votes_eventmap[data.eventid]) {
             sendVotes('votes_changed', undefined, [ws]);
-        }
+        }*/
     } else {//add entry for event if event exists
         db.Event.findOne({'_id': data.eventid}, function (err, events) {
             if (err) {
@@ -42,9 +42,9 @@ nserver.register_to_UserRegistrations('votes_changed', function (ws, req, data) 
                 votes_eventmap[data.eventid].clients.push(ws);
             }
             //send the songs to the new client
-            if (votes_eventmap[data.eventid]) {
+            /*if (votes_eventmap[data.eventid]) {
                 sendVotes('votes_changed', undefined, [ws]);
-            }
+            }*/
         });
     }
 });
@@ -69,9 +69,9 @@ nserver.register_to_UserRegistrations('suggestion_played', function (ws, req, da
             suggestion_eventmap[data.eventid].clients.push(ws);
         }
         //send the songs to the new client
-        if (suggestion_eventmap[data.eventid]) {
+        /*if (suggestion_eventmap[data.eventid]) {
             sendVotes('votes_changed', undefined, [ws]);
-        }
+        }*/
     } else {//add entry for event if event exists
         db.Event.findOne({'_id': data.eventid}, function (err, events) {
             if (err) {
@@ -88,9 +88,9 @@ nserver.register_to_UserRegistrations('suggestion_played', function (ws, req, da
                 suggestion_eventmap[data.eventid].clients.push(ws);
             }
             //send the songs to the new client
-            if (suggestion_eventmap[data.eventid]) {
+            /*if (suggestion_eventmap[data.eventid]) {
                 sendVotes('votes_changed', undefined, [ws]);
-            }
+            }*/
         });
     }
 });

@@ -17,7 +17,7 @@ router.get('/search', passport.ensureAuthenticated, function (req, res) {
     req.checkQuery('q', 'no search querry defined in the q get parameter').notEmpty();
     var errors = req.validationErrors();
     if (errors) {
-        console.log( util.inspect(errors));
+        console.log(util.inspect(errors));
         res.status(400).send('There have been validation errors: ' + util.inspect(errors));
         return;
     }
@@ -32,7 +32,7 @@ router.get('/search', passport.ensureAuthenticated, function (req, res) {
         auth: authkey
     };
     youtubeapi.search.list(params, function (err, result) {
-        if(err){
+        if (err) {
             console.log(err);
             res.status(500).send('Internal Server Error');
             return;
@@ -56,6 +56,7 @@ router.get('/search', passport.ensureAuthenticated, function (req, res) {
 
 router.post('/', passport.ensureAuthenticated, function (req, res) {
 
+    var alreadysend = false;
     req.checkBody('youtubeurl', 'URL is empty').notEmpty();
     req.checkBody('youtubeurl', 'Parameter is no valid URL').isValidUrl();
     var errors = req.validationErrors();
@@ -68,14 +69,19 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
         var d = domain.create();
         d.on('error', function (err) {
             console.log(err);
-            res.status(500).send('Internal Server Error');
+            if (!alreadysend) {
+                alreadysend = true;
+                res.status(500).send('Internal Server Error');
+            }
         });
         d.run(function () {
             ytdl.getInfo(req.body.youtubeurl, function (err, info) {
                 //if error occurs or youtube link is not valid send status 400
                 if (err || info.title === undefined) {
-                    console.log(err);
-                    res.status(400).send('Bad request');
+                    if (!alreadysend) {
+                        alreadysend = true;
+                        res.status(400).send('Bad request');
+                    }
                     return;
                 }
                 var title = info.title;
@@ -97,29 +103,36 @@ router.post('/', passport.ensureAuthenticated, function (req, res) {
                 //pipe mp3 stream into database
                 ffmpegstream.pipe(writeStream);
                 writeStream.on('close', function () {
-                    var metadata = {
-                        addedDate: new Date(),
-                        title: title || '',
-                        owner_id: req.user._id,
-                        active: true
-                    };
+                    if (!alreadysend) {
+                        var metadata = {
+                            addedDate: new Date(),
+                            title: title || '',
+                            owner_id: req.user._id,
+                            active: true
+                        };
 
-                    // the parser sometimes outputs utf-8 junk :-/
-                    metadata.title = metadata.title.replace(/\0/g, '');
+                        // the parser sometimes outputs utf-8 junk :-/
+                        metadata.title = metadata.title.replace(/\0/g, '');
 
-                    metadata.file_id = writeStream.id;
-                    database.db.collection('song').insert(metadata, function (err, records) {
-                        var record = records[0];
-                        elasticSearchService.indexSong(record);
-                        res.status(200).send(record);
-                    });
+                        metadata.file_id = writeStream.id;
+                        database.db.collection('song').insert(metadata, function (err, records) {
+                            var record = records[0];
+                            elasticSearchService.indexSong(record);
+                            if (!alreadysend) {
+                                alreadysend = true;
+                                res.status(200).send(record);
+                            }
+                        });
+                    }
                 });
             });
         });
         //sometimes the error didn't get caught on the on error listeners
     } catch (err) {
-        console.log(err);
-        res.status(500).send('Internal server error');
+        if (!alreadysend) {
+            alreadysend = true;
+            res.status(500).send('Internal server error');
+        }
     }
 });
 

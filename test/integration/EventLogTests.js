@@ -29,8 +29,6 @@ describe('EventLogApi', function () {
                     done();
                 });
             });
-
-
     });
 
     afterEach(function (done) {
@@ -564,45 +562,6 @@ describe('EventLogApi', function () {
         });
     });
 
-    it('registration to websocket request should not work if event doesn\'t exist', function (done) {
-        var postdata = {
-            message: {
-                currentSong: {
-                    id: "5489e267663534a4148bdfaaa119",
-                    _id: "5489e267663534a4148bdfaaa119",
-                    title: "Contrails",
-                    artist: "Glowworm",
-                    album: "The Coachlight Woods",
-                    year: "",
-                    cover: "5489e2672b6671a414dcab9a",
-                    file_id: "5489e2612b6671a414dcab94",
-                    addedDate: "2014-12-11T18:28:49.672Z",
-                    src: "/song/5489e2612b6671a414dcab94/raw",
-                    type: "audio/mp3"
-                }
-            },
-            type: "songplayed"
-        };
-        api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
-            expect(err).to.not.be.ok;
-            expect(res.statusCode).to.equal(201);
-
-            api.post('/eventlog/' + eid).send(postdata).end(function (err, res) {
-                expect(err).to.not.be.ok;
-                expect(res.statusCode).to.equal(201);
-                var started = true;
-                var nClient = require('../lib/notification_client');
-                var data = {
-                    eventid: '54abb9f6005967151a7aaaaa'
-                };
-                done();
-                nClient.register_to_event('music_changed', function (msg) {
-                    //expect(true).to.equal(false);
-                }, data);
-            });
-        });
-    });
-
     it('should return 403 if i want to log something on someone elses event', function (done) {
         var logindata = {
             "username": "user1",
@@ -683,6 +642,19 @@ describe('EventLogApi', function () {
     it('songs should send 400 if id is not valid mongoid', function (done) {
         api.get('/eventlog/songs/zzzzz').expect(400).end(function (err, res) {
             expect(err).to.not.be.ok;
+            done();
+        });
+    });
+
+    it('should return 500, if id is not valid mongoid', function (done) {
+        var postdata = {
+            type: "songplayed",
+            message: "test"
+        };
+        api.post('/eventlog/__').send(postdata).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.statusCode).to.equal(500);
+            expect(res.body).to.be.empty;
             done();
         });
     });

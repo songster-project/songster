@@ -10,11 +10,40 @@ var MongoStore=require('connect-mongo')(session);
 var app=require('../../app');
 
 /**
+ * used to parse a request through the middleware
+ *
+ * @param middlewares the middleware you want to parse the request through
+ * @param request the request you want to parse through the middleware
+ * @param callback function that should be called afterwards
+ */
+function parsemiddleware(middlewares, request, callback) {
+    var req = request;
+    var response = {writeHead: {}};
+    var idx = 0;
+    if (!request._passport) {
+        (function next(err) {
+            if (err) {
+                return;
+            }
+            var cur = middlewares[idx];
+            idx += 1;
+            if (cur) {
+                cur(req, response, next);
+            } else {
+                callback(req);
+            }
+        }());
+    } else {
+        callback(req);
+    }
+}
+
+/**
  * initializes the WebsocketServer
  */
 module.exports = function () {
-    wsMiddlewares = new Array();
-    instancemap = new Object();
+    wsMiddlewares = [];
+    instancemap = {};
     /*
      * initialize middlware for websockets
      */
@@ -42,22 +71,22 @@ module.exports = function () {
                 function (request) {
                     var msg = JSON.parse(data);
                     if (instancemap[msg.event_type]) {
-                        if (msg.register) {
-                            instancemap[msg.event_type].register_User_callbacks.forEach(function (entry) {
-                                entry(ws, request, msg.payload);
-                            })
-                        } else {
-                            instancemap[msg.event_type].event_callbacks.forEach(function (entry) {
-                                entry(ws, request, msg.payload);
-                            })
+                        /*if (msg.register) {*/
+                        instancemap[msg.event_type].register_User_callbacks.forEach(function (entry) {
+                            entry(ws, request, msg.payload);
+                        });
+                        /*} else {
+                         instancemap[msg.event_type].event_callbacks.forEach(function (entry) {
+                         entry(ws, request, msg.payload);
+                         })
 
-                        }
+                         }*/
                     }
                 });
 
-        })
+        });
     });
-}
+};
 
 /**
  * registers a callback to an event
@@ -66,7 +95,7 @@ module.exports = function () {
  * @param event_type name of the event you want to register for has to be a string
  * @param callback function that should be called if event occurs
  */
-module.exports.register_to_Event = function register_to_Event(event_type, callback) {
+/*module.exports.register_to_Event = function register_to_Event(event_type, callback) {
     if (!instancemap[event_type]) {
         instancemap[event_type] = {
             event_callbacks: new Array(),
@@ -74,7 +103,7 @@ module.exports.register_to_Event = function register_to_Event(event_type, callba
         };
     }
     instancemap[event_type].event_callbacks.push(callback);
-}
+}*/
 
 /**
  * function gets called if a new user registers to an event
@@ -85,10 +114,10 @@ module.exports.register_to_Event = function register_to_Event(event_type, callba
  */
 module.exports.register_to_UserRegistrations = function register_to_UserRegistrations(event_type, callback) {
     if (!instancemap[event_type]) {
-        instancemap[event_type] = {event_callbacks: new Array(), register_User_callbacks: new Array()};
+        instancemap[event_type] = {event_callbacks: [], register_User_callbacks: []};
     }
     instancemap[event_type].register_User_callbacks.push(callback);
-}
+};
 
 /**
  * sends a notification for the event event_type
@@ -111,31 +140,4 @@ module.exports.send_Notifications = function send_Notifications(event_type, payl
         });
 
     }
-}
-
-/**
- * used to parse a request through the middleware
- *
- * @param middlewares the middleware you want to parse the request through
- * @param request the request you want to parse through the middleware
- * @param callback function that should be called afterwards
- */
-function parsemiddleware(middlewares, request, callback) {
-    var req = request
-    var response = {writeHead: {}};
-    var idx = 0;
-    if (!request._passport) {
-        (function next(err) {
-            if (err) return;
-            var cur = middlewares[idx++];
-            if (cur) {
-                cur(req, response, next);
-            } else {
-                callback(req);
-            }
-        }());
-    } else {
-        callback(req);
-    }
-
-}
+};

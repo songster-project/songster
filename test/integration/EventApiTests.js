@@ -30,9 +30,7 @@ describe('EventApi', function () {
                     done();
                 });
 
-            })
-
-
+            });
     });
 
     afterEach(function (done) {
@@ -44,6 +42,22 @@ describe('EventApi', function () {
 
     //Logged In
     //#########################################################################################
+
+    it('should show no event als current if i have no open event', function (done) {
+        api.get('/event/current').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.be.empty;
+            done();
+        });
+    });
+
+    it('should show no event if i have no past events', function (done) {
+        api.get('/event/past').expect(200).end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.body).to.be.empty;
+            done();
+        });
+    });
 
     it('should return no events when i have not closed an event',function(done){
         api.get('/event/past').end(function (err, res) {
@@ -62,7 +76,8 @@ describe('EventApi', function () {
                 "suggestionEnabled": true,
                 "votingEnabled": true,
                 "previewEnabled": true
-            }
+            };
+
             api.post('/event').send(postdata).end(function (err, res) {
                 console.log('Error:' + err);
                 console.log(res.text);
@@ -71,8 +86,7 @@ describe('EventApi', function () {
                 id_event = res.body._id;
                 done();
             });
-        }
-    );
+        });
 
     it('should throw an error if i create an second event', function (done) {
         var postdata = {
@@ -82,17 +96,16 @@ describe('EventApi', function () {
             "suggestionEnabled": true,
             "votingEnabled": true,
             "previewEnabled": true
-        }
+        };
+
         api.post('/event').send(postdata).end(function (err, res) {
                 api.post('/event').send(postdata).end(function (err, res) {
                     expect(res.error.text).to.equal('This user has already an event running');
                     expect(res.error.status).to.equal(400);
                     done();
-                })
+                });
             }
         );
-
-
     });
 
     it('should show the event as the active event', function (done) {
@@ -104,7 +117,6 @@ describe('EventApi', function () {
         });
     });
 
-
     it('should show the event as the current event', function (done) {
         api.get('/event/current').end(function (err, res) {
             expect(err).to.not.exist;
@@ -113,10 +125,8 @@ describe('EventApi', function () {
         });
     });
 
-
     it('should be able to get the current event via id', function (done) {
         api.get('/event/current').end(function (err, res) {
-
             var id = res.body._id;
             api.get('/event/' + id).end(function (err, res) {
                 expect(err).to.not.exist;
@@ -128,7 +138,6 @@ describe('EventApi', function () {
 
     it('should return 204 when i want to delete the current active event',function(done){
         api.get('/event/current').end(function (err, res) {
-
             var id = res.body._id;
             api.delete('/event/notactive/'+id).end(function (err,res) {
                 expect(res.status).to.equal(204);
@@ -145,8 +154,6 @@ describe('EventApi', function () {
         });
     });
 
-
-
     it('should return the closed event as a past event',function(done){
         api.get('/event/past').end(function (err, res) {
             console.log(res.text);
@@ -156,8 +163,6 @@ describe('EventApi', function () {
         });
     });
 
-
-
     it('should return two events after start and end a next one',function(done){
         var postdata = {
             "name": "myEvent",
@@ -166,7 +171,8 @@ describe('EventApi', function () {
             "suggestionEnabled": true,
             "votingEnabled": true,
             "previewEnabled": true
-        }
+        };
+
         api.post('/event').send(postdata).end(function (err, res) {
                 api.put('/event/current/end').send({}).end(function (err, res) {
                     api.get('/event/past').end(function (err, res) {
@@ -191,16 +197,16 @@ describe('EventApi', function () {
 
     it('should be able to delete the second past event and get should not show it',function(done){
         api.get('/event/past').end(function (err, res) {
-            var eventid = res.body[1]._id
+            var eventid = res.body[1]._id;
             api.delete('/event/notactive/'+eventid).end(function(err,res) {
                expect(res.status).to.equal(200);
                 api.get('/event/past').end(function (err,res){
                     expect(res.body[0]._id).to.not.equal(eventid);
                     api.get('/event/'+eventid).end(function (err,res){
                         expect(res.status).to.equal(404);
-                    })
+                        done();
+                    });
                 });
-                done();
             });
         });
     });

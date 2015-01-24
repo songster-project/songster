@@ -36,9 +36,9 @@ describe('Accounts', function () {
             done();
         });
     });
+
     //Logged In
     //#########################################################################################
-
 
     it('should get account', function (done) {
         api.get('/account')
