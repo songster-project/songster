@@ -15,14 +15,8 @@ module.exports = function () {
     function addSocketRoute(route, middleware, callback) {
         //var args = [].splice.call(arguments, 0);
         var middle = [];
-        /*if (args.length < 2)
-            throw new SyntaxError('Invalid number of arguments');
-        */
 
         middle.push(middleware);
-        /*if (args.length > 2) {
-            middle.push(callback);
-        }*/
 
         var wss = new WebSocketServer({
             server: server,
@@ -43,9 +37,7 @@ module.exports = function () {
                     var cur = middle[idx++];
                     if (!middle[idx]) {
                         cur(ws, ws.upgradeReq, wss);
-                    } /*else {
-                        cur(ws.upgradeReq, response, next);
-                    }*/
+                    }
                 }());
             });
         });

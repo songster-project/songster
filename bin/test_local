@@ -27,12 +27,5 @@ echo "_____ starting integration tests _____"
 ./node_modules/mocha/bin/mocha -R List $(find test/integration -name '*.js')
 echo "_____ integration testing finished _____"
 
-#echo "_____ setting up testdata _____"
-#./bin/importdb > /dev/null
-
-#echo "_____ starting system tests _____"
-#./node_modules/protractor/bin/protractor test/localprotractor.config.js
-#echo "_____ system tests finished _____"
-# stop the server
 killall -SIGTERM npm
 killall -SIGTERM node

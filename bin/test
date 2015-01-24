@@ -1,12 +1,14 @@
 #!/bin/bash
 npm start &
 grunt
+
 echo "_____ starting frontend tests _____"
 grunt karma:continuous
 rc=$?
 if [[ $rc != 0 ]] ; then
 exit $rc
 fi
+
 echo "_____ starting backend tests _____"
 ./node_modules/.bin/mocha -R dot $(find test/unit/backend -name '*.js')
 rc=$?
@@ -14,16 +16,10 @@ if [[ $rc != 0 ]] ; then
 exit $rc
 fi
 ./bin/importdb
+
 echo "_____ starting integration tests _____"
 ./node_modules/.bin/mocha -R dot $(find test/integration -name '*.js' ! -name 'SearchTests.js')
 rc=$?
 if [[ $rc != 0 ]] ; then
 exit $rc
 fi
-#./bin/importdb
-#echo "_____ starting system tests _____"
-#./node_modules/protractor/bin/protractor ./test/protractor.config.js
-#rc=$?
-#if [[ $rc != 0 ]] ; then
-#exit $rc
-#fi
