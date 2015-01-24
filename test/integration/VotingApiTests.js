@@ -64,7 +64,6 @@ describe('VotingApiTests', function () {
             });
     });
 
-
     beforeEach(function (done) {
 
         var cb = function (x) {
@@ -82,8 +81,6 @@ describe('VotingApiTests', function () {
                 });
             });
     });
-
-
 
     afterEach(function (done) {
         api.get('/logout').end(function (err, res) {
@@ -124,9 +121,8 @@ describe('VotingApiTests', function () {
         });
     });
 
-//Logged In
-//#########################################################################################
-
+    //Logged In
+    //#########################################################################################
 
     it('should post one vote', function (done) {
         var postdata = {
@@ -134,14 +130,28 @@ describe('VotingApiTests', function () {
             "state": "new",
             "song_id": "5489e268663534a4148bdfab",
             "event_id": eid
-        }
+        };
+
+        var first = true;
+        var nClient = require('../lib/notification_client');
+        var data = {
+            eventid: eid
+        };
+
+        nClient.register_to_event('votes_changed', function (vote) {
+            expect(vote).to.exist;
+            if (first) {
+                expect(vote.song_id._id).to.equal("5489e268663534a4148bdfab");
+                first = false;
+                done();
+            }
+        }, data);
 
         api.post('/voting/' + eid).send(postdata).end(function (err, res) {
             console.log('Error: ' + err);
             expect(err).to.not.exist;
             expect(res.body).to.contain.key('date');
             expect(res.status).to.equal(201);
-            done();
         });
     });
 
@@ -151,7 +161,7 @@ describe('VotingApiTests', function () {
             "state": "new",
             "song_id": "5489e268663534a4148bdfab",
             "event_id": eid
-        }
+        };
 
         api.post('/voting/' + eid).send(postdata).end(function (err, res) {
             console.log('Error: ' + err);
@@ -179,11 +189,11 @@ describe('VotingApiTests', function () {
         });
     });
 
-    it('should redirect voting of anonymous user and vote', function(done) {
+    it('should redirect voting of anonymous user and vote', function (done) {
         api.get('/logout').end(function (err, res) {
             expect(err).to.not.exist;
 
-            api.get('/voting/'+ eid).end(function (err, res) {
+            api.get('/voting/' + eid).end(function (err, res) {
                 expect(err).to.not.exist;
                 expect(res.text).to.contain('Moved Temporarily');
                 console.log(res.text);
@@ -193,7 +203,7 @@ describe('VotingApiTests', function () {
                     "state": "new",
                     "song_id": "5489e268663534a4148bdfab",
                     "event_id": eid
-                }
+                };
 
                 api.post('/voting/' + eid).send(postdata).end(function (err, res) {
                     expect(err).to.not.exist;
@@ -215,13 +225,55 @@ describe('VotingApiTests', function () {
         });
     });
 
+    it('votes should update if song changed', function (done) {
+        api.get('/logout').end(function (err, res) {
+            expect(err).to.not.exist;
+            expect(res.status).to.equal(302);
+            api.post('/login')
+                .send(postdata_dj)
+                .end(function (err, res) {
+                    expect(err).to.not.exist;
+                    expect(res.status).to.equal(302);
+                    var songdata = {
+                        message: {
+                            currentSong: {
+                                id: "5489e268663534a4148bdfab",
+                                _id: "5489e268663534a4148bdfab"
+                            }
+                        },
+                        type: "songplayed"
+                    };
+
+                    var first = true;
+                    var nClient = require('../lib/notification_client');
+                    var data = {
+                        eventid: eid
+                    };
+
+                    nClient.register_to_event('votes_changed', function (vote) {
+                        expect(vote).to.exist;
+                        if (first) {
+                            expect(vote.song_id._id).to.equal("5489e268663534a4148bdfab");
+                            first = false;
+                            done();
+                        }
+                    }, data);
+
+                    api.post('/eventlog/' + eid).send(songdata).end(function (err, res) {
+                        expect(err).to.not.be.ok;
+                        expect(res.statusCode).to.equal(201);
+                    });
+                });
+        });
+    });
+
     it('should get vote via websocket from anonymous users vote ', function (done) {
 
         api.get('/logout').end(function (err, res) {
             expect(err).to.not.exist;
 
             // call voting as unlogged - get logged in as anonymous
-            api.get('/voting/'+ eid).end(function (err, res) {
+            api.get('/voting/' + eid).end(function (err, res) {
                 expect(err).to.not.exist;
                 expect(res.text).to.contain('Moved Temporarily');
                 console.log(res.text);
@@ -310,7 +362,7 @@ describe('VotingApiTests', function () {
             "state": "new",
             "song_id": "5489e268663534a4148bdfab",
             "event_id": eid
-        }
+        };
 
         api.post('/voting/zzz').send(postdata).end(function (err, res) {
             console.log('Error: ' + err);
@@ -327,7 +379,7 @@ describe('VotingApiTests', function () {
             "song_id": "5489e268663534a4148bdfab",
             "event_id": eid,
             "suggestion_type": 'file'
-        }
+        };
 
         api.post('/voting/54abb9f6005967151a7aaaaa').send(postdata).end(function (err, res) {
             console.log('Error: ' + err);
@@ -344,7 +396,7 @@ describe('VotingApiTests', function () {
             "song_id": "54abb9f6005967151a7aaaaa",
             "event_id": eid,
             "suggestion_type": 'file'
-        }
+        };
 
         api.post('/voting/' + eid).send(postdata).end(function (err, res) {
             console.log('Error: ' + err);
@@ -370,9 +422,9 @@ describe('VotingApiTests', function () {
             "song_id": "5489e267663534a4148bdfcc",
             "event_id": eid,
             "suggestion_type": 'file'
-        }
+        };
 
-        api.post('/voting/'+eid).send(postdata).end(function (err, res) {
+        api.post('/voting/' + eid).send(postdata).end(function (err, res) {
             console.log('Error: ' + err);
             expect(err).to.not.exist;
             expect(res.status).to.equal(201);
@@ -397,24 +449,7 @@ describe('VotingApiTests', function () {
             "song_id": "54abb9f6005967151a7aaaaa",
             "event_id": eid,
             "suggestion_type": 'youtube'
-        }
-
-        api.post('/voting/' + eid).send(postdata).end(function (err, res) {
-            console.log('Error: ' + err);
-            expect(err).to.not.exist;
-            expect(res.status).to.equal(400);
-            done();
-        });
-    });
-
-    it('post vote should return 400 if youtube suggestion and no youtubeid', function (done) {
-        var postdata = {
-            "type": "suggestion",
-            "state": "new",
-            "song_id": "54abb9f6005967151a7aaaaa",
-            "event_id": eid,
-            "suggestion_type": 'youtube'
-        }
+        };
 
         api.post('/voting/' + eid).send(postdata).end(function (err, res) {
             console.log('Error: ' + err);
@@ -425,7 +460,7 @@ describe('VotingApiTests', function () {
     });
 
     it('get vote should redirect to event vote page', function (done) {
-        api.get('/voting/' + eid).expect(302,'Moved Temporarily. Redirecting to /app/#/event/'+eid).end(function (err, res) {
+        api.get('/voting/' + eid).expect(302, 'Moved Temporarily. Redirecting to /app/#/event/' + eid).end(function (err, res) {
             console.log('Error: ' + err);
             expect(err).to.not.exist;
             done();

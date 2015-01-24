@@ -117,6 +117,7 @@ describe('SearchApi', function () {
             done();
         });
     });
+
     //Logged In
     //#########################################################################################
 
@@ -132,7 +133,18 @@ describe('SearchApi', function () {
             });
     });
 
-    it('get artist', function (done) {
+    it('get all songs with pagination, should return one song', function (done) {
+        api.get('/search/song?from=0&size=1')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.hits.hits.length).to.equal(1);
+                expect(res.body.hits.hits[0]._id).to.equal('5489e268663534a4148bdfab');
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('get all artists', function (done) {
         api.get('/search/artist')
             .expect(200)
             .end(function (err, res) {
@@ -186,6 +198,27 @@ describe('SearchApi', function () {
 
     it('search event song get event songs', function (done) {
         api.get('/search/event/' + eid + '/song')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.hits.hits.length).to.equal(2);
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event song with querry should return song', function (done) {
+        api.get('/search/event/' + eid + '/song?q=Know+Me2')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body.hits.hits.length).to.equal(1);
+                expect(res.body.hits.hits[0]._id).to.equal('5489e26c663534a4148bdfac');
+                expect(err).to.not.exist;
+                done();
+            });
+    });
+
+    it('search event song with empty querry', function (done) {
+        api.get('/search/event/' + eid + '/song?q=')
             .expect(200)
             .end(function (err, res) {
                 expect(res.body.hits.hits.length).to.equal(2);

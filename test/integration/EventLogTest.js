@@ -29,7 +29,7 @@ describe('EventLog', function () {
                     done();
                 });
 
-            })
+            });
 
 
     });
@@ -55,8 +55,6 @@ describe('EventLog', function () {
             expect(res.body[0].logDate).to.equal('2014-12-15T14:39:00.054Z');
             console.log(res.body[0].message);
             expect(res.body[0].message.currentSong.title).to.equal('Money (That\'s What I Want)');
-
-
             done();
         });
     });
@@ -65,6 +63,14 @@ describe('EventLog', function () {
         api.get('/eventlog/votes/548eb4134bb971760975bcba').expect(200).end(function (err, res) {
             expect(err).to.not.be.ok;
             expect(res.body).to.have.length(0);
+            done();
+        });
+    });
+
+    it('votes should send 400 if not valid mongoid', function (done) {
+        api.get('/eventlog/votes/___').expect(400).end(function (err, res) {
+            expect(err).to.not.be.ok;
+            expect(res.body).to.be.empty;
             done();
         });
     });

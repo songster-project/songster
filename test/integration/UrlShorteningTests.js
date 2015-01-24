@@ -29,7 +29,7 @@ describe('UrlShortening', function () {
                     done();
                 });
 
-            })
+            });
 
 
     });
@@ -54,7 +54,6 @@ describe('UrlShortening', function () {
         });
     });
 
-
     it('should return an error when i request with a q that is not an uri',function(done){
         api.get('/event/shorten?q=notAnUri').end(function (err, res) {
             console.log(res.text);
@@ -65,7 +64,6 @@ describe('UrlShortening', function () {
         });
     });
 
-
     it('should return no error and the url when i make a valid request',function(done){
         api.get('/event/shorten?q=http://www.test.com').end(function (err, res) {
             expect(res.body.url).to.exist;
@@ -73,7 +71,6 @@ describe('UrlShortening', function () {
             done();
         });
     });
-
 
     it('should return same url when i make a valid request for a url i already shortened',function(done){
         api.get('/event/shorten?q=http://www.gmx.at').end(function (err, res) {
@@ -89,5 +86,4 @@ describe('UrlShortening', function () {
             });
         });
     });
-
 });
