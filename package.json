@@ -35,7 +35,7 @@
     "valid-url": "~1.0.9",
     "googleapis": "~1.0.21",
     "fluent-ffmpeg": "~2.0.0-rc3",
-    "ytdl-core": "~0.3.1",
+    "ytdl-core": "~0.4.0",
     "qr-image": "~3.0.0"
   },
   "devDependencies": {
