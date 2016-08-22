@@ -25,6 +25,7 @@ To start songster do this:
 ```
 vagrant ssh
 cd /vagrant
+sudo apt-get install g++
 sudo npm install -g grunt grunt-cli bower
 npm install # add --no-bin-links if you run windows
 bower install
