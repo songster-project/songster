@@ -19,31 +19,31 @@
             </tab-heading>
             <div ng-include="'event/event-detail-home.tpl.html'"></div>
         </tab>
-        <tab ng-if="!event.end" active="tabs[1].active">
+        <tab ng-if="!event.end" active="tabs[1].active" title="Playlist">
             <tab-heading>
                 <i class="fa fa-play"></i>
-                <span ng-if="tabs[1].active">Playlist</span>
+                <span ng-class="tabs[1].active ? '' : 'hidden-xs'">Playlist</span>
             </tab-heading>
             <so-event-songs event-id="event._id"></so-event-songs>
         </tab>
-        <tab active="tabs[2].active">
+        <tab active="tabs[2].active" title="Stream">
             <tab-heading>
                 <i class="fa fa-list-alt"></i>
-                <span ng-if="tabs[2].active">Stream</span>
+                <span ng-class="tabs[2].active ? '' : 'hidden-xs'">Stream</span>
             </tab-heading>
             <so-event-activity-stream event-id="event._id"></so-event-activity-stream>
         </tab>
-        <tab ng-if="!event.end" active="tabs[3].active">
+        <tab ng-if="!event.end" active="tabs[3].active" title="Votes">
             <tab-heading>
                 <i class="fa fa-thumbs-up"></i>
-                <span ng-if="tabs[3].active">Votes</span>
+                <span ng-class="tabs[3].active ? '' : 'hidden-xs'">Votes</span>
             </tab-heading>
             <div ng-include="'event/event-detail-votings.tpl.html'"></div>
         </tab>
-        <tab ng-if="!$root.isDj() && !event.end" active="tabs[4].active" select="removeTabsForSuggestMode()">
+        <tab ng-if="!$root.isDj() && !event.end" active="tabs[4].active" select="removeTabsForSuggestMode()" title="Suggest">
             <tab-heading>
                 <i class="fa fa-lightbulb-o"></i>
-                <span ng-if="tabs[4].active">Suggest</span>
+                <span ng-class="tabs[4].active ? '' : 'hidden-xs'">Suggest</span>
             </tab-heading>
             <div ng-include="'event/event-detail-suggestions.tpl.html'"></div>
         </tab>

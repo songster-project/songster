@@ -21,7 +21,7 @@ module.exports = function ( karma ) {
     frameworks: [ 'jasmine' ],
       plugins
   :
-  ['karma-jasmine', 'karma-phantomjs-launcher', 'karma-coffee-preprocessor', 'karma-htmlfile-reporter', 'karma-story-reporter', 'karma-junit-reporter'],
+  ['karma-jasmine', 'karma-phantomjs-launcher', 'karma-chrome-launcher', 'karma-coffee-preprocessor', 'karma-htmlfile-reporter', 'karma-story-reporter', 'karma-junit-reporter'],
     preprocessors: {
       '**/*.coffee': 'coffee',
     },

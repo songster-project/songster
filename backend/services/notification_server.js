@@ -65,6 +65,7 @@ module.exports = function () {
     wsMiddlewares.push(passport.session());
 
     app.ws('event', function (ws, req) {
+        return; // FIXME
         ws.on('message', function (data) {
             //parse the request through the middleware after the first message was sent otherwise it would block the connection for too long
             parsemiddleware(wsMiddlewares, req,

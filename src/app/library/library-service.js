@@ -1,9 +1,9 @@
 angular
     .module('songster.library.services')
-    .provider('$library', LibraryProvider);
+    .service('$library', LibraryService);
 
 
-function Library($http, $q, SearchResultFactory, UpdateSongFactory, $rootScope) {
+function LibraryService($http, $q, SearchResultFactory, UpdateSongFactory, $rootScope, NotificationService) {
 
     var EVENT_SONG_DELETED = 'SONG_DELETED';
 
@@ -38,7 +38,9 @@ function Library($http, $q, SearchResultFactory, UpdateSongFactory, $rootScope) 
     this.updateSongMetadata = function(song) {
         if (song && song._id) {
             var updateSong = UpdateSongFactory.create(song);
-            return $http.put('/song/' + updateSong._id, updateSong);
+            var promise = $http.put('/song/' + updateSong._id, updateSong);
+            promise.then(NotificationService.notify); 
+            return promise;
         } else {
             return false;
         }
@@ -52,11 +54,5 @@ function Library($http, $q, SearchResultFactory, UpdateSongFactory, $rootScope) 
             console.log('updateCover() got passed an invalid song');
             return false;
         }
-    };
-}
-
-function LibraryProvider() {
-    this.$get = function ($http, $q, SearchResultFactory, UpdateSongFactory, $rootScope) {
-        return new Library($http, $q, SearchResultFactory, UpdateSongFactory, $rootScope);
     };
 }

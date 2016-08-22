@@ -380,6 +380,17 @@ hr {
     color: #777777;
     text-decoration: none;
   }
+
+  // if large enough, show delete icon only when hovering over
+  @media (min-width: @screen-sm-min) {
+    .playlist-delete-icon {
+      display: none;
+    }
+
+    &:hover .playlist-delete-icon {
+      display: block;
+    }
+  }
 }
 
 .playlist-delete-anchor {
