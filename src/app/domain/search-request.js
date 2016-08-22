@@ -14,16 +14,12 @@ angular.module('songster.domain.searchRequest')
                 throw 'url must be defined';
             }
 
-            var params = [];
-            if(this.q !== undefined) {
-                params.push('q=' + this.q);
-            }
-            if(this.from !== undefined) {
-                params.push('from=' + this.from);
-            }
-            if(this.size !== undefined) {
-                params.push('size=' + this.size);
-            }
+            var params = [], self = this;
+            _.forEach(["q", "from", "size"], function(value) {
+                if(self[value] !== undefined) {
+                    params.push(value + '=' + self[value]);
+                }
+            });
 
             var request = this.url;
             if(!_.isEmpty(params)) {
